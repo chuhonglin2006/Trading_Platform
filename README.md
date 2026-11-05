@@ -1,7 +1,7 @@
 # 校园二手交易平台
 
 面向高校学生的二手交易平台：**Vue 3 前端 + FastAPI 后端 + MySQL + Redis**，包含商品发布与审核、订单与面交、实时聊天、举报处理、管理员后台和独立的图片服务器。
-展示界面: (chuhlblog.top) (这个域名以前拿来做个人博客的)
+![成品展示](chuhlblog.top) (这个域名以前拿来做个人博客的)
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)
