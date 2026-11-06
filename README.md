@@ -357,6 +357,3 @@ server {
 
 - IP 归属地使用 [ip2region](https://github.com/lionsoul2014/ip2region) 离线库。
 
-## 许可证
-
-发布前请补充 `LICENSE` 文件并在此说明。
