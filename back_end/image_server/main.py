@@ -95,8 +95,7 @@ PORT = int(
 )
 
 PUBLIC_BASE_URL = os.getenv(
-    "IMAGE_SERVER_PUBLIC_URL",
-    "http://120.26.37.94:8001"
+    "IMAGE_SERVER_PUBLIC_URL"
 ).rstrip("/")
 
 
