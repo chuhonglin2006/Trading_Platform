@@ -129,10 +129,7 @@ cp keys.env.example keys.env      # 然后编辑 keys.env，见下方「环境�
 
 先创建空库（库名与 `DATABASE_NAME` 一致，字符集建议 `utf8mb4`）。
 
-> 仓库**暂未提供建表 SQL 或迁移脚本**，表结构以 `modles_1/` 和 `admin/modles_a/` 中的模型为准，共 11 张表：
-> `users`、`products`、`product_images`、`categories`、`favorites`、`orders`、
-> `chat_conversations`、`chat_messages`、`reports`、`announcements`、`admins`。
->
+> **提供建表 SQL 脚本，详细见Marketz_Table.sql**，
 > 另外，后端启动时会检查 `products.publish_province` 列，缺失则自动 `ALTER TABLE` 补上，
 > 所以 MySQL 账号需要有 `ALTER` 权限。
 
