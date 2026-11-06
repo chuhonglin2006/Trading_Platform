@@ -18,9 +18,7 @@ def normalize_image_url(image_url: str | None) -> str | None:
     """
     将图片服务器返回的完整 URL 统一转换成前端使用的 /images/xxx 路径。
 
-    例如：
 
-    http://120.26.37.94:8001/images/14/xxx.jpg
     ->
     /images/14/xxx.jpg
 
