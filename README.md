@@ -433,7 +433,7 @@ Trading_Platform/
 │   │
 │   ├── schemas/              Pydantic 数据模型
 │   │
-│   ├── utils/                工具函数
+│   ├── tools/                工具函数
 │   │
 │   ├── static/               静态资源
 │   │
@@ -538,53 +538,6 @@ pip install -r requirements.txt
 
 ---
 
-# 配置环境变量
-
-项目使用环境变量保存敏感配置。
-
-不要将真实的：
-
-```text
-keys.env
-.env
-```
-
-上传到 GitHub。
-
-可以创建：
-
-```text
-back_end/keys.env
-```
-
-示例：
-
-```env
-DATABASE_HOST=127.0.0.1
-DATABASE_PORT=3306
-DATABASE_NAME=hkz_market
-DATABASE_USER=root
-DATABASE_PASSWORD=your_password
-
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
-REDIS_PASSWORD=your_redis_password
-
-SECRET_KEY=your_secret_key
-ALGORITHM=HS256
-```
-
-实际变量名称应根据项目代码中的配置读取方式进行设置。
-
-建议使用：
-
-```text
-keys.env.example
-```
-
-作为配置模板。
-
----
 
 # MySQL 配置
 
@@ -835,28 +788,7 @@ Swagger UI 可以用于：
 例如商品详情缓存可能使用：
 
 ```text
-product:detail:v2:{product_id}
-```
-
-例如：
-
-```text
-product:detail:v2:14
-```
-
-为了避免不同代码位置出现 Redis Key 不一致的问题，建议统一通过函数生成缓存 Key。
-
-例如：
-
-```python
-def get_product_detail_cache_key(product_id: int) -> str:
-    return f"product:detail:v2:{product_id}"
-```
-
-然后所有操作统一使用：
-
-```python
-key = get_product_detail_cache_key(product_id)
+product:detail:{product_id}
 ```
 
 包括：
@@ -897,26 +829,6 @@ stmt = (
 
 ---
 
-# 安全建议
-
-## 不要上传敏感配置
-
-以下文件不应该上传到 GitHub：
-
-```text
-.env
-*.env
-keys.env
-```
-
-建议在 `.gitignore` 中添加：
-
-```gitignore
-.env
-*.env
-```
-
----
 
 ## JWT 密钥
 
@@ -983,80 +895,10 @@ Uvicorn / FastAPI
 
 ---
 
-# .gitignore 推荐配置
 
-建议在项目根目录创建 `.gitignore`：
-
-```gitignore
-# Python
-__pycache__/
-*.py[cod]
-
-# Environment / Secrets
-.env
-*.env
-
-# Logs
-*.log
-logs/
-
-# IDE
-.idea/
-.vscode/
-
-# Python Virtual Environment
-.venv/
-venv/
-
-# Build
-dist/
-build/
-
-# Node.js
-node_modules/
-
-# Operating System
-.DS_Store
-Thumbs.db
-```
-
-如果 `keys.env` 已经被 Git 跟踪，仅添加 `.gitignore` 不会自动停止 Git 跟踪。
-
-需要执行：
-
-```bash
-git rm --cached back_end/keys.env
-```
-
-然后提交：
-
-```bash
-git add .gitignore
-git commit -m "Remove sensitive environment files"
-```
-
-如果真实密码已经上传到公开仓库，还应该立即更换：
-
-```text
-数据库密码
-Redis 密码
-JWT SECRET_KEY
-SMTP 授权码
-```
-
----
-
-# 后续可以继续优化的方向
+# 后续准备继续优化的方向
 
 ## 接口测试
-
-可以使用：
-
-```text
-pytest
-pytest-asyncio
-httpx
-```
 
 对接口进行自动化测试。
 
@@ -1072,43 +914,9 @@ httpx
 
 ---
 
-## 并发测试
-
-建议重点测试：
-
-### 多用户同时购买同一商品
-
-验证：
-
-```text
-只能创建一个有效交易订单
-```
-
----
-
-### 多请求同时创建聊天
-
-验证：
-
-```text
-不会因为唯一约束导致 500 错误
-```
-
----
-
-### 管理员并发操作
-
-验证：
-
-```text
-不会因为并发操作导致系统没有超级管理员
-```
-
 ---
 
 ## 缓存优化
-
-后续可以继续完善：
 
 - 缓存预热
 - 缓存穿透保护
@@ -1121,8 +929,6 @@ httpx
 
 ## 图片处理
 
-未来可以增加：
-
 - 自动生成缩略图
 - 图片压缩
 - WebP 转换
@@ -1133,8 +939,6 @@ httpx
 ---
 
 ## 搜索功能
-
-目前可以进一步扩展：
 
 - 商品名称搜索
 - 分类搜索
@@ -1239,48 +1043,6 @@ PONG
 
 ---
 
-# 开发建议
-
-建议开发环境：
-
-```text
-Windows / Linux
-Python 虚拟环境
-MySQL
-Redis
-Node.js
-```
-
-推荐工作流程：
-
-```text
-修改代码
-    ↓
-本地测试
-    ↓
-接口测试
-    ↓
-前后端联调
-    ↓
-提交 Git
-    ↓
-部署测试服务器
-    ↓
-生产部署
-```
-
-提交代码前建议检查：
-
-```text
-敏感配置是否被提交
-环境变量是否正确
-数据库连接是否正常
-Redis 是否正常
-前端是否能够构建
-后端是否能够启动
-```
-
----
 
 # 许可证
 
