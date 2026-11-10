@@ -1,4 +1,4 @@
-﻿# Trading_Platform
+  ﻿# Trading_Platform
 
 一个基于 FastAPI 和 Vue 3 开发的校园二手物品交易与信息展示平台。
 
@@ -6,9 +6,10 @@
 
 项目采用前后端分离架构，后端使用 FastAPI 提供 RESTful API，前端使用 Vue 3 构建用户界面，并使用 MySQL 进行数据持久化、Redis 提供缓存和部分高并发场景优化。
 
-                                                                 [成品展示](https://chuhlblog.top) 
+[成品展示](https://chuhlblog.top) 
 
-                                        [![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4)
+
+[![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4)
 
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue)
