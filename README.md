@@ -8,13 +8,6 @@
 
 [成品展示](https://chuhlblog.top) 
 
-
-
-![image](https://www.bing.com/images/search?view=detailV2&ccid=UYyX%2fyN8&id=04E812AD0C0C75C9A2AA71F6135A6D5A23A428FF&thid=OIP.UYyX_yN8Vg3FKmQ6_gsfxwAAAA&mediaurl=https%3a%2f%2fimgs.qiubiaoqing.com%2fqiubiaoqing%2fimgs%2f6a02444da3020wU0.jpg%3fimageView2%2f2%2fw%2f200&exph=196&expw=200&q=%e5%a4%a7%e7%ac%91%e7%9a%84%e5%a5%b6%e5%a8%83&FORM=IRPRST&ck=5DF6AD63BF3793214FF30C41E3C22FBC&selectedIndex=7&itb=0)
-
-
-
-
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)
 ![Vue](https://img.shields.io/badge/Vue-3-42b883)
