@@ -101,7 +101,7 @@ Trading_Platform/
     ├── ip_data/                 # ip2region 离线 IP 库
     ├── Log/                     # 运行日志（Python / Redis / MySQL / Image，按大小轮转）
     ├── admin/                   # 管理端：路由、业务逻辑、模型、静态页面
-    └── image_server/            # 独立图片服务器（默认 8001 端口）
+    └── image_data/              # 商品图片存储
 ```
 
 ## 快速开始
