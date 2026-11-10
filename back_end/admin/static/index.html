@@ -1,0 +1,517 @@
+
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <meta
+        name="description"
+        content="校园二手交易平台管理控制台"
+    >
+
+    <title>管理控制台 · 校园二手交易平台</title>
+
+    <link
+        rel="stylesheet"
+        href="/admin/css/style.css?v=2"
+    >
+
+    <style>
+        /* 管理模块内容区域 */
+
+        #module-view {
+            width: 100%;
+        }
+
+        .module-panel {
+            min-height: auto;
+            padding: 20px 24px;
+            text-align: left;
+        }
+
+        #module-description:empty {
+            display: none;
+        }
+
+        #dashboard-content {
+            width: 100%;
+        }
+
+        /* 动态统计卡片 */
+
+        #dashboard-overview-extra {
+            margin: 24px 0;
+        }
+
+        /* 保留 HTML hidden 属性的预期行为 */
+
+        [hidden] {
+            display: none !important;
+        }
+
+        /* 管理员信息 */
+
+        .account {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* 小屏幕下避免内容溢出 */
+
+        @media (max-width: 768px) {
+            .module-panel {
+                padding: 16px;
+            }
+
+            #dashboard-content {
+                min-width: 0;
+            }
+
+            .account {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+
+    <!-- =====================================
+         1. 左侧导航栏
+    ====================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <span class="brand-mark small">
+                校
+            </span>
+
+            <div>
+                <strong>
+                    校园二手交易
+                </strong>
+
+                <small>
+                    管理控制台
+                </small>
+            </div>
+
+        </div>
+
+
+        <nav
+            id="navigation"
+            aria-label="后台导航"
+        >
+
+            <!-- 数据概览 -->
+
+            <button
+                type="button"
+                class="nav-item active"
+                data-view="overview"
+            >
+                ▦
+                <span>数据概览</span>
+            </button>
+
+
+            <!-- 用户管理 -->
+
+            <button
+                type="button"
+                class="nav-item"
+                data-view="users"
+            >
+                ♙
+                <span>用户管理</span>
+            </button>
+
+
+            <!-- 商品审核 -->
+
+            <button
+                type="button"
+                class="nav-item"
+                data-view="products"
+            >
+                ▣
+                <span>商品审核</span>
+            </button>
+
+
+            <!-- 订单管理 -->
+
+            <button
+                type="button"
+                class="nav-item"
+                data-view="orders"
+            >
+                ▤
+                <span>订单管理</span>
+            </button>
+
+
+            <!-- 举报管理 -->
+
+            <button
+                type="button"
+                class="nav-item"
+                data-view="reports"
+            >
+                ⚑
+                <span>举报管理</span>
+            </button>
+
+
+            <!-- 公告管理 -->
+
+            <button
+                type="button"
+                class="nav-item"
+                data-view="announcements"
+            >
+                ◈
+                <span>公告管理</span>
+            </button>
+
+
+            <!-- 管理员管理 -->
+
+            <button
+                type="button"
+                class="nav-item super-only"
+                data-view="admins"
+                hidden
+            >
+                ♛
+                <span>管理员管理</span>
+            </button>
+
+        </nav>
+
+
+        <!-- 左侧底部 -->
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="/admin/static"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                ↗ 打开用户前台
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================
+         2. 右侧工作区域
+    ====================================== -->
+
+    <div class="workspace">
+
+        <!-- 顶部导航 -->
+
+        <header class="topbar">
+
+            <!-- 移动端菜单按钮 -->
+
+            <button
+                type="button"
+                id="menu-toggle"
+                class="menu-toggle"
+                aria-label="切换菜单"
+            >
+                ☰
+            </button>
+
+
+            <!-- 当前页面标题 -->
+
+            <div>
+
+                <div class="eyebrow">
+                    ADMIN CONSOLE
+                </div>
+
+                <h1 id="page-title">
+                    数据概览
+                </h1>
+
+            </div>
+
+
+            <!-- 当前管理员 -->
+
+            <div class="account">
+
+                <span
+                    class="avatar"
+                    id="avatar"
+                >
+                    A
+                </span>
+
+                <div>
+
+                    <strong id="admin-name">
+                        管理员
+                    </strong>
+
+                    <small id="admin-role">
+                        身份验证中
+                    </small>
+
+                </div>
+
+
+                <!-- 退出登录 -->
+
+                <button
+                    type="button"
+                    id="logout"
+                    class="outline"
+                >
+                    退出
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================
+             3. 页面主体
+        ================================== -->
+
+        <main
+            id="content"
+            class="main-content"
+        >
+
+            <!-- =============================
+                 数据概览
+            ============================== -->
+
+            <section
+                id="overview"
+                class="view active"
+            >
+
+                <!-- 欢迎区域 -->
+
+                <div class="welcome">
+
+                    <div>
+
+                        <div class="eyebrow">
+                            WELCOME BACK
+                        </div>
+
+                        <h2>
+                            欢迎回来，
+                            <span id="welcome-name">
+                                管理员
+                            </span>
+                        </h2>
+
+                        <p>
+                            在这里管理平台内容和日常运营。
+                        </p>
+
+                    </div>
+
+                    <span class="welcome-illustration">
+                        ✦
+                    </span>
+
+                </div>
+
+
+                <!-- 动态统计数据 -->
+
+                <div id="dashboard-overview-extra">
+
+                    <div class="dash-empty">
+                        正在加载平台统计数据...
+                    </div>
+
+                </div>
+
+
+                <!-- 快捷管理 -->
+
+                <div class="panel">
+
+                    <div class="panel-head">
+
+                        <div>
+
+                            <h3>
+                                快捷管理
+                            </h3>
+
+                            <p>
+                                选择需要处理的业务
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="quick-grid">
+
+                        <button
+                            type="button"
+                            data-jump="users"
+                        >
+                            用户管理
+
+                            <span>
+                                查看与管理平台用户 →
+                            </span>
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-jump="products"
+                        >
+                            商品审核
+
+                            <span>
+                                处理待审核商品 →
+                            </span>
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-jump="orders"
+                        >
+                            订单管理
+
+                            <span>
+                                查看平台交易订单 →
+                            </span>
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-jump="reports"
+                        >
+                            举报管理
+
+                            <span>
+                                查看与处理用户举报 →
+                            </span>
+                        </button>
+
+
+                        <button
+                            type="button"
+                            data-jump="announcements"
+                        >
+                            公告管理
+
+                            <span>
+                                发布与维护平台公告 →
+                            </span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================
+                 通用管理模块容器
+            ============================== -->
+
+            <section
+                id="module-view"
+                class="view"
+            >
+
+                <!-- 模块标题 -->
+
+                <div class="panel module-panel">
+
+                    <div
+                        class="module-icon"
+                        id="module-icon"
+                        aria-hidden="true"
+                    >
+                        ▣
+                    </div>
+
+                    <h2 id="module-title">
+                        模块名称
+                    </h2>
+
+                    <p id="module-description"></p>
+
+                </div>
+
+                <!-- dashboard.js 会在这里动态生成模块内容 -->
+                <div id="dashboard-content"></div>
+
+
+                <!--
+                    以下管理界面由 dashboard.js
+                    动态生成并插入此区域：
+
+                    1. 用户管理
+                    2. 商品审核
+                    3. 订单管理
+                    4. 举报管理
+                    5. 公告管理
+                    6. 管理员管理
+                -->
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- =====================================
+         4. 移动端侧边栏遮罩
+    ====================================== -->
+
+    <div
+        id="overlay"
+        class="overlay"
+        hidden
+    ></div>
+
+
+    <!-- =====================================
+         5. 管理后台 JavaScript
+    ====================================== -->
+
+    <script
+            src="/admin/js/dashboard.js?v=6" defer>
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1 @@
+import{m as s}from"./index-CJlVQJuc.js";const a={getOrCreate(e){return s.post("/chat/conversations",null,{params:{order_id:e}})},getMessages(e){return s.get(`/chat/conversations/${e}/messages`)},sendMessage(e,t){return s.post(`/chat/conversations/${e}/messages`,{content:t})},readMessage(e){return s.post(`/chat/messages/${e}/read`)}};export{a as c};
