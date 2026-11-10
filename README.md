@@ -1,4 +1,4 @@
-  ﻿# Trading_Platform
+﻿# Trading_Platform
 
 一个基于 FastAPI 和 Vue 3 开发的校园二手物品交易与信息展示平台。
 
