@@ -40,7 +40,6 @@
 | 鉴权 | JWT（python-jose）、bcrypt（passlib） |
 | IP 归属地 | py-ip2region（离线库 `ip2region_v4.xdb`） |
 | 邮件 | SMTP（默认 QQ 邮箱） |
-| 图片 | 独立 FastAPI 图片服务器，后端通过 httpx 上传 |
 
 ## Redis 设计
 
