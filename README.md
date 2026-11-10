@@ -7,6 +7,7 @@
 项目采用前后端分离架构，后端使用 FastAPI 提供 RESTful API，前端使用 Vue 3 构建用户界面，并使用 MySQL 进行数据持久化、Redis 提供缓存和部分高并发场景优化。
 
 [成品展示](https://chuhlblog.top) 
+![](https://dropit.pics/de06kdm.webp)
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)
