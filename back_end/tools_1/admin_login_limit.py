@@ -8,9 +8,10 @@ Redis 不可用时拒绝登录
 """
 
 import hashlib
-from fastapi import HTTPException, status
-from tools_1.logger import get_logger
 
+from fastapi import HTTPException, status
+
+from tools_1.logger import get_logger
 
 logger = get_logger(__name__, "redis")
 

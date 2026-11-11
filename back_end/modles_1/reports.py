@@ -3,11 +3,11 @@
 from datetime import datetime
 
 from sqlalchemy import (
-    String,
     DateTime,
     Enum,
     ForeignKey,
     Integer,
+    String,
     func,
 )
 from sqlalchemy.dialects.mysql import BIGINT

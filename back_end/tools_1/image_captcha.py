@@ -4,11 +4,19 @@
 3. 后端 verify_image_captcha() 校验：答案取出即删除，每张图只能用一次
 """
 
-import asyncio,base64,hmac,io,os,random,secrets,math
+import asyncio
+import base64
+import hmac
+import io
+import math
+import os
+import random
+import secrets
+
 from fastapi import HTTPException, status
 from PIL import Image, ImageDraw, ImageFont
-from tools_1.logger import get_logger
 
+from tools_1.logger import get_logger
 
 logger = get_logger(__name__, "redis")
 

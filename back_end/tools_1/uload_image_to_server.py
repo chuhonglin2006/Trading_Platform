@@ -1,8 +1,9 @@
 """商品图片工具"""
 
 from pathlib import Path
-from urllib.parse import urlparse, parse_qs, unquote
-from tools_1.image_storage import upload_image, delete_image  # noqa: F401
+from urllib.parse import parse_qs, unquote, urlparse
+
+from tools_1.image_storage import delete_image, upload_image  # noqa: F401
 
 
 def normalize_image_url(image_url: str | None) -> str | None:

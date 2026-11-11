@@ -1,6 +1,7 @@
 """密码加密,对比工具"""
-from passlib.context import CryptContext
 import asyncio
+
+from passlib.context import CryptContext
 
 password_context = CryptContext(schemes = ["bcrypt"],deprecated = "auto")
 

@@ -1,15 +1,17 @@
 """举报接口"""
-from fastapi import APIRouter,Depends
-from crud_1.reports import report_user
-from schemas_1.reports import ReportCreate
-from crud_1.users import get_user_info
 from typing import Any
+
+from crud_1.reports import report_user
+from crud_1.users import get_user_info
+from fastapi import APIRouter, Depends
+from schemas_1.reports import ReportCreate
+from tools_1.limit import ip_rate_limit
 
 report = APIRouter()
 
 
 """举报接口"""
-@report.post("/api/reports")
+@report.post("/api/reports", dependencies=[Depends(ip_rate_limit("report", 10, 3600))])
 async def submit_report(data:ReportCreate,current_user = Depends(get_user_info)) -> dict[str,Any]:
     result = await report_user(
         reporter_id=current_user["id"],

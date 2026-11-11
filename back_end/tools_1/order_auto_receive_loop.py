@@ -1,8 +1,9 @@
 """ 订单自动收货 """
 import asyncio
-from crud_1.orders import auto_complete_orders, auto_receive_orders
-from tools_1.logger import get_logger
 
+from crud_1.orders import auto_complete_orders, auto_receive_orders
+
+from tools_1.logger import get_logger
 
 logger = get_logger(__name__, "python")
 

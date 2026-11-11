@@ -1462,11 +1462,7 @@ async function submitProductReport() {
     )
 
 
-    const message =
-      error?.response?.data?.detail ||
-      error?.response?.data?.message ||
-      error?.message ||
-      '举报提交失败，请稍后重试'
+    const message = getApiErrorMessage(error, '举报提交失败，请稍后重试')
 
 
     window.alert(message)
@@ -1659,11 +1655,7 @@ async function handleDeleteProduct(product) {
     )
 
 
-    const message =
-      error?.response?.data?.detail ||
-      error?.response?.data?.message ||
-      error?.message ||
-      '删除商品失败，请稍后重试'
+    const message = getApiErrorMessage(error, '删除商品失败，请稍后重试')
 
 
     window.alert(message)
@@ -2044,11 +2036,7 @@ async function handleContactBuyer(order) {
     )
 
 
-    const message =
-      error?.response?.data?.detail ||
-      error?.response?.data?.message ||
-      error?.message ||
-      '进入聊天失败，请稍后重试'
+   const message = getApiErrorMessage(error, '进入聊天失败，请稍后重试')
 
 
     window.alert(message)

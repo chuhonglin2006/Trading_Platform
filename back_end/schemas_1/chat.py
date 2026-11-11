@@ -1,5 +1,6 @@
 """用户聊天模型类"""
-from pydantic import BaseModel,Field
+from pydantic import BaseModel, Field
+
 
 class SendMessageRequest(BaseModel):
     """发送消息模型类"""

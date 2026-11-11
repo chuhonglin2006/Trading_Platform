@@ -5,6 +5,7 @@ import { useMarketStore } from '../stores/market'
 import { productsApi } from '../api/products'
 import { categoriesApi } from '../api/categories'
 import { CAMPUSES } from '../constants/campus'
+import { getApiErrorMessage } from '../utils/apiError'
 
 const route = useRoute()
 const router = useRouter()
@@ -60,10 +61,7 @@ async function loadCategories() {
   } catch (e) {
     console.error('加载分类失败:', e)
 
-    error.value =
-      e?.response?.data?.detail ||
-      e?.message ||
-      '商品分类加载失败'
+    error.value = getApiErrorMessage(e, '商品分类加载失败')
 
   } finally {
     categoriesLoading.value = false
@@ -151,10 +149,7 @@ async function loadProduct() {
       e
     )
 
-    error.value =
-      e?.response?.data?.detail ||
-      e?.message ||
-      '无法加载商品，请确认本人商品详情接口已实现'
+    error.value = getApiErrorMessage(e, '无法加载商品，请确认本人商品详情接口已实现')
 
   } finally {
     loading.value = false
@@ -268,10 +263,7 @@ async function save() {
       e
     )
 
-    error.value =
-      e?.response?.data?.detail ||
-      e?.message ||
-      '保存失败'
+    error.value = getApiErrorMessage(e, '保存失败')
 
   } finally {
     saving.value = false

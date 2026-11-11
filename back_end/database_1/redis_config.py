@@ -1,12 +1,12 @@
 """Redis配置"""
-import redis.asyncio as aioredis
-from redis.exceptions import TimeoutError,ConnectionError
 import os
-from dotenv import load_dotenv
 from pathlib import Path
-from fastapi import Request
-from tools_1.logger import get_logger
 
+import redis.asyncio as aioredis
+from dotenv import load_dotenv
+from fastapi import Request
+from redis.exceptions import ConnectionError, TimeoutError
+from tools_1.logger import get_logger
 
 logger = get_logger(__name__, "redis")
 

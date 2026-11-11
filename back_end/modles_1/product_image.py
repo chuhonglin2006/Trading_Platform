@@ -1,7 +1,9 @@
 """商品图片模型类"""
 from datetime import datetime
-from sqlalchemy import BigInteger,String,Integer,DateTime,ForeignKey,func
-from sqlalchemy.orm import Mapped,mapped_column,relationship
+
+from sqlalchemy import BigInteger, DateTime, ForeignKey, Integer, String, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from modles_1.base import Base
 
 

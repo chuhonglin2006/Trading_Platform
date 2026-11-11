@@ -1,6 +1,7 @@
 """验证学号是否匹配"""
 from datetime import datetime
 
+
 def check_student_id(student_id:str) -> bool:
     """
     验证学号是否匹配

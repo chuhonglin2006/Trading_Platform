@@ -1,12 +1,22 @@
 """管理员公告接口"""
 
 from typing import Any
+
 from database_1.redis_config import get_redis
 from fastapi import APIRouter, Depends, Query
-from admin.curd_a.announcements import get_all_announcements,get_announcement_info,create_announcement,update_announcement,delete_announcement
-from admin.curd_a.admins import get_admin_info
-from admin.shemas_a.announcements import AnnouncementCreateRequest,AnnouncementUpdateRequest
 
+from admin.curd_a.admins import get_admin_info
+from admin.curd_a.announcements import (
+    create_announcement,
+    delete_announcement,
+    get_all_announcements,
+    get_announcement_info,
+    update_announcement,
+)
+from admin.shemas_a.announcements import (
+    AnnouncementCreateRequest,
+    AnnouncementUpdateRequest,
+)
 
 admin_announcement = APIRouter()
 

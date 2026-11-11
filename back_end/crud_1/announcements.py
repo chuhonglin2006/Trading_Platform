@@ -1,12 +1,14 @@
 """公告接口函数"""
-import asyncio, json, random
+import asyncio
+import json
+import random
 from typing import Any
+
 from cachetools import TTLCache
-from modles_1.announcements import Announcements
 from database_1.mysql_config import async_session_maker
+from modles_1.announcements import Announcements
 from sqlalchemy import select
 from tools_1.logger import get_logger
-
 
 logger = get_logger(__name__, "redis")
 

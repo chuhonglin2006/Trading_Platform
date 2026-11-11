@@ -1,12 +1,20 @@
 """用户接口"""
 from typing import Any
-from crud_1.users import user_login, get_user_info, send_code, user_register, get_seller_public_info
-from fastapi import APIRouter,Depends,Request,Response
-from tools_1.image_captcha import create_image_captcha, verify_image_captcha
-from schemas_1.user import Login,SendCodeRequest,Register
+
+from crud_1.users import (
+    get_seller_public_info,
+    get_user_info,
+    send_code,
+    user_login,
+    user_register,
+)
 from database_1.redis_config import get_redis
-from tools_1.limit import ip_rate_limit
+from fastapi import APIRouter, Depends, Request, Response
+from schemas_1.user import Login, Register, SendCodeRequest
 from tools_1.client_ip import get_client_ip
+from tools_1.image_captcha import create_image_captcha, verify_image_captcha
+from tools_1.limit import ip_rate_limit
+
 user = APIRouter()
 
 

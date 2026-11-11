@@ -1,27 +1,29 @@
 """用户接口函数"""
+import asyncio
+import json
+import random
+import secrets
+from collections import defaultdict, deque
+from datetime import datetime
+from threading import Lock
 from typing import Any
+
+from cachetools import TTLCache
 from database_1.mysql_config import async_session_maker
+from database_1.redis_config import get_redis
+from fastapi import Depends, Header, HTTPException, status
+from fastapi.encoders import jsonable_encoder
 from modles_1.user import User
 from sqlalchemy import select
-from tools_1.password_hash import check_password_async,password_hash_async
-from tools_1.create_token import create_token,decode_token
-from fastapi import HTTPException, status, Header,Depends
-from datetime import datetime
-from tools_1.email import send_email
-import secrets,asyncio
-from collections import defaultdict, deque
-from threading import Lock
-from tools_1.check_student_id import check_student_id
-from tools_1.email_hash import hash_email
-from cachetools import TTLCache
-import json,random
-from fastapi.encoders import jsonable_encoder
-from database_1.redis_config import get_redis
 from sqlalchemy.exc import IntegrityError
-from tools_1.warm_up_cache import user_name_bloom,normalize_username
-from tools_1.logger import get_logger
+from tools_1.check_student_id import check_student_id
+from tools_1.create_token import create_token, decode_token
+from tools_1.email import send_email
+from tools_1.email_hash import hash_email
 from tools_1.ip_region import get_ip_province
-
+from tools_1.logger import get_logger
+from tools_1.password_hash import DUMMY_HASH, check_password_async, password_hash_async
+from tools_1.warm_up_cache import normalize_username, user_name_bloom
 
 logger = get_logger(__name__, "redis")
 app_logger = get_logger(__name__, "python")
@@ -157,6 +159,18 @@ async def get_user_cached(redis,user_id:int) -> dict | None:
         user_local_cache[user_id] = data
     return data
 
+async def _count_register_failure(redis, code_key: str, fail_key: str) -> None:
+    """验证码错误或注册信息冲突都计一次失败，累计 5 次作废验证码"""
+    failures = await redis.incr(fail_key)
+    if failures == 1 or await redis.ttl(fail_key) == -1:
+        await redis.expire(fail_key, 300)
+    if failures >= 5:
+        await redis.delete(code_key, fail_key)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="验证码错误次数过多,请重新获取"
+        )
+
 async def user_register(redis,username:str,student_id:str,user_email:str,
 password:str,email_code:str,register_ip:str = '') -> dict[Any, Any]:
     """
@@ -211,20 +225,11 @@ password:str,email_code:str,register_ip:str = '') -> dict[Any, Any]:
         )
 
     async with async_session_maker() as session:
-        # 重复检查
-        for column, value, msg in (
-                (User.email, user_email, "邮箱已注册"),
-                (User.username, username, "用户名已存在"),
-                (User.student_id, student_id, "学号已注册"),
-        ):
-            if await session.scalar(select(User.id).where(column == value)):
-                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=msg)
-
-        # 验证码校验
         email_id = hash_email(user_email)
         code_key = f"captcha:register:{email_id}"
         fail_key = f"captcha:register:fail:{email_id}"
 
+        # 先校验验证码
         saved_code = await redis.get(code_key)
         if saved_code is None:
             raise HTTPException(
@@ -233,25 +238,28 @@ password:str,email_code:str,register_ip:str = '') -> dict[Any, Any]:
             )
 
         input_code = (email_code or "").strip()
-        # 转为 bytes 再比较,防止非 ASCII 字符触发 TypeError
         if not secrets.compare_digest(
-            saved_code.encode("utf-8"), input_code.encode("utf-8")
+                saved_code.encode("utf-8"), input_code.encode("utf-8")
         ):
-            failures = await redis.incr(fail_key)
-            # 首次失败,或旧数据里没有过期时间的 key,都补上 TTL
-            if failures == 1 or await redis.ttl(fail_key) == -1:
-                await redis.expire(fail_key, 300)
-            if failures >= 5:
-                await redis.delete(code_key, fail_key)
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="验证码错误次数过多,请重新获取"
-                )
+            await _count_register_failure(redis, code_key, fail_key)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="验证码错误"
             )
 
+        # 验证码通过后再查重：只在日志里记录具体字段，对外统一提示
+        for column, value in (
+                (User.email, user_email),
+                (User.username, username),
+                (User.student_id, student_id),
+        ):
+            if await session.scalar(select(User.id).where(column == value)):
+                app_logger.info("注册冲突 field=%s ip=%s", column.key, register_ip)
+                await _count_register_failure(redis, code_key, fail_key)
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="邮箱、用户名或学号已被注册"
+                )
         # 创建用户
         hash_password = await password_hash_async(password)
         user = User(
@@ -316,6 +324,7 @@ async def user_login(redis,user_email:str,password:str,login_ip:str) -> dict[str
         user_class = await session.execute(stmt)
         user = user_class.scalar_one_or_none()
         if user is None:
+            await check_password_async(password, DUMMY_HASH)
             await _record_login_failure(redis, login_ip, user_email)
             app_logger.warning("用户登录失败原因=账号不存在 ip=%s", login_ip)
             raise HTTPException(

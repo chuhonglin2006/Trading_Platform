@@ -1,8 +1,11 @@
 """商品分类模型类"""
 from datetime import datetime
-from sqlalchemy import String, Integer, DateTime, func
+
+from sqlalchemy import DateTime, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column
+
 from modles_1.base import Base
+
 
 class Category(Base):
     __tablename__ = "categories"

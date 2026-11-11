@@ -1,8 +1,10 @@
 """公告模型类"""
-from modles_1.base import Base
-from sqlalchemy.orm import mapped_column,Mapped
-from sqlalchemy import BigInteger,String,Text,DateTime,func
 from datetime import datetime
+
+from sqlalchemy import BigInteger, DateTime, String, Text, func
+from sqlalchemy.orm import Mapped, mapped_column
+
+from modles_1.base import Base
 
 
 class Announcements(Base):

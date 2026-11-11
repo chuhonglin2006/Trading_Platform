@@ -3,18 +3,19 @@ import datetime
 from datetime import timedelta
 from decimal import Decimal
 from typing import Any
-from modles_1.order import Order
-from sqlalchemy import select, or_,func
+
 from database_1.mysql_config import async_session_maker
-from tools_1.create_order_no import create_order_number
-from modles_1.products import Product
 from fastapi import HTTPException, status
+from modles_1.order import Order
+from modles_1.products import Product
 from modles_1.user import User
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import selectinload
-from crud_1.produces import invalidate_product
+from tools_1.create_order_no import create_order_number
 from tools_1.logger import get_logger
 from tools_1.product_state import status_after_order_cancelled
 
+from crud_1.produces import invalidate_product
 
 logger = get_logger(__name__, "python")
 mysql_logger = get_logger(__name__, "mysql")
@@ -497,32 +498,31 @@ async def auto_complete_orders(redis) -> dict[str, Any]:
     cutoff = now - timedelta(days=3)
     sold: list[tuple[int, int]] = []
 
-    async with async_session_maker() as session:
-        async with session.begin():
-            stmt = (
-                select(Order)
-                .where(
-                    Order.status == "received",
-                    Order.received_at.is_not(None),
-                    Order.received_at <= cutoff
-                ).limit(200).with_for_update())   # 一次最多处理 200 个，剩下的下一轮处理
-            result = await session.execute(stmt)
-            orders = result.scalars().all()
+    async with async_session_maker() as session, session.begin():
+        stmt = (
+            select(Order)
+            .where(
+                Order.status == "received",
+                Order.received_at.is_not(None),
+                Order.received_at <= cutoff
+            ).limit(200).with_for_update())   # 一次最多处理 200 个，剩下的下一轮处理
+        result = await session.execute(stmt)
+        orders = result.scalars().all()
 
-            for order in orders:
-                product_result = await session.execute(
-                    select(Product).where(
-                        Product.id == order.product_id
-                    ).with_for_update()
-                )
-                product = product_result.scalar_one_or_none()
+        for order in orders:
+            product_result = await session.execute(
+                select(Product).where(
+                    Product.id == order.product_id
+                ).with_for_update()
+            )
+            product = product_result.scalar_one_or_none()
 
-                order.status = "completed"
-                order.completed_at = now
+            order.status = "completed"
+            order.completed_at = now
 
-                if product is not None:
-                    product.status = "sold"
-                    sold.append((product.id, product.seller_id))
+            if product is not None:
+                product.status = "sold"
+                sold.append((product.id, product.seller_id))
 
     # 事务提交之后再清缓存；单个商品清缓存失败不影响其他商品
     for product_id, seller_id in sold:
@@ -589,11 +589,7 @@ async def sale_statistics(user_id:int) -> dict[str,Any]:
 async def set_meting(user_id:int,order_id:int,meeting_time:datetime.datetime,meeting_location:str) -> dict[str,Any]:
     """
     设置交易时间,地点
-    :param user_id:用户id
-    :param order_id:订单id
-    :param meeting_time:交易时间
-    :param meeting_location:交易地点
-    :return:
+    距离已确定的交易时间不足1小时时，时间和地点都不能再修改
     """
     meeting_location = meeting_location.strip()
     if not meeting_location:
@@ -613,9 +609,10 @@ async def set_meting(user_id:int,order_id:int,meeting_time:datetime.datetime,mee
             detail="交易时间必须晚于当前时间"
         )
     async with async_session_maker() as session:
+        # 加行锁：买卖双方同时修改时串行处理
         stmt = select(Order).where(
             Order.id == order_id
-        )
+        ).with_for_update()
         result = await session.execute(stmt)
         order = result.scalar_one_or_none()
         if order is None:
@@ -623,33 +620,44 @@ async def set_meting(user_id:int,order_id:int,meeting_time:datetime.datetime,mee
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="订单不存在"
             )
-        if user_id not in (
-                order.buyer_id,
-                order.seller_id
-        ):
+        if user_id not in (order.buyer_id, order.seller_id):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="无权操作此订单"
             )
-        if order.status in (
-                "completed",
-                "cancelled"
-        ):
+        if order.status in ("completed", "cancelled"):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="当前订单不能设置交易安排"
             )
-        if order.meeting_time is not None:
-            six_hours_later = (
-                    now + datetime.timedelta(hours=1)
-            )
-            if order.meeting_time <= six_hours_later:
 
-                if meeting_location != order.meeting_location:
-                    raise HTTPException(
-                        status_code=status.HTTP_400_BAD_REQUEST,
-                        detail="距离交易时间不足1小时，不能修改交易地点"
-                    )
+        if order.meeting_time is not None:
+            # 内容没变化：直接返回，不重置双方的确认状态
+            if (order.meeting_time == meeting_time
+                    and order.meeting_location == meeting_location):
+                return {
+                    "code": 200,
+                    "message": "交易安排未变化",
+                    "data": {
+                        "order_id": order.id,
+                        "meeting_time": order.meeting_time,
+                        "meeting_location": order.meeting_location,
+                        "buyer_meeting_confirmed": order.buyer_meeting_confirmed,
+                        "seller_meeting_confirmed": order.seller_meeting_confirmed,
+                        "confirmed": bool(
+                            order.buyer_meeting_confirmed
+                            and order.seller_meeting_confirmed
+                        )
+                    }
+                }
+            # 距离交易不足1小时：时间和地点都禁止修改
+            if order.meeting_time <= now + datetime.timedelta(hours=1):
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="距离交易时间不足1小时，不能修改交易时间或地点"
+                )
+
+        old_time, old_location = order.meeting_time, order.meeting_location
         order.meeting_time = meeting_time
         order.meeting_location = meeting_location
         order.buyer_meeting_confirmed = False
@@ -657,9 +665,9 @@ async def set_meting(user_id:int,order_id:int,meeting_time:datetime.datetime,mee
         await session.commit()
         await session.refresh(order)
         logger.info(
-            "交易安排设置成功 order_id=%s user_id=%s",
-            order.id,
-            user_id
+            "交易安排设置成功 order_id=%s user_id=%s old_time=%s new_time=%s old_location=%s new_location=%s",
+            order.id, user_id, old_time, order.meeting_time,
+            old_location, order.meeting_location
         )
         return {
             "code": 200,
@@ -668,12 +676,8 @@ async def set_meting(user_id:int,order_id:int,meeting_time:datetime.datetime,mee
                 "order_id": order.id,
                 "meeting_time": order.meeting_time,
                 "meeting_location": order.meeting_location,
-                "buyer_meeting_confirmed": (
-                    order.buyer_meeting_confirmed
-                ),
-                "seller_meeting_confirmed": (
-                    order.seller_meeting_confirmed
-                ),
+                "buyer_meeting_confirmed": order.buyer_meeting_confirmed,
+                "seller_meeting_confirmed": order.seller_meeting_confirmed,
                 "confirmed": False
             }
         }

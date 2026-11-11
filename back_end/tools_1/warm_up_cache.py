@@ -1,18 +1,21 @@
 """ 预热Redis、布隆过滤器 """
-import asyncio,json,random
-from pybloom_live import ScalableBloomFilter
-from database_1.mysql_config import async_session_maker
-from modles_1.products import Product
-from sqlalchemy import select
-from tools_1.add_ttl_for_products import make_products_ttl
-from modles_1.category import Category
-from sqlalchemy.orm import selectinload
-from tools_1.product_serializer import build_product_detail
-from fastapi.encoders import jsonable_encoder
-from modles_1.user import User
-from tools_1.product_cache_version import get_product_cache_version
-from tools_1.logger import get_logger
+import asyncio
+import json
+import random
 
+from database_1.mysql_config import async_session_maker
+from fastapi.encoders import jsonable_encoder
+from modles_1.category import Category
+from modles_1.products import Product
+from modles_1.user import User
+from pybloom_live import ScalableBloomFilter
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
+
+from tools_1.add_ttl_for_products import make_products_ttl
+from tools_1.logger import get_logger
+from tools_1.product_cache_version import get_product_cache_version
+from tools_1.product_serializer import build_product_detail
 
 mysql_logger = get_logger(__name__, "mysql")
 redis_logger = get_logger(__name__, "redis")
@@ -146,7 +149,7 @@ def list_cache_key(
 
 async def warming_up_products_list(redis,page_size:int) -> None:
     """ 预热首页前1~5页列表 """
-    from crud_1.produces import get_products_list_from_mysql # 局部导入 防止冲突
+    from crud_1.produces import get_products_list_from_mysql  # 局部导入 防止冲突
     MAX_CACHE_PAGE = 5 # 只存前5页
     MAX_CACHE_PAGE_SIZE = 50 # page_size上限
 

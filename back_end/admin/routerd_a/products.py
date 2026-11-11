@@ -1,12 +1,16 @@
 """管理员管理商品接口"""
-from fastapi import APIRouter,Query,Depends
-from admin.curd_a.products import get_all_products,review_product,change_product_status
-from admin.curd_a.admins import get_admin_info
 from typing import Any
-from admin.shemas_a.products import ProductReviewRequest,ProductStatusRequest
+
 from database_1.redis_config import get_redis
+from fastapi import APIRouter, Depends, Query
 
-
+from admin.curd_a.admins import get_admin_info
+from admin.curd_a.products import (
+    change_product_status,
+    get_all_products,
+    review_product,
+)
+from admin.shemas_a.products import ProductReviewRequest, ProductStatusRequest
 
 admin_product = APIRouter()
 

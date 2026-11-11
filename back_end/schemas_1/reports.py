@@ -1,5 +1,6 @@
 """举报接口模型类"""
-from pydantic import BaseModel,Field
+from pydantic import BaseModel, Field
+
 
 class ReportCreate(BaseModel):
     target_type:str

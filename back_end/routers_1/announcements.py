@@ -1,8 +1,9 @@
 """公告接口"""
 from typing import Any
+
 from crud_1.announcements import get_announcements
-from fastapi import APIRouter, Depends
 from database_1.redis_config import get_redis
+from fastapi import APIRouter, Depends
 from tools_1.limit import ip_rate_limit
 
 announcements = APIRouter()

@@ -2,18 +2,17 @@
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
 
 from sqlalchemy import (
     BigInteger,
-    String,
-    Numeric,
+    Boolean,
     DateTime,
     Enum,
     ForeignKey,
-    Boolean,
+    Index,
+    Numeric,
+    String,
     func,
-    Index
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -80,12 +79,12 @@ class Order(Base):
     # 交易安排
     # =========================
 
-    meeting_location: Mapped[Optional[str]] = mapped_column(
+    meeting_location: Mapped[str | None] = mapped_column(
         String(100),
         nullable=True
     )
 
-    meeting_time: Mapped[Optional[datetime]] = mapped_column(
+    meeting_time: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )
@@ -100,22 +99,22 @@ class Order(Base):
         server_default=func.current_timestamp()
     )
 
-    completed_at: Mapped[Optional[datetime]] = mapped_column(
+    completed_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )
 
-    cancelled_at: Mapped[Optional[datetime]] = mapped_column(
+    cancelled_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )
 
-    received_at: Mapped[Optional[datetime]] = mapped_column(
+    received_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )
 
-    auto_receive_at: Mapped[Optional[datetime]] = mapped_column(
+    auto_receive_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )

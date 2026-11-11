@@ -1,14 +1,18 @@
 """客户端 IP 省份解析、缓存和商品发布地回填。"""
 
 import ipaddress
+from database_1.mysql_config import async_engine, async_session_maker
 from sqlalchemy import or_, select, text
 from sqlalchemy.orm import joinedload
-from database_1.mysql_config import async_engine, async_session_maker
 from tools_1.add_ip_data_to_memory import search_ip_region
 from tools_1.logger import get_logger
 
 
+
 logger = get_logger(__name__, "python")
+
+
+
 
 UNKNOWN_REGION = "未知"
 REGION_CACHE_PREFIX = "ip:region:v2:"
@@ -66,8 +70,8 @@ async def get_ip_province(redis, ip: str | None) -> str:
 
 
 async def ensure_product_region_schema() -> None:
-    """兼容当前没有迁移框架的部署，首次启动时补充商品发布省份列。"""
-    async with async_engine.begin() as connection:
+    """启动时只检查 products.publish_province 列是否存在，不再自动改表。"""
+    async with async_engine.connect() as connection:
         exists = (
             await connection.execute(
                 text(
@@ -82,17 +86,12 @@ async def ensure_product_region_schema() -> None:
             )
         ).scalar_one()
 
-        if not exists:
-            await connection.execute(
-                text(
-                    """
-                    ALTER TABLE products
-                    ADD COLUMN publish_province VARCHAR(50) NULL
-                    AFTER campus
-                    """
-                )
-            )
-            logger.info("products.publish_province 字段已创建")
+    if not exists:
+        logger.error("products.publish_province 列不存在")
+        raise RuntimeError(
+            "数据库缺少 products.publish_province 列，请手动执行："
+            "ALTER TABLE products ADD COLUMN publish_province VARCHAR(50) NULL AFTER campus;"
+        )
 
 
 async def backfill_product_publish_provinces(redis) -> None:

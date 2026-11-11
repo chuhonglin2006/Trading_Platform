@@ -1,12 +1,24 @@
 """订单接口"""
-from fastapi import APIRouter, Depends, BackgroundTasks, Body
-from crud_1.orders import create_order,get_my_orders,get_order_info,get_my_sales,cancel_order,buyer_confirmation,seller_confirmed,\
-sale_statistics,get_meting,set_meting,confirm_meting
-from crud_1.users import get_user_info
 from typing import Any
-from tools_1.email import send_cancel_notification,send_new_order_notification
-from schemas_1.orders import MeetingRequest
+
+from crud_1.orders import (
+    buyer_confirmation,
+    cancel_order,
+    confirm_meting,
+    create_order,
+    get_meting,
+    get_my_orders,
+    get_my_sales,
+    get_order_info,
+    sale_statistics,
+    seller_confirmed,
+    set_meting,
+)
+from crud_1.users import get_user_info
 from database_1.redis_config import get_redis
+from fastapi import APIRouter, BackgroundTasks, Body, Depends
+from schemas_1.orders import MeetingRequest
+from tools_1.email import send_cancel_notification, send_new_order_notification
 
 order = APIRouter()
 

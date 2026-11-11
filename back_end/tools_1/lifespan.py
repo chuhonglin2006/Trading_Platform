@@ -2,26 +2,26 @@
 
 import asyncio
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
-from sqlalchemy import text
+from tools_1.db_init import init_database_if_empty
 from database_1.mysql_config import async_engine
 from database_1.redis_config import redis_close, redis_content
+from fastapi import FastAPI
+from sqlalchemy import text
+from tools_1.add_ip_data_to_memory import init_ip_region_searcher
+from tools_1.disk_monitor import disk_monitor_loop
 from tools_1.flush_view_counts import flush_view_counts, view_count_flush_loop
+from tools_1.ip_region import (
+    backfill_product_publish_provinces,
+    ensure_product_region_schema,
+)
 from tools_1.logger import get_logger
 from tools_1.order_auto_receive_loop import order_auto_receive_loop
 from tools_1.warm_up_cache import warming_blooms_main, warming_redis_main
-from tools_1.ip_region import backfill_product_publish_provinces,ensure_product_region_schema
-from tools_1.add_ip_data_to_memory import init_ip_region_searcher
-from tools_1.disk_monitor import disk_monitor_loop
-
 
 
 app_logger = get_logger(__name__, "python")
 redis_logger = get_logger(__name__, "redis")
 mysql_logger = get_logger(__name__, "mysql")
-
-
-
 
 
 
@@ -52,6 +52,8 @@ async def lifespan(app: FastAPI):
         except Exception:
             mysql_logger.exception("MySQL连接失败")
             raise
+
+        await init_database_if_empty()
 
         await ensure_product_region_schema()
         region_task = asyncio.create_task(

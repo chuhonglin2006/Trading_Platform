@@ -10,6 +10,7 @@ import TradeSafetyDialog from '../components/TradeSafetyDialog.vue'
 import { productsApi } from '../api/products'
 import { reportsApi } from '../api/reports'
 import { formatDateTime } from '../utils/format'
+import { getApiErrorMessage } from '../utils/apiError'
 
 const props = defineProps({
   id: {
@@ -338,11 +339,7 @@ async function loadProductDetail(productId) {
       error
     )
 
-    loadError.value =
-      error?.response?.data?.detail ||
-      error?.response?.data?.message ||
-      error?.message ||
-      '商品不存在或暂时无法加载'
+    loadError.value = getApiErrorMessage(error, '商品不存在或暂时无法加载')
   } finally {
     loading.value = false
   }
@@ -611,12 +608,7 @@ async function toggleFav() {
       error
     )
 
-    show(
-      error?.response?.data?.detail ||
-      error?.response?.data?.message ||
-      error?.message ||
-      '收藏操作失败'
-    )
+    show(getApiErrorMessage(error, '收藏操作失败'))
   }
 }
 
@@ -734,16 +726,8 @@ async function submitReport() {
       error
     )
 
-    const detail =
-      error?.response?.data?.detail ||
-      error?.response?.data?.message ||
-      error?.message ||
-      '举报提交失败，请稍后重试'
+    reportError.value = getApiErrorMessage(error, '举报提交失败，请稍后重试')
 
-    reportError.value =
-      typeof detail === 'string'
-        ? detail
-        : '举报提交失败，请稍后重试'
   } finally {
     reportSubmitting.value = false
   }

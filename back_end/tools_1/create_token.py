@@ -1,13 +1,14 @@
 """生成用户登录token"""
-from datetime import datetime,timezone,timedelta
-from typing import Any
-from jose import jwt
-from fastapi import HTTPException,status
 import os
-from dotenv import load_dotenv
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from tools_1.logger import get_logger
+from typing import Any
 
+from dotenv import load_dotenv
+from fastapi import HTTPException, status
+from jose import jwt
+
+from tools_1.logger import get_logger
 
 logger = get_logger(__name__, "python")
 
@@ -33,7 +34,7 @@ def create_token(data:dict) -> str:
     :return:token
     """
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes = ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(UTC) + timedelta(minutes = ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=str(ALGORITHM))
 
@@ -46,9 +47,9 @@ def decode_token(token:str) -> dict[str, Any]:
     try:
         payload = jwt.decode(token,SECRET_KEY,algorithms = [ALGORITHM])
         return payload
-    except Exception:
+    except Exception:  # noqa: BLE001
         logger.warning("Token解码失败或已过期")
-        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED,
+        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED,  # noqa: B904
                             detail='token无效或已过期')
 
 

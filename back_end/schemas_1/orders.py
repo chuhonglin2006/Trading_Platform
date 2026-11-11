@@ -1,6 +1,8 @@
 """订单模型类"""
-from pydantic import BaseModel
 from datetime import datetime
+
+from pydantic import BaseModel
+
 
 class CreateOrderRequest(BaseModel):
     product_id: int

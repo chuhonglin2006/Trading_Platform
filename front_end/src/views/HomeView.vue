@@ -5,6 +5,7 @@ import { useMarketStore } from '../stores/market'
 import { useUserStore } from '../stores/user'
 import { ICON_SEARCH } from '../utils/icons'
 import ProductCard from '../components/ProductCard.vue'
+import { getApiErrorMessage } from '../utils/apiError'
 
 const router = useRouter()
 const marketStore = useMarketStore()

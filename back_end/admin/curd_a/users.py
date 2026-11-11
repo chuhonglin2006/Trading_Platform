@@ -1,12 +1,12 @@
 """管理员后台用户函数"""
 from typing import Any
-from sqlalchemy import select,func,or_
-from fastapi import HTTPException,status
-from database_1.mysql_config import async_session_maker
-from modles_1.user import User
-from crud_1.users import invalidate_user
-from tools_1.logger import get_logger
 
+from crud_1.users import invalidate_user
+from database_1.mysql_config import async_session_maker
+from fastapi import HTTPException, status
+from modles_1.user import User
+from sqlalchemy import func, or_, select
+from tools_1.logger import get_logger
 
 logger = get_logger(__name__, "python")
 
@@ -98,47 +98,46 @@ async def update_user_status(redis,user_id: int,new_status: str) -> dict[str, An
             detail="用户状态不合法"
         )
 
-    async with async_session_maker() as session:
-        async with session.begin():
-            user = (
-                await session.execute(
-                    select(User)
-                    .where(User.id == user_id)
-                    .with_for_update()
-                )
-            ).scalar_one_or_none()
+    async with async_session_maker() as session, session.begin():
+        user = (
+            await session.execute(
+                select(User)
+                .where(User.id == user_id)
+                .with_for_update()
+            )
+        ).scalar_one_or_none()
 
-            if user is None:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail="用户不存在"
-                )
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="用户不存在"
+            )
 
-            if user.status == new_status:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="用户已处于该状态"
-                )
+        if user.status == new_status:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="用户已处于该状态"
+            )
 
-            user.status = new_status
-            # 后台手动封禁是永久封禁，解封也要清空封禁截止时间
-            user.banned_until = None
+        user.status = new_status
+        # 后台手动封禁是永久封禁，解封也要清空封禁截止时间
+        user.banned_until = None
 
-            # 在块里面先把结果组装好，提交之后属性可能已过期，不能再读 user
-            response = {
-                "code": 200,
-                "message": (
-                    "用户封禁成功"
-                    if new_status == "banned"
-                    else "用户解封成功"
-                ),
-                "data": {
-                    "id": user.id,
-                    "username": user.username,
-                    "status": user.status,
-                    "banned_until": None
-                }
+        # 在块里面先把结果组装好，提交之后属性可能已过期，不能再读 user
+        response = {
+            "code": 200,
+            "message": (
+                "用户封禁成功"
+                if new_status == "banned"
+                else "用户解封成功"
+            ),
+            "data": {
+                "id": user.id,
+                "username": user.username,
+                "status": user.status,
+                "banned_until": None
             }
+        }
         # 走到这里，事务已经提交
 
     # 提交成功之后清用户缓存

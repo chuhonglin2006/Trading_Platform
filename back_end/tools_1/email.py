@@ -1,13 +1,14 @@
 """邮件发送模块"""
 import os
 import smtplib
-from pathlib import Path
-from email.mime.text import MIMEText
 from email.header import Header
+from email.mime.text import MIMEText
+from pathlib import Path
+
 from dotenv import load_dotenv
 from fastapi import HTTPException, status
-from tools_1.logger import get_logger
 
+from tools_1.logger import get_logger
 
 logger = get_logger(__name__, "python")
 
@@ -36,7 +37,7 @@ def send_email(user_email: str,content: str,subject: str = "二手交易网站")
         with smtplib.SMTP_SSL(EMAIL_HOST,EMAIL_PORT,timeout=15) as smtp:
             smtp.login(EMAIL_ADDRESS,EMAIL_AUTH_CODE)
             smtp.sendmail(EMAIL_ADDRESS,[user_email],msg.as_string())
-    except Exception as e:
+    except Exception:
         logger.exception(
             "邮件发送失败 host=%s port=%s",
             EMAIL_HOST,

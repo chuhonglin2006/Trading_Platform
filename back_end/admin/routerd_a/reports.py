@@ -1,11 +1,18 @@
 """管理员界面举报接口"""
-from fastapi import APIRouter,Depends
-from admin.curd_a.reports import get_all_reports,get_report_info
-from admin.curd_a.admins import get_admin_info
 from typing import Any
-from admin.shemas_a.reports import ReportHandleRequest, ReportRejectRequest
-from admin.curd_a.reports import handle_report, reject_report
+
 from database_1.redis_config import get_redis
+from fastapi import APIRouter, Depends
+
+from admin.curd_a.admins import get_admin_info
+from admin.curd_a.reports import (
+    get_all_reports,
+    get_report_info,
+    handle_report,
+    reject_report,
+)
+from admin.shemas_a.reports import ReportHandleRequest, ReportRejectRequest
+
 admin_reports = APIRouter()
 
 

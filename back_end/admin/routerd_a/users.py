@@ -1,10 +1,12 @@
 """管理员界面用户接口"""
-from admin.curd_a.users import get_all_user,update_user_status
-from fastapi import APIRouter,Depends,Query
-from admin.curd_a.admins import get_admin_info
 from typing import Any
-from admin.shemas_a.users import UserStatusRequest
+
 from database_1.redis_config import get_redis
+from fastapi import APIRouter, Depends, Query
+
+from admin.curd_a.admins import get_admin_info
+from admin.curd_a.users import get_all_user, update_user_status
+from admin.shemas_a.users import UserStatusRequest
 
 admin_user = APIRouter()
 

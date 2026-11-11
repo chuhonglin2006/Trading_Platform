@@ -1,8 +1,10 @@
 """管理员界面数据总预览接口"""
-from fastapi import APIRouter,Depends
-from admin.curd_a.overview import get_all_data
-from admin.curd_a.admins import get_admin_info
 from typing import Any
+
+from fastapi import APIRouter, Depends
+
+from admin.curd_a.admins import get_admin_info
+from admin.curd_a.overview import get_all_data
 
 admin_overview = APIRouter()
 

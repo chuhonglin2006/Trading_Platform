@@ -1,19 +1,31 @@
 """商品接口"""
-from typing import Any
-from crud_1.produces import get_products_list_cache,get_product_info_from_cache,publish_produce,search_product_from_cache,get_my_products,\
-favorite_produce,unfavorite_produce,get_my_favorite,get_products_category,get_others_products,delete_my_product,\
-change_my_product,mark_as_sold,get_my_product_info
-from fastapi import APIRouter,Query,Form,Depends,File,UploadFile
 from decimal import Decimal
-from crud_1.users import get_user_info,get_optional_user_info
-from schemas_1.products import ProductUpdate
+from typing import Any
+
+from crud_1.produces import (
+    change_my_product,
+    delete_my_product,
+    favorite_produce,
+    get_my_favorite,
+    get_my_product_info,
+    get_my_products,
+    get_others_products,
+    get_product_info_from_cache,
+    get_products_category,
+    get_products_list_cache,
+    mark_as_sold,
+    publish_produce,
+    search_product_from_cache,
+    unfavorite_produce,
+)
+from crud_1.users import get_optional_user_info, get_user_info
 from database_1.redis_config import get_redis
-from fastapi import Request
+from fastapi import APIRouter, Depends, File, Form, Query, Request, UploadFile
 from modles_1.user import User
-from tools_1.limit import ip_rate_limit
+from schemas_1.products import ProductUpdate
 from tools_1.client_ip import get_client_ip
 from tools_1.ip_region import get_ip_province
-
+from tools_1.limit import ip_rate_limit
 
 products = APIRouter()
 

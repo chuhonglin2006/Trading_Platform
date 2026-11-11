@@ -1,5 +1,6 @@
 """商品路由的模型类"""
 from decimal import Decimal
+
 from pydantic import BaseModel
 
 

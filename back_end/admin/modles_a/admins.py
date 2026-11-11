@@ -1,10 +1,10 @@
 """管理员数据库模型"""
 
 from datetime import datetime
-from typing import Optional
-from sqlalchemy import BigInteger, String, DateTime, Enum, text
-from sqlalchemy.orm import Mapped, mapped_column
+
 from modles_1.base import Base
+from sqlalchemy import BigInteger, DateTime, Enum, String, text
+from sqlalchemy.orm import Mapped, mapped_column
 
 
 class Admin(Base):
@@ -37,12 +37,12 @@ class Admin(Base):
         server_default=text("'normal'")
     )
 
-    last_login_ip: Mapped[Optional[str]] = mapped_column(
+    last_login_ip: Mapped[str | None] = mapped_column(
         String(45),
         nullable=True
     )
 
-    last_login_at: Mapped[Optional[datetime]] = mapped_column(
+    last_login_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )

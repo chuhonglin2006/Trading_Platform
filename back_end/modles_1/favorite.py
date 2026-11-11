@@ -1,10 +1,12 @@
 """收藏模型类"""
-from sqlalchemy.orm import Mapped,mapped_column
-from sqlalchemy import BigInteger,DateTime,func,ForeignKey,UniqueConstraint
 from datetime import datetime
+
+from sqlalchemy import BigInteger, DateTime, ForeignKey, UniqueConstraint, func
+from sqlalchemy.orm import Mapped, mapped_column
+
 from modles_1.base import Base
-from modles_1.user import User
 from modles_1.products import Product
+from modles_1.user import User
 
 
 class Favorite(Base):

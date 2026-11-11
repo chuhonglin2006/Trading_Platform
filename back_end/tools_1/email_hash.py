@@ -1,9 +1,10 @@
 """ Redis中邮箱加密 """
-import hmac,hashlib,os
+import hashlib
+import hmac
+import os
 from pathlib import Path
+
 from dotenv import load_dotenv
-
-
 
 load_dotenv(Path(__file__).resolve().parent.parent / "keys.env")
 

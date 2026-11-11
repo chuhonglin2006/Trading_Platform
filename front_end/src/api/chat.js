@@ -9,9 +9,10 @@ export const chatApi = {
     })
   },
 
-  getMessages(conversationId) {
+  getMessages(conversationId, params = {}) {
     return request.get(
-      `/chat/conversations/${conversationId}/messages`
+    `/chat/conversations/${conversationId}/messages`,
+    { params }
     )
   },
 

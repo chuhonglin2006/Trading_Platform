@@ -2,26 +2,25 @@
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional
 
 from sqlalchemy import (
     BigInteger,
-    String,
-    Text,
-    Numeric,
-    Integer,
     DateTime,
     Enum,
     ForeignKey,
+    Index,
+    Integer,
+    Numeric,
+    String,
+    Text,
     func,
-    Index
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from modles_1.base import Base
-from modles_1.user import User
 from modles_1.category import Category
 from modles_1.product_image import ProductImage
+from modles_1.user import User
 
 
 class Product(Base):
@@ -62,12 +61,12 @@ class Product(Base):
         nullable=False
     )
 
-    original_price: Mapped[Optional[Decimal]] = mapped_column(
+    original_price: Mapped[Decimal | None] = mapped_column(
         Numeric(10, 2),
         nullable=True
     )
 
-    description: Mapped[Optional[str]] = mapped_column(
+    description: Mapped[str | None] = mapped_column(
         Text,
         nullable=True
     )
@@ -84,12 +83,12 @@ class Product(Base):
         default=0
     )
 
-    campus: Mapped[Optional[str]] = mapped_column(
+    campus: Mapped[str | None] = mapped_column(
         String(50),
         nullable=True
     )
 
-    publish_province: Mapped[Optional[str]] = mapped_column(
+    publish_province: Mapped[str | None] = mapped_column(
         String(50),
         nullable=True
     )
@@ -107,7 +106,7 @@ class Product(Base):
         onupdate=func.current_timestamp()
     )
 
-    sold_at: Mapped[Optional[datetime]] = mapped_column(
+    sold_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )
@@ -135,18 +134,18 @@ class Product(Base):
         default="pending"
     )
 
-    review_reason: Mapped[Optional[str]] = mapped_column(
+    review_reason: Mapped[str | None] = mapped_column(
         String(500),
         nullable=True
     )
 
-    reviewed_by: Mapped[Optional[int]] = mapped_column(
+    reviewed_by: Mapped[int | None] = mapped_column(
         BigInteger,
         ForeignKey("admins.id"),
         nullable=True
     )
 
-    reviewed_at: Mapped[Optional[datetime]] = mapped_column(
+    reviewed_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )

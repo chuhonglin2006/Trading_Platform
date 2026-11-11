@@ -1,12 +1,12 @@
 """管理员公告管理接口函数"""
 
 from typing import Any
+
 from crud_1.announcements import invalidate_announcements
+from database_1.mysql_config import async_session_maker
 from fastapi import HTTPException, status
 from sqlalchemy import text
-from database_1.mysql_config import async_session_maker
 from tools_1.logger import get_logger
-
 
 logger = get_logger(__name__, "python")
 

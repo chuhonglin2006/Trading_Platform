@@ -2,16 +2,9 @@
 
 from datetime import datetime
 
-from sqlalchemy import (
-    BigInteger,
-    String,
-    Text,
-    Boolean,
-    DateTime,
-    ForeignKey,
-    Index
-)
+from sqlalchemy import BigInteger, Boolean, DateTime, ForeignKey, Index, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from modles_1.base import Base
 
 

@@ -6,6 +6,7 @@ import { useMarketStore } from '../stores/market'
 import { useToast } from '../composables/useToast'
 import { ICON_FLAG, ICON_BOX } from '../utils/icons'
 import ProductCard from '../components/ProductCard.vue'
+import { getApiErrorMessage } from '../utils/apiError'
 
 const props = defineProps({
   id: {
@@ -175,10 +176,7 @@ async function loadSeller() {
       error
     )
 
-    loadError.value =
-      error?.response?.data?.detail ||
-      error?.message ||
-      '卖家信息加载失败'
+    loadError.value = getApiErrorMessage(error, '卖家信息加载失败')
 
     sellerProducts.value = []
 
@@ -291,10 +289,7 @@ async function submitReport() {
     )
 
   } catch (error) {
-    reportError.value =
-      error?.response?.data?.detail ||
-      error?.message ||
-      '举报提交失败'
+    reportError.value = getApiErrorMessage(error, '举报提交失败')
 
   } finally {
     reporting.value = false

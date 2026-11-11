@@ -1,27 +1,27 @@
 """校园二手交易平台主文件"""
 import os,time,uuid,uvicorn
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from routers_1.user import user
-from routers_1.products import products
-from routers_1.announcements import announcements
-from routers_1.orders import order
-from routers_1.reports import report
-from routers_1.chat import chat
-from admin.routerd_a.admins import admin
 from pathlib import Path
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse
-from admin.routerd_a.users import admin_user
-from admin.routerd_a.products import admin_product
+from admin.routerd_a.admins import admin
+from admin.routerd_a.announcements import admin_announcement
 from admin.routerd_a.orders import admin_order
 from admin.routerd_a.overview import admin_overview
+from admin.routerd_a.products import admin_product
 from admin.routerd_a.reports import admin_reports
-from admin.routerd_a.announcements import admin_announcement
+from admin.routerd_a.users import admin_user
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from routers_1.announcements import announcements
+from routers_1.chat import chat
+from routers_1.orders import order
+from routers_1.products import products
+from routers_1.reports import report
+from routers_1.user import user
+from tools_1.client_ip import get_client_ip
+from tools_1.image_storage import IMAGE_DIR
 from tools_1.lifespan import lifespan
 from tools_1.logger import configure_uvicorn_logging, get_logger
-from tools_1.image_storage import IMAGE_DIR
-from tools_1.client_ip import get_client_ip
 
 
 logger = get_logger(__name__, "python")

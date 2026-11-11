@@ -1,14 +1,13 @@
 """用户模型类"""
 
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy import (
     BigInteger,
-    String,
-    Integer,
     DateTime,
     Enum,
+    Integer,
+    String,
     func,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -48,7 +47,7 @@ class User(Base):
         unique=True
     )
 
-    campus: Mapped[Optional[str]] = mapped_column(
+    campus: Mapped[str | None] = mapped_column(
         String(50),
         nullable=True,
         default="关山校区"
@@ -67,12 +66,12 @@ class User(Base):
         default=100
     )
 
-    register_ip: Mapped[Optional[str]] = mapped_column(
+    register_ip: Mapped[str | None] = mapped_column(
         String(45),
         nullable=True
     )
 
-    last_login_ip: Mapped[Optional[str]] = mapped_column(
+    last_login_ip: Mapped[str | None] = mapped_column(
         String(45),
         nullable=True
     )
@@ -89,7 +88,7 @@ class User(Base):
         nullable=False
     )
 
-    last_login_at: Mapped[Optional[datetime]] = mapped_column(
+    last_login_at: Mapped[datetime | None] = mapped_column(
         DateTime,
         nullable=True
     )

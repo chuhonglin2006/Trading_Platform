@@ -1,8 +1,10 @@
 """管理界面订单接口"""
-from admin.curd_a.orders import all_orders,get_order_info
-from fastapi import APIRouter,Query,Depends
-from admin.curd_a.admins import get_admin_info
 from typing import Any
+
+from fastapi import APIRouter, Depends, Query
+
+from admin.curd_a.admins import get_admin_info
+from admin.curd_a.orders import all_orders, get_order_info
 
 admin_order = APIRouter()
 

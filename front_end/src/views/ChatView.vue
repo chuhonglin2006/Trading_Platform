@@ -43,6 +43,7 @@
       @scroll="handleScroll"
     >
       <!-- 加载 -->
+      <div v-if="loadingMore" class="loading">加载更早消息...</div>
       <div v-if="loading && messages.length === 0" class="loading">
         正在加载消息...
       </div>
@@ -210,6 +211,8 @@ const router = useRouter()
 */
 
 const messages = ref([])
+const hasMore = ref(false)
+const loadingMore = ref(false)
 
 const loading = ref(false)
 const sending = ref(false)
@@ -870,6 +873,7 @@ async function loadMessages(scrollToEnd = false) {
     }
 
     messages.value = normalizeMessages(list)
+    hasMore.value = Boolean(result?.has_more)
 
     /*
      * 获取对方名字
@@ -900,6 +904,47 @@ async function loadMessages(scrollToEnd = false) {
     )
   } finally {
     loading.value = false
+  }
+}
+
+async function loadOlderMessages() {
+  if (loadingMore.value || !hasMore.value || !conversationId.value) return
+
+  // 只取已保存到数据库的消息 id，跳过发送中的临时消息
+  const oldest = messages.value.find(m => Number.isInteger(m.id))
+  if (!oldest) return
+
+  const container = messageContainer.value
+  loadingMore.value = true
+
+  try {
+    const result = await chatApi.getMessages(conversationId.value, {
+      before_id: oldest.id,
+      limit: 50,
+    })
+    const list = Array.isArray(result?.data) ? result.data : []
+    hasMore.value = Boolean(result?.has_more)
+
+    const older = normalizeMessages(list)
+    const existing = new Set(messages.value.map(m => m.id))
+    const fresh = older.filter(m => !existing.has(m.id))
+
+    // 记录当前滚动位置，加载后保持视线不跳动
+    const prevHeight = container?.scrollHeight || 0
+    const prevTop = container?.scrollTop || 0
+
+    messages.value = [...fresh, ...messages.value]
+
+    await nextTick()
+    if (container) {
+      container.style.scrollBehavior = 'auto'   // 关掉平滑滚动，否则会"滑"一下
+      container.scrollTop = container.scrollHeight - prevHeight + prevTop
+      container.style.scrollBehavior = ''
+    }
+  } catch (error) {
+    console.error('加载更早消息失败:', error)
+  } finally {
+    loadingMore.value = false
   }
 }
 
@@ -1324,6 +1369,11 @@ function handleScroll() {
 
   showScrollBottom.value =
     distance > 200
+
+      // 滚到顶部附近，加载更早的消息
+      if (container.scrollTop < 60) {
+        loadOlderMessages()
+      }
 }
 
 /*

@@ -6,6 +6,7 @@ import { useMarketStore } from '../stores/market'
 import { useToast } from '../composables/useToast'
 import { authApi } from '../api/auth'
 import ImageCaptcha from '../components/ImageCaptcha.vue'
+import { getApiErrorMessage } from '../utils/apiError'
 
 const router = useRouter()
 const route = useRoute()
@@ -127,11 +128,7 @@ async function sendCode() {
     show(result.message || '验证码发送成功')
 
   } catch (err) {
-    console.error('发送验证码失败:', err)
-
-    error.value =
-      err.response?.data?.detail ||
-      '验证码发送失败，请稍后重试'
+    error.value = getApiErrorMessage(err, '验证码发送失败，请稍后重试')
 
   } finally {
     sendingCode.value = false
@@ -210,12 +207,7 @@ async function submit() {
       await goAfterAuth()
 
     } catch (err) {
-      console.error('注册失败:', err)
-
-      error.value =
-        err.response?.data?.detail ||
-        err.message ||
-        '注册失败，请稍后重试'
+      error.value = getApiErrorMessage(err, '注册失败，请稍后重试')
 
     } finally {
       submitting.value = false
@@ -268,12 +260,7 @@ async function submit() {
     await goAfterAuth()
 
   } catch (err) {
-    console.error('登录失败:', err)
-
-    error.value =
-      err.response?.data?.detail ||
-      err.message ||
-      '邮箱或密码错误'
+    error.value = getApiErrorMessage(err, '邮箱或密码错误')
 
   } finally {
     submitting.value = false

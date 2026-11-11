@@ -1,5 +1,6 @@
 """ 将商品信息转为公共的字典信息 """
 from fastapi.encoders import jsonable_encoder
+
 from tools_1.uload_image_to_server import normalize_image_url
 
 

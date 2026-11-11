@@ -3,12 +3,11 @@
 import asyncio
 import uuid
 
-from sqlalchemy import func, select, update
-
 from database_1.mysql_config import async_session_maker
 from modles_1.products import Product
-from tools_1.logger import get_logger
+from sqlalchemy import func, select, update
 
+from tools_1.logger import get_logger
 
 redis_logger = get_logger(__name__, "redis")
 mysql_logger = get_logger(__name__, "mysql")

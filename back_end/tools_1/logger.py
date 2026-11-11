@@ -4,7 +4,6 @@ from logging import Formatter, Logger, getLogger
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-
 LOG_DIR = Path(__file__).resolve().parent.parent / "Log"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 

@@ -1,8 +1,7 @@
 """管理商品接口模型类"""
 from typing import Literal
+
 from pydantic import BaseModel, Field
-
-
 
 
 class ProductReviewRequest(BaseModel):

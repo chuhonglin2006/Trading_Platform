@@ -840,6 +840,8 @@ import {
   orderStatusText
 } from '../constants/status'
 
+import { getApiErrorMessage } from '../utils/apiError'
+
 
 const route = useRoute()
 
@@ -1217,11 +1219,7 @@ async function loadOrder() {
     )
 
 
-    error.value =
-      err?.response?.data?.detail ||
-      err?.response?.data?.message ||
-      err?.message ||
-      '获取订单详情失败'
+    error.value = getApiErrorMessage(err, '获取订单详情失败')
 
   } finally {
 
@@ -1551,20 +1549,8 @@ async function handleSetMeeting() {
     )
 
 
-    const detail =
-      err?.response?.data?.detail
-
-    const message =
-      err?.response?.data?.message
-
-
     window.alert(
-
-      detail ||
-      message ||
-      err?.message ||
-      '设置交易安排失败，请稍后重试'
-
+      getApiErrorMessage(err, '设置交易安排失败，请稍后重试')
     )
 
   } finally {
@@ -1737,20 +1723,8 @@ async function handleConfirmMeeting() {
     )
 
 
-    const detail =
-      err?.response?.data?.detail
-
-    const message =
-      err?.response?.data?.message
-
-
     window.alert(
-
-      detail ||
-      message ||
-      err?.message ||
-      '确认交易安排失败，请稍后重试'
-
+      getApiErrorMessage(err, '确认交易安排失败，请稍后重试')
     )
 
   } finally {
@@ -1850,20 +1824,8 @@ async function handleContact() {
     )
 
 
-    const detail =
-      err?.response?.data?.detail
-
-    const message =
-      err?.response?.data?.message
-
-
     window.alert(
-
-      detail ||
-      message ||
-      err?.message ||
-      '进入聊天失败，请稍后重试'
-
+      getApiErrorMessage(err, '进入聊天失败，请稍后重试')
     )
 
   } finally {
@@ -1942,20 +1904,8 @@ async function handleReceiveOrder() {
     )
 
 
-    const detail =
-      err?.response?.data?.detail
-
-    const message =
-      err?.response?.data?.message
-
-
     window.alert(
-
-      detail ||
-      message ||
-      err?.message ||
-      '确认收货失败，请稍后重试'
-
+      getApiErrorMessage(err, '确认收货失败，请稍后重试')
     )
 
   } finally {
@@ -2034,20 +1984,8 @@ async function handleCompleteOrder() {
     )
 
 
-    const detail =
-      err?.response?.data?.detail
-
-    const message =
-      err?.response?.data?.message
-
-
     window.alert(
-
-      detail ||
-      message ||
-      err?.message ||
-      '确认交易完成失败，请稍后重试'
-
+      getApiErrorMessage(err, '确认交易完成失败，请稍后重试')
     )
 
   } finally {
@@ -2131,20 +2069,8 @@ async function handleCancelOrder() {
     )
 
 
-    const detail =
-      err?.response?.data?.detail
-
-    const message =
-      err?.response?.data?.message
-
-
     window.alert(
-
-      detail ||
-      message ||
-      err?.message ||
-      '取消订单失败，请稍后重试'
-
+      getApiErrorMessage(err, '取消订单失败，请稍后重试')
     )
 
   } finally {

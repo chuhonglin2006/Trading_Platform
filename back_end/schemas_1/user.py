@@ -1,13 +1,10 @@
 """用户路由的模型类"""
 from pydantic import BaseModel, EmailStr, Field
 
-
-
-
 """用户登录模型类"""
 class Login(BaseModel):
-    user_email:str
-    password:str
+    user_email: str = Field(min_length=3, max_length=100)
+    password: str = Field(min_length=1, max_length=64)
 
 """发送验证码模型类"""
 class SendCodeRequest(BaseModel):
@@ -17,12 +14,12 @@ class SendCodeRequest(BaseModel):
 
 """用户注册模型类"""
 class Register(BaseModel):
-    username:str
-    student_id:str
-    email:EmailStr
-    code:str = Field(
+    username: str = Field(min_length=1, max_length=50)
+    student_id: str = Field(min_length=9, max_length=9)
+    email: EmailStr
+    code: str = Field(
         min_length=6,
         max_length=6,
         pattern=r"^[0-9]{6}$",
     )
-    password:str
+    password: str = Field(min_length=6, max_length=64)

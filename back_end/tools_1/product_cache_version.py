@@ -2,7 +2,6 @@
 
 from tools_1.logger import get_logger
 
-
 logger = get_logger(__name__, "redis")
 
 PRODUCT_CACHE_VERSION_KEY = "product:cache:version:v2"

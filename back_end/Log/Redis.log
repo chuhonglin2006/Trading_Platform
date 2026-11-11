@@ -1,28 +1,6 @@
-2026-11-10 18:23:40 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=23
-2026-11-10 18:23:56 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=24
-2026-11-10 18:24:32 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=25
-2026-11-10 18:32:43 | INFO     | backend.redis.database_1.redis_config | Redis连接池已关闭
-2026-11-10 18:32:46 | INFO     | backend.redis.database_1.redis_config | Redis连接成功 host=localhost port=6379 max_connections=50
-2026-11-10 18:32:46 | INFO     | backend.redis.tools_1.lifespan | 浏览量刷新后台任务已启动
-2026-11-10 18:32:46 | INFO     | backend.redis.tools_1.warm_up_cache | 商品分类和热门商品缓存预热完成 categories=8 products=0
-2026-11-10 18:32:46 | INFO     | backend.redis.tools_1.warm_up_cache | 商品列表缓存预热完成 pages=1 page_size=20 version=25
-2026-11-10 18:32:46 | INFO     | backend.redis.tools_1.lifespan | Redis缓存预热完成
-2026-11-10 18:44:50 | INFO     | backend.redis.database_1.redis_config | Redis连接池已关闭
-2026-11-10 18:44:51 | INFO     | backend.redis.database_1.redis_config | Redis连接成功 host=localhost port=6379 max_connections=50
-2026-11-10 18:44:51 | INFO     | backend.redis.tools_1.lifespan | 浏览量刷新后台任务已启动
-2026-11-10 18:44:51 | INFO     | backend.redis.tools_1.warm_up_cache | 商品分类和热门商品缓存预热完成 categories=8 products=0
-2026-11-10 18:44:51 | INFO     | backend.redis.tools_1.warm_up_cache | 商品列表缓存预热完成 pages=1 page_size=20 version=25
-2026-11-10 18:44:51 | INFO     | backend.redis.tools_1.lifespan | Redis缓存预热完成
-2026-11-10 18:45:27 | INFO     | backend.redis.database_1.redis_config | Redis连接池已关闭
-2026-11-10 18:45:44 | INFO     | backend.redis.database_1.redis_config | Redis连接成功 host=localhost port=6379 max_connections=50
-2026-11-10 18:45:44 | INFO     | backend.redis.tools_1.lifespan | 浏览量刷新后台任务已启动
-2026-11-10 18:45:44 | INFO     | backend.redis.tools_1.warm_up_cache | 商品分类和热门商品缓存预热完成 categories=8 products=0
-2026-11-10 18:45:44 | INFO     | backend.redis.tools_1.warm_up_cache | 商品列表缓存预热完成 pages=1 page_size=20 version=25
-2026-11-10 18:45:44 | INFO     | backend.redis.tools_1.lifespan | Redis缓存预热完成
-2026-11-10 18:56:16 | INFO     | backend.redis.database_1.redis_config | Redis连接池已关闭
-2026-11-10 18:56:18 | INFO     | backend.redis.database_1.redis_config | Redis连接成功 host=localhost port=6379 max_connections=50
-2026-11-10 18:56:18 | INFO     | backend.redis.tools_1.lifespan | 浏览量刷新后台任务已启动
-2026-11-10 18:56:18 | INFO     | backend.redis.tools_1.warm_up_cache | 商品分类和热门商品缓存预热完成 categories=8 products=0
-2026-11-10 18:56:18 | INFO     | backend.redis.tools_1.warm_up_cache | 商品列表缓存预热完成 pages=1 page_size=20 version=25
-2026-11-10 18:56:18 | INFO     | backend.redis.tools_1.lifespan | Redis缓存预热完成
-2026-11-10 19:22:49 | INFO     | backend.redis.database_1.redis_config | Redis连接池已关闭
+2026-11-11 18:27:59 | INFO     | backend.redis.database_1.redis_config | Redis连接成功 host=localhost port=6379 max_connections=50
+2026-11-11 18:27:59 | INFO     | backend.redis.tools_1.lifespan | 浏览量刷新后台任务已启动
+2026-11-11 18:27:59 | INFO     | backend.redis.tools_1.warm_up_cache | 商品分类和热门商品缓存预热完成 categories=7 products=0
+2026-11-11 18:27:59 | INFO     | backend.redis.tools_1.warm_up_cache | 商品列表缓存预热完成 pages=1 page_size=20 version=133
+2026-11-11 18:27:59 | INFO     | backend.redis.tools_1.lifespan | Redis缓存预热完成
+2026-11-11 18:28:26 | INFO     | backend.redis.database_1.redis_config | Redis连接池已关闭

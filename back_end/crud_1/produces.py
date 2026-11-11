@@ -1,32 +1,51 @@
 """商品接口函数"""
-import datetime,asyncio,json,random,hashlib,copy,uuid
-from typing import Any
-from sqlalchemy import select, func,delete, or_
-from sqlalchemy.orm import selectinload,joinedload
-from modles_1.products import Product
-from database_1.mysql_config import async_session_maker
-from fastapi import HTTPException, status, UploadFile
+import asyncio
+import copy
+import datetime
+import hashlib
+import json
+import random
+import uuid
 from decimal import Decimal
-from tools_1.product_serializer import build_product_detail
-from tools_1.review_product import validate_product
-from tools_1.uload_image_to_server import upload_image,get_image_filename,delete_image,normalize_image_url
-from modles_1.product_image import ProductImage
-from modles_1.favorite import Favorite
+from typing import Any
+
+from cachetools import TTLCache
+from database_1.mysql_config import async_session_maker
+from fastapi import HTTPException, UploadFile, status
+from fastapi.encoders import jsonable_encoder
 from modles_1.category import Category
 from modles_1.chat import ChatConversation, ChatMessage
-from tools_1.get_six_mouth import get_six_months_ago
+from modles_1.favorite import Favorite
 from modles_1.order import Order
-from cachetools import TTLCache
-from fastapi.encoders import jsonable_encoder
-from tools_1.warm_up_cache import list_cache_key,products_bloom
-from tools_1.add_ttl_for_products import make_products_ttl,make_null_ttl,make_state_ttl
+from modles_1.product_image import ProductImage
+from modles_1.products import Product
+from sqlalchemy import delete, func, or_, select
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import joinedload, selectinload
+from tools_1.add_ttl_for_products import (
+    make_null_ttl,
+    make_products_ttl,
+    make_state_ttl,
+)
+from tools_1.get_six_mouth import get_six_months_ago
 from tools_1.limit import check_rate_limit
-from crud_1.users import get_user_cached
-from tools_1.product_cache_version import bump_product_cache_version,get_product_cache_version
 from tools_1.logger import get_logger
+from tools_1.product_cache_version import (
+    bump_product_cache_version,
+    get_product_cache_version,
+)
+from tools_1.product_serializer import build_product_detail
 from tools_1.product_state import status_after_resubmit
+from tools_1.review_product import validate_product
+from tools_1.uload_image_to_server import (
+    delete_image,
+    get_image_filename,
+    normalize_image_url,
+    upload_image,
+)
+from tools_1.warm_up_cache import list_cache_key, products_bloom
 
+from crud_1.users import get_user_cached
 
 app_logger = get_logger(__name__, "python")
 redis_logger = get_logger(__name__, "redis")
@@ -61,8 +80,9 @@ def build_list_item(product: Product) -> dict[str, Any]:
 
 # 列表专用本地缓存 条目大 容量小 TTL 短
 list_local_cache = TTLCache(maxsize=50, ttl=15)
-# 防击穿 每个 key 一把锁 key 数量有限
-list_locks: dict[str, asyncio.Lock] = {}
+# 防击穿 用固定数量的分片锁，按 key 的哈希取模选锁，数量固定不会增长
+_LIST_LOCKS = [asyncio.Lock() for _ in range(64)]
+
 
 async def get_products_list_from_mysql(page: int, page_size: int) -> dict[str, Any]:
     """
@@ -126,7 +146,7 @@ async def get_products_list_cache(redis,page:int,page_size:int) -> Any | None:
         redis_logger.exception("商品列表Redis缓存读取失败 key=%s", key)
 
     # MySQL
-    lock = list_locks.setdefault(key,asyncio.Lock())
+    lock = _LIST_LOCKS[hash(key) % len(_LIST_LOCKS)]
     async with lock:
         # 双重检查
         data = list_local_cache.get(key)

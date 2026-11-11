@@ -1,17 +1,23 @@
 """用户聊天接口"""
 import asyncio
-from fastapi import APIRouter,Depends,WebSocket,HTTPException,WebSocketDisconnect
-from crud_1.chat import get_or_create_chat, get_message, send_message, get_my_message_list, read_message, \
-check_chat_permission
-from crud_1.users import get_user_info,verify_websocket_user , get_user_cached
 from typing import Any
-from schemas_1.chat import SendMessageRequest,WSMessage
-from tools_1.websocket_manager import manager
-from pydantic import ValidationError
-from fastapi.encoders import jsonable_encoder
+from crud_1.chat import (
+    check_chat_permission,
+    get_message,
+    get_my_message_list,
+    get_or_create_chat,
+    read_message,
+    send_message,
+)
+from crud_1.users import get_user_cached, get_user_info, verify_websocket_user
 from database_1.redis_config import get_redis
+from fastapi import APIRouter, Depends, WebSocket, HTTPException, WebSocketDisconnect, Query
+from fastapi.encoders import jsonable_encoder
+from pydantic import ValidationError
+from schemas_1.chat import SendMessageRequest, WSMessage
 from tools_1.limit import check_rate_limit
 from tools_1.logger import get_logger
+from tools_1.websocket_manager import manager
 
 chat = APIRouter()
 logger = get_logger(__name__, "python")
@@ -29,10 +35,13 @@ async def create_or_get_chat(order_id:int,current_user = Depends(get_user_info))
 
 """获取聊天信息接口"""
 @chat.get("/api/chat/conversations/{conversation_id}/messages")
-async def get_my_messages(conversation_id:int,current_user = Depends(get_user_info)) -> dict[str,Any]:
+async def get_my_messages(conversation_id: int,before_id: int | None = Query(default=None, ge=1),
+limit: int = Query(default=50, ge=1, le=100),current_user = Depends(get_user_info)) -> dict[str,Any]:
     result = await get_message(
         user_id=current_user["id"],
-        conversation_id=conversation_id
+        conversation_id=conversation_id,
+        before_id=before_id,
+        limit=limit
     )
     return result
 
@@ -237,7 +246,7 @@ async def chat_websocket(websocket:WebSocket,conversation_id:int) -> None:
     except WebSocketDisconnect:
         pass
 
-    except asyncio.TimeoutError:
+    except TimeoutError:
         logger.warning("WebSocket认证超时 conversation_id=%s", conversation_id)
         await websocket.close(
             code=1008,

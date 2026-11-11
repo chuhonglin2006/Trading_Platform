@@ -4,16 +4,16 @@ from sqlalchemy.exc import IntegrityError
 from tools_1.create_token import create_token,decode_token
 from database_1.mysql_config import async_session_maker
 from admin.modles_a.admins import Admin
-from sqlalchemy import select,func
+from sqlalchemy import select
 from typing import Any
 from fastapi import HTTPException,status,Header,Depends
-from tools_1.password_hash import check_password_async,password_hash_async
 from tools_1.logger import get_logger
 from tools_1.password_hash import DUMMY_HASH,check_password_async,password_hash_async
 from tools_1.admin_login_limit import clear_admin_login_failures,ensure_admin_login_allowed,record_admin_login_failure
 
 
 logger = get_logger(__name__, "python")
+
 
 
 async def admin_login(admin_username:str,admin_password:str,login_ip:str,redis) -> dict[str,Any]:
@@ -272,6 +272,7 @@ async def update_admin_role(admin_id:int,role:str,operator_id:int) -> dict[str,A
         )
     async with async_session_maker() as session:
         async with session.begin():
+            super_count = await lock_super_admins(session)
             stmt = select(Admin).where(
                 Admin.id == admin_id
             ).with_for_update()
@@ -283,7 +284,7 @@ async def update_admin_role(admin_id:int,role:str,operator_id:int) -> dict[str,A
                     detail="管理员账户不存在"
                 )
             if account.role == "super_admin" and role == "admin":
-                await check_last_super_admin(session, account)
+                check_last_super_admin(account, super_count)
             account.role = role
         logger.info(
             "管理员角色修改成功 admin_id=%s role=%s operator_id=%s",
@@ -301,26 +302,28 @@ async def update_admin_role(admin_id:int,role:str,operator_id:int) -> dict[str,A
             }
         }
 
-async def check_last_super_admin(session, target_admin):
+async def lock_super_admins(session) -> int:
     """
-    检查目标管理员是否为最后一位正常的超级管理员
-    :param session:数据库会话
-    :param target_admin:剩余管理员数量
-    :return:
+    锁定所有状态正常的超级管理员行，并返回数量。
+    必须在事务开始后、读取/修改目标管理员之前调用。
+    按 id 排序加锁，保证所有事务加锁顺序一致，避免死锁。
     """
-    if (target_admin.role != "super_admin"
-        or target_admin.status != "normal"
-    ):
-        return
-    stmt = select(func.count(Admin.id)).where(
-        Admin.role == "super_admin",
-        Admin.status == "normal"
+    stmt = (
+        select(Admin.id)
+        .where(Admin.role == "super_admin", Admin.status == "normal")
+        .order_by(Admin.id)
+        .with_for_update()
     )
     result = await session.execute(stmt)
-    count = result.scalar_one()
-    if count <= 1:
+    return len(result.scalars().all())
+
+def check_last_super_admin(target_admin, super_admin_count: int) -> None:
+    """目标是最后一位正常超管时，禁止降权/封禁"""
+    if target_admin.role != "super_admin" or target_admin.status != "normal":
+        return
+    if super_admin_count <= 1:
         raise HTTPException(
-            status_code=400,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="系统至少需要保留一位正常状态的超级管理员"
         )
 
@@ -340,6 +343,7 @@ async def update_admin_status(admin_id:int,new_status:str,operator_id:int) -> di
 
     async with async_session_maker() as session:
         async with session.begin():
+            super_count = await lock_super_admins(session)
             stmt = select(Admin).where(
                 Admin.id == admin_id
             ).with_for_update()
@@ -356,7 +360,7 @@ async def update_admin_status(admin_id:int,new_status:str,operator_id:int) -> di
                     detail="管理员账户已处于该状态"
                 )
             if new_status == "banned":
-                await check_last_super_admin(session,account)
+                check_last_super_admin(account, super_count)
             account.status = new_status
             result_data = {
                 "id": account.id,
@@ -374,26 +378,3 @@ async def update_admin_status(admin_id:int,new_status:str,operator_id:int) -> di
             "message": "管理员状态修改成功",
             "data": result_data
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,12 +1,27 @@
 """管理员接口"""
-from admin.curd_a.admins import admin_login,get_admin_info,create_admin,get_supper_admin_info,get_admin_account,update_admin_role,\
-update_admin_status
-from fastapi import APIRouter,Depends,Request
 from typing import Any
-from admin.shemas_a.admins import AdminLoginRequest,AdminCreateRequest,AdminRoleRequest,AdminStatusRequest
+
 from database_1.redis_config import get_redis
-from tools_1.image_captcha import verify_image_captcha
+from fastapi import APIRouter, Depends, Request
 from tools_1.client_ip import get_client_ip
+from tools_1.image_captcha import verify_image_captcha
+
+from admin.curd_a.admins import (
+    admin_login,
+    create_admin,
+    get_admin_account,
+    get_admin_info,
+    get_supper_admin_info,
+    update_admin_role,
+    update_admin_status,
+)
+from admin.shemas_a.admins import (
+    AdminCreateRequest,
+    AdminLoginRequest,
+    AdminRoleRequest,
+    AdminStatusRequest,
+)
+
 admin = APIRouter()
 
 

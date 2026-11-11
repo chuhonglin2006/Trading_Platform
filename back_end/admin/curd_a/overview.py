@@ -1,15 +1,12 @@
 """管理员界面数据概览"""
-from sqlalchemy import select,func
-from fastapi import HTTPException,status
 from typing import Any
+
 from database_1.mysql_config import async_session_maker
-from modles_1.user import User
-from modles_1.products import Product
 from modles_1.order import Order
+from modles_1.products import Product
 from modles_1.reports import Report
-
-
-
+from modles_1.user import User
+from sqlalchemy import func, select
 
 
 async def get_all_data() -> dict[str,Any]:
