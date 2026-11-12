@@ -15,7 +15,7 @@ create table admins
     updated_at    datetime                      default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
     constraint uk_admin_username
         unique (username)
-) engine = InnoDB default charset = utf8mb4;
+);
 
 create table announcements
 (
@@ -25,7 +25,8 @@ create table announcements
     content    text                               not null comment '公告正文',
     created_at datetime default CURRENT_TIMESTAMP not null comment '发布时间',
     updated_at datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间'
-) engine = InnoDB default charset = utf8mb4 comment '平台公告表';
+)
+    comment '平台公告表';
 
 create index idx_created_at
     on announcements (created_at);
@@ -40,7 +41,8 @@ create table categories
     created_at datetime default CURRENT_TIMESTAMP not null,
     constraint `key`
         unique (`key`)
-) engine = InnoDB default charset = utf8mb4 comment '商品分类表';
+)
+    comment '商品分类表';
 
 create table users
 (
@@ -63,13 +65,8 @@ create table users
         unique (email),
     constraint username
         unique (username)
-) engine = InnoDB default charset = utf8mb4 comment '用户表';
-
-create index idx_campus
-    on users (campus);
-
-create index idx_status
-    on users (status);
+)
+    comment '用户表';
 
 create table products
 (
@@ -82,55 +79,22 @@ create table products
     original_price   decimal(10, 2)                                                 null,
     description      text                                                           null,
     status           enum ('on_sale', 'off_sale', 'sold') default 'on_sale'         not null,
-    view_count       int unsigned                         default 0                 not null,
+    view_count       int unsigned                         default '0'               not null,
     campus           varchar(50)                                                    null,
-    publish_province varchar(50)                                                    null comment '发布时的IP省份',
+    publish_province varchar(50)                                                    null,
     created_at       datetime                             default CURRENT_TIMESTAMP not null,
     updated_at       datetime                             default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP,
     sold_at          datetime                                                       null comment '标记为已售出的时间，用于销售统计',
     review_status    varchar(20)                          default 'pending'         not null comment '审核状态：pending待审核，approved通过，rejected拒绝',
     review_reason    varchar(500)                                                   null comment '审核原因',
     reviewed_at      datetime                                                       null comment '审核时间',
-    reviewed_by      bigint unsigned                                                null comment '审核人ID',
+    reviewed_by      bigint unsigned                                                null comment '审核人用户ID',
     constraint fk_products_category
         foreign key (category_id) references categories (id),
     constraint fk_products_seller
         foreign key (seller_id) references users (id)
-) engine = InnoDB default charset = utf8mb4 comment '商品表';
-
-create index idx_campus
-    on products (campus);
-
-create index idx_category_id
-    on products (category_id);
-
-create index idx_seller_id
-    on products (seller_id);
-
-create index idx_sold_at
-    on products (sold_at);
-
-create index idx_status
-    on products (status);
-
-create table product_images
-(
-    id         bigint unsigned auto_increment
-        primary key,
-    product_id bigint unsigned                    not null,
-    image_url  varchar(500)                       not null comment '商品图片访问地址',
-    sort_order int      default 0                 not null comment '图片排序，0为主图',
-    created_at datetime default CURRENT_TIMESTAMP not null,
-    constraint fk_product_images_product
-        foreign key (product_id) references products (id)
-            on delete cascade
-) engine = InnoDB default charset = utf8mb4 comment '商品图片表';
-
-create index idx_product_images_product_id
-    on product_images (product_id);
-
-create index idx_product_images_sort_order
-    on product_images (sort_order);
+)
+    comment '商品表';
 
 create table favorites
 (
@@ -145,7 +109,8 @@ create table favorites
         foreign key (product_id) references products (id),
     constraint fk_favorites_user
         foreign key (user_id) references users (id)
-) engine = InnoDB default charset = utf8mb4 comment '商品收藏表';
+)
+    comment '商品收藏表';
 
 create index idx_product_id
     on favorites (product_id);
@@ -177,19 +142,8 @@ create table orders
         foreign key (product_id) references products (id),
     constraint fk_orders_seller
         foreign key (seller_id) references users (id)
-) engine = InnoDB default charset = utf8mb4 comment '订单表';
-
-create index idx_buyer_id
-    on orders (buyer_id);
-
-create index idx_product_id
-    on orders (product_id);
-
-create index idx_seller_id
-    on orders (seller_id);
-
-create index idx_status
-    on orders (status);
+)
+    comment '订单表';
 
 create table chat_conversations
 (
@@ -208,7 +162,7 @@ create table chat_conversations
         foreign key (order_id) references orders (id),
     constraint fk_chat_conversation_seller
         foreign key (seller_id) references users (id)
-) engine = InnoDB default charset = utf8mb4;
+);
 
 create table chat_messages
 (
@@ -224,13 +178,75 @@ create table chat_messages
         foreign key (conversation_id) references chat_conversations (id),
     constraint fk_chat_message_sender
         foreign key (sender_id) references users (id)
-) engine = InnoDB default charset = utf8mb4;
+);
 
 create index idx_chat_messages_conversation_created
     on chat_messages (conversation_id, created_at);
 
 create index idx_chat_messages_sender
     on chat_messages (sender_id);
+
+create index ix_chat_messages_conv_created
+    on chat_messages (conversation_id, created_at);
+
+create index idx_buyer_id
+    on orders (buyer_id);
+
+create index idx_product_id
+    on orders (product_id);
+
+create index idx_seller_id
+    on orders (seller_id);
+
+create index idx_status
+    on orders (status);
+
+create index ix_orders_auto_complete
+    on orders (status, received_at);
+
+create index ix_orders_auto_receive
+    on orders (status, auto_receive_at);
+
+create table product_images
+(
+    id         bigint unsigned auto_increment
+        primary key,
+    product_id bigint unsigned                    not null,
+    image_url  varchar(500)                       not null comment '商品图片访问地址',
+    sort_order int      default 0                 not null comment '图片排序，0为主图',
+    created_at datetime default CURRENT_TIMESTAMP not null,
+    constraint fk_product_images_product
+        foreign key (product_id) references products (id)
+            on delete cascade
+)
+    comment '商品图片表';
+
+create index idx_product_images_product_id
+    on product_images (product_id);
+
+create index idx_product_images_sort_order
+    on product_images (sort_order);
+
+create index idx_campus
+    on products (campus);
+
+create index idx_category_id
+    on products (category_id);
+
+create index idx_seller_id
+    on products (seller_id);
+
+create index idx_sold_at
+    on products (sold_at);
+
+create index idx_status
+    on products (status);
+
+create index ix_products_list
+    on products (status, review_status, created_at, id);
+
+create index ix_products_seller_created
+    on products (seller_id, created_at);
 
 create table reports
 (
@@ -248,7 +264,8 @@ create table reports
     created_at   datetime                                 default CURRENT_TIMESTAMP not null,
     constraint fk_reports_reporter
         foreign key (reporter_id) references users (id)
-) engine = InnoDB default charset = utf8mb4 comment '举报表';
+)
+    comment '举报表';
 
 create index idx_reporter
     on reports (reporter_id);
@@ -259,12 +276,9 @@ create index idx_status
 create index idx_target
     on reports (target_type, target_id);
 
--- 初始商品分类（与前端 CATEGORIES 保持一致）
-insert into categories (`key`, name, sort_order) values
-    ('book', '教材书籍', 1),
-    ('digital', '数码电子', 2),
-    ('clothes', '服装配饰', 3),
-    ('life', '生活日用', 4),
-    ('sport', '运动户外', 5),
-    ('furniture', '家具家电', 6),
-    ('other', '其他', 7);
+create index idx_campus
+    on users (campus);
+
+create index idx_status
+    on users (status);
+
