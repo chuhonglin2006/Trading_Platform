@@ -9,7 +9,7 @@
 [成品展示](https://chuhlblog.top) 
 
 
-[![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4) [![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4) [![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4)
+[![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4) [![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4) [![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4) [![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4)
 
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue)
