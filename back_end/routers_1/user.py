@@ -1,6 +1,5 @@
 """用户接口"""
 from typing import Any
-
 from crud_1.users import (
     get_seller_public_info,
     get_user_info,
@@ -9,10 +8,12 @@ from crud_1.users import (
     send_code,
     user_login,
     user_register,
+    user_reset_password,
+    send_reset_code
 )
 from database_1.redis_config import get_redis
-from fastapi import APIRouter, Depends, Request, Response
-from schemas_1.user import Login, RefreshRequest, Register, SendCodeRequest
+from fastapi import APIRouter, Depends, Request, Response,BackgroundTasks
+from schemas_1.user import Login, RefreshRequest, Register, SendCodeRequest,ResetPassword
 from tools_1.client_ip import get_client_ip
 from tools_1.image_captcha import create_image_captcha, verify_image_captcha
 from tools_1.limit import ip_rate_limit
@@ -80,9 +81,27 @@ async def register(data:Register,request:Request,redis = Depends(get_redis)) -> 
     )
     return result
 
-"""获取其他卖家公共信息"""
+"""获取其他卖家公共信息接口"""
 @user.get("/api/users/{user_id}",dependencies=[Depends(ip_rate_limit("seller_info", 60, 60))])
 async def get_other_seller_info(user_id: int, redis=Depends(get_redis)) -> dict[str, Any]:
     result = await get_seller_public_info(redis,user_id)
     return result
+
+"""重置密码发送验证码接口"""
+@user.post("/api/auth/forgot-password/send-code")
+async def forgot_send_code(data: SendCodeRequest, request: Request,background: BackgroundTasks, redis=Depends(get_redis)):
+    ip = get_client_ip(request)
+    await verify_image_captcha(redis, data.captcha_id, data.captcha_code)
+    await send_reset_code(redis, str(data.user_email), ip, background)
+    return {"code": 200,
+            "message": "如果该邮箱已注册,验证码已发送,请查收"
+        }
+
+"""重置密码接口"""
+@user.post("/api/auth/reset-password",dependencies=[Depends(ip_rate_limit("reset_pwd", 20, 600))])
+async def reset_password(data: ResetPassword, request: Request, redis=Depends(get_redis)):
+    await user_reset_password(redis, str(data.email), data.code, data.new_password,get_client_ip(request))
+    return {"code":200,
+            "message":"密码重置成功,请使用新密码登录"
+        }
 

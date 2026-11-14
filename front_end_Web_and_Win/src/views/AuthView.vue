@@ -14,7 +14,21 @@ const userStore = useUserStore()
 const marketStore = useMarketStore()
 const { show } = useToast()
 
-const mode = ref('login')
+const mode = ref('login') // login | register | forgot
+
+const MODE_TEXT = {
+  login: { title: '欢迎回来', sub: '登录后继续查看', submit: '登录' },
+  register: {
+    title: '注册账号',
+    sub: '用邮箱注册，专属个人二手商品展示',
+    submit: '注册',
+  },
+  forgot: {
+    title: '找回密码',
+    sub: '输入注册邮箱，验证后即可设置新密码',
+    submit: '重置密码',
+  },
+}
 
 const form = reactive({
   username: '',
@@ -22,6 +36,7 @@ const form = reactive({
   email: '',
   code: '',
   password: '',
+  confirmPassword: '',
 })
 
 const error = ref('')
@@ -62,6 +77,7 @@ function resetForm() {
     email: '',
     code: '',
     password: '',
+    confirmPassword: '',
   })
 
   error.value = ''
@@ -69,12 +85,20 @@ function resetForm() {
 
 
 // ==============================
-// 切换登录 / 注册
+// 切换 登录 / 注册 / 忘记密码
 // ==============================
 
 function switchMode(newMode) {
   mode.value = newMode
   resetForm()
+
+  // 各模式的验证码互相独立：清掉倒计时，并换一张新的图片验证码
+  if (countdownTimer) {
+    clearInterval(countdownTimer)
+    countdownTimer = null
+  }
+  countdown.value = 0
+  captchaRef.value?.refresh()
 }
 
 
@@ -101,7 +125,10 @@ async function sendCode() {
   sendingCode.value = true
 
   try {
-    const result = await authApi.sendCode(
+    const sendApi =
+      mode.value === 'forgot' ? authApi.forgotSendCode : authApi.sendCode
+
+    const result = await sendApi(
       form.email,
       captchaId.value,
       captchaCode.value.trim(),
@@ -218,6 +245,68 @@ async function submit() {
 
 
   // ==========================
+  // 忘记密码（验证码通过后重置）
+  // ==========================
+
+  if (mode.value === 'forgot') {
+    if (!form.email || !form.email.includes('@')) {
+      error.value = '请输入正确的邮箱地址'
+      return
+    }
+
+    if (!/^\d{6}$/.test(form.code.trim())) {
+      error.value = '请输入6位邮箱验证码'
+      return
+    }
+
+    if (form.password.length < 6) {
+      error.value = '新密码至少需要6位'
+      return
+    }
+
+    // 后端限制 64 位，且 bcrypt 只取前 72 字节（中文每字 3 字节）
+    if (
+      form.password.length > 64 ||
+      new TextEncoder().encode(form.password).length > 72
+    ) {
+      error.value = '新密码过长，请缩短后重试'
+      return
+    }
+
+    if (form.password !== form.confirmPassword) {
+      error.value = '两次输入的密码不一致'
+      return
+    }
+
+    submitting.value = true
+
+    try {
+      const email = form.email
+
+      const result = await authApi.resetPassword({
+        email,
+        code: form.code.trim(),
+        new_password: form.password,
+      })
+
+      show(result.message || '密码重置成功，请使用新密码登录')
+
+      // 回到登录页，保留邮箱方便直接登录
+      switchMode('login')
+      form.email = email
+
+    } catch (err) {
+      error.value = getApiErrorMessage(err, '重置失败，请稍后重试')
+
+    } finally {
+      submitting.value = false
+    }
+
+    return
+  }
+
+
+  // ==========================
   // 登录
   // ==========================
 
@@ -286,15 +375,11 @@ onUnmounted(() => {
     <div class="auth-card">
 
       <h1 class="auth-title">
-        {{ mode === 'login' ? '欢迎回来' : '注册账号' }}
+        {{ MODE_TEXT[mode].title }}
       </h1>
 
       <p class="auth-sub">
-        {{
-          mode === 'login'
-            ? '登录后继续查看'
-            : '用邮箱注册，专属个人二手商品展示'
-        }}
+        {{ MODE_TEXT[mode].sub }}
       </p>
 
 
@@ -361,7 +446,7 @@ onUnmounted(() => {
 
       <!-- 验证码 -->
       <!-- 图片验证码（发送邮箱验证码前需要先通过） -->
-      <div v-if="mode === 'register'" class="field">
+      <div v-if="mode !== 'login'" class="field">
         <label>图片验证码</label>
 
         <ImageCaptcha
@@ -372,7 +457,7 @@ onUnmounted(() => {
       </div>
 
       <div
-        v-if="mode === 'register'"
+        v-if="mode !== 'login'"
         class="field"
       >
         <label>邮箱验证码</label>
@@ -409,14 +494,48 @@ onUnmounted(() => {
 
       <!-- 密码 -->
       <div class="field">
-        <label>密码</label>
+        <label>{{ mode === 'forgot' ? '新密码' : '密码' }}</label>
 
         <input
           v-model="form.password"
           type="password"
-          placeholder="至少6位"
+          :placeholder="mode === 'forgot' ? '设置新密码，至少6位' : '至少6位'"
+          :autocomplete="mode === 'login' ? 'current-password' : 'new-password'"
           minlength="6"
+          maxlength="64"
         />
+      </div>
+
+
+      <!-- 确认新密码（仅忘记密码） -->
+      <div
+        v-if="mode === 'forgot'"
+        class="field"
+      >
+        <label>确认新密码</label>
+
+        <input
+          v-model="form.confirmPassword"
+          type="password"
+          placeholder="再输入一次新密码"
+          autocomplete="new-password"
+          minlength="6"
+          maxlength="64"
+        />
+      </div>
+
+
+      <!-- 忘记密码入口（仅登录） -->
+      <div
+        v-if="mode === 'login'"
+        class="auth-forgot"
+      >
+        <button
+          type="button"
+          @click="switchMode('forgot')"
+        >
+          忘记密码？
+        </button>
       </div>
 
 
@@ -426,13 +545,7 @@ onUnmounted(() => {
         :disabled="submitting"
         @click="submit"
       >
-        {{
-          submitting
-            ? '处理中...'
-            : mode === 'login'
-              ? '登录'
-              : '注册'
-        }}
+        {{ submitting ? '处理中...' : MODE_TEXT[mode].submit }}
       </button>
 
 
@@ -451,7 +564,7 @@ onUnmounted(() => {
 
         </template>
 
-        <template v-else>
+        <template v-else-if="mode === 'register'">
 
           已有账号？
 
@@ -459,6 +572,18 @@ onUnmounted(() => {
             @click="switchMode('login')"
           >
             直接登录
+          </button>
+
+        </template>
+
+        <template v-else>
+
+          想起密码了？
+
+          <button
+            @click="switchMode('login')"
+          >
+            返回登录
           </button>
 
         </template>

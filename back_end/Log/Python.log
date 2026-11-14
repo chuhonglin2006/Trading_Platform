@@ -1,0 +1,218 @@
+2026-11-14 19:36:04 | INFO     | uvicorn.error | Started server process [3656]
+2026-11-14 19:36:04 | INFO     | uvicorn.error | Waiting for application startup.
+2026-11-14 19:36:04 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端正在启动
+2026-11-14 19:36:06 | ERROR    | uvicorn.error | Traceback (most recent call last):
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 850, in connect_check_health
+    await self._connect()
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1487, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        **self._connection_arguments()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Python\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        lambda: protocol, host, port, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\asyncio\base_events.py", line 1168, in create_connection
+    raise exceptions[0]
+  File "E:\Python\Lib\asyncio\base_events.py", line 1143, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        exceptions, addrinfo, laddr_infos)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\asyncio\base_events.py", line 1042, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "E:\Python\Lib\asyncio\proactor_events.py", line 728, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\asyncio\windows_events.py", line 804, in _poll
+    value = callback(transferred, key, ov)
+  File "E:\Python\Lib\asyncio\windows_events.py", line 600, in finish_connect
+    ov.getresult()
+    ~~~~~~~~~~~~^^
+ConnectionRefusedError: [WinError 1225] 远程计算机拒绝网络连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\database_1\redis_config.py", line 41, in redis_content
+    await redis_client.ping()
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\client.py", line 929, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\utils.py", line 249, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 3103, in get_connection
+    await self.ensure_connection(connection)
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 2865, in ensure_connection
+    await connection.connect()
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 819, in connect
+    await self.retry.call_with_retry(
+    ...<7 lines>...
+    )
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\retry.py", line 81, in call_with_retry
+    raise error
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\retry.py", line 69, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 876, in connect_check_health
+    raise e
+redis.exceptions.ConnectionError: Error 22 connecting to 127.0.0.1:6379. 远程计算机拒绝网络连接。.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\starlette\routing.py", line 638, in lifespan
+    async with self.lifespan_context(app) as maybe_state:
+               ~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
+    async with original_context(app) as maybe_original_state:
+               ~~~~~~~~~~~~~~~~^^^^^
+  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
+    return await anext(self.gen)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\lifespan.py", line 33, in lifespan
+    app.state.redis = await redis_content()
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\database_1\redis_config.py", line 55, in redis_content
+    raise RuntimeError("Redis连接错误") from e
+RuntimeError: Redis连接错误
+
+2026-11-14 19:36:06 | ERROR    | uvicorn.error | Application startup failed. Exiting.
+2026-11-14 19:36:12 | INFO     | uvicorn.error | Started server process [21080]
+2026-11-14 19:36:12 | INFO     | uvicorn.error | Waiting for application startup.
+2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端正在启动
+2026-11-14 19:36:12 | INFO     | backend.python.tools_1.add_ip_data_to_memory | IP2Region数据库已加载到内存 path=E:\PyProject\FastAPI\Trading_Platform\back_end\ip_data\ip2region_v4.xdb size=11122714bytes
+2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 布隆过滤器初始化完成
+2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 订单自动处理后台任务已启动
+2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 磁盘空间监控后台任务已启动
+2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 服务器状态采样后台任务已启动
+2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端启动完成
+2026-11-14 19:36:12 | INFO     | backend.python.tools_1.disk_monitor | 磁盘空间监控已启动 threshold=5.00 GB interval=1800s
+2026-11-14 19:36:12 | INFO     | uvicorn.error | Application startup complete.
+2026-11-14 19:36:12 | INFO     | uvicorn.error | Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-11-14 19:36:12 | INFO     | backend.python.tools_1.order_auto_receive_loop | 订单自动收货完成 count=2
+2026-11-14 19:36:13 | INFO     | backend.python.tools_1.order_auto_receive_loop | 订单自动完成 count=200
+2026-11-14 19:36:43 | INFO     | backend.python.tools_1.order_auto_receive_loop | 订单自动完成 count=43
+2026-11-14 19:37:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=2e656f1b2e37 method=GET path=/api/products/categories status=200 duration_ms=7.7 client=127.0.0.1
+2026-11-14 19:37:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=e7671dce326a method=GET path=/api/products status=200 duration_ms=33.8 client=127.0.0.1
+2026-11-14 19:37:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=779e0ee5ecbb method=GET path=/api/announcements status=200 duration_ms=56.4 client=127.0.0.1
+2026-11-14 19:37:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=3873605c165f method=GET path=/api/products/categories status=200 duration_ms=24.9 client=127.0.0.1
+2026-11-14 19:37:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=1ed5ab769ba3 method=GET path=/images/1689/9888356a11d7425ca9341c83c627c782.webp status=200 duration_ms=31.2 client=127.0.0.1
+2026-11-14 19:37:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=c6c7579c91a8 method=GET path=/api/products status=200 duration_ms=29.4 client=127.0.0.1
+2026-11-14 19:37:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=a13699f723e4 method=GET path=/api/captcha status=200 duration_ms=34.2 client=127.0.0.1
+2026-11-14 19:37:29 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=242 ip=127.0.0.1
+2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=fea1e452ebd6 method=POST path=/api/auth/login status=200 duration_ms=173.2 client=127.0.0.1
+2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=0fdef366c9b0 method=GET path=/api/favorite status=200 duration_ms=11.1 client=127.0.0.1
+2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=92e37daaa6f4 method=GET path=/api/products/categories status=200 duration_ms=2.3 client=127.0.0.1
+2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=34ebc7af9e7a method=GET path=/api/products status=200 duration_ms=4.2 client=127.0.0.1
+2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=dbcc9696c262 method=GET path=/api/favorite status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-14 19:37:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=799420047576 method=GET path=/api/favorite status=200 duration_ms=3.2 client=127.0.0.1
+2026-11-14 19:37:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=d8efc0dfbb57 method=GET path=/api/orders/my status=200 duration_ms=6.5 client=127.0.0.1
+2026-11-14 19:37:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=358d49389ea6 method=GET path=/api/sales/my status=200 duration_ms=24.4 client=127.0.0.1
+2026-11-14 19:37:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=b52c7f489bde method=GET path=/api/my status=200 duration_ms=13.0 client=127.0.0.1
+2026-11-14 19:37:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=e5c150ec0d99 method=POST path=/api/auth/logout status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-14 19:37:45 | INFO     | backend.python.__main__ | HTTP请求 request_id=d1d8e1c455f3 method=GET path=/api/announcements status=200 duration_ms=6.3 client=127.0.0.1
+2026-11-14 19:37:45 | INFO     | backend.python.__main__ | HTTP请求 request_id=2b5b5de95a61 method=GET path=/api/products/categories status=200 duration_ms=6.2 client=127.0.0.1
+2026-11-14 19:37:45 | INFO     | backend.python.__main__ | HTTP请求 request_id=5a8490289673 method=GET path=/api/products status=200 duration_ms=7.2 client=127.0.0.1
+2026-11-14 19:37:51 | INFO     | backend.python.__main__ | HTTP请求 request_id=b92d16267236 method=GET path=/api/captcha status=200 duration_ms=4.0 client=127.0.0.1
+2026-11-14 19:37:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=e27eaf005e0b method=GET path=/api/captcha status=200 duration_ms=4.2 client=127.0.0.1
+2026-11-14 19:37:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=a726c59ccfac method=GET path=/api/captcha status=200 duration_ms=2.8 client=127.0.0.1
+2026-11-14 19:38:13 | INFO     | uvicorn.error | Shutting down
+2026-11-14 19:38:13 | INFO     | uvicorn.error | Waiting for application shutdown.
+2026-11-14 19:38:13 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端正在关闭
+2026-11-14 19:38:13 | INFO     | backend.python.tools_1.lifespan | 后台任务已停止
+2026-11-14 19:38:13 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端已关闭
+2026-11-14 19:38:13 | INFO     | uvicorn.error | Application shutdown complete.
+2026-11-14 19:38:13 | INFO     | uvicorn.error | Finished server process [21080]

@@ -6,6 +6,7 @@ const FIELD_NAMES = {
   user_email: '邮箱',
   email: '邮箱',
   password: '密码',
+  new_password: '新密码',
   username: '用户名',
   student_id: '学号',
   code: '邮箱验证码',

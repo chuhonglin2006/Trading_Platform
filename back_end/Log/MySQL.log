@@ -1,0 +1,7 @@
+2026-11-14 19:36:12 | INFO     | backend.mysql.tools_1.lifespan | MySQL连接成功
+2026-11-14 19:36:12 | INFO     | backend.mysql.tools_1.warm_up_cache | 用户名布隆过滤器加载完成 users=1002
+2026-11-14 19:36:12 | INFO     | backend.mysql.tools_1.warm_up_cache | 商品ID布隆过滤器加载完成 products=1001
+2026-11-14 19:36:12 | INFO     | backend.mysql.crud_1.orders | 自动确认收货写入MySQL count=2
+2026-11-14 19:36:13 | INFO     | backend.mysql.crud_1.orders | 订单自动完成写入MySQL count=200
+2026-11-14 19:36:43 | INFO     | backend.mysql.crud_1.orders | 订单自动完成写入MySQL count=43
+2026-11-14 19:38:13 | INFO     | backend.mysql.tools_1.lifespan | MySQL连接池已关闭

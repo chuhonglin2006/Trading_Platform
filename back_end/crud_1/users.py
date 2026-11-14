@@ -7,11 +7,10 @@ from collections import defaultdict, deque
 from datetime import datetime
 from threading import Lock
 from typing import Any
-
 from cachetools import TTLCache
 from database_1.mysql_config import async_session_maker
 from database_1.redis_config import get_redis
-from fastapi import Depends, Header, HTTPException, status
+from fastapi import Depends, Header, HTTPException, status, BackgroundTasks
 from fastapi.encoders import jsonable_encoder
 from modles_1.user import User
 from sqlalchemy import select
@@ -94,6 +93,18 @@ async def _clear_login_failures(redis, login_ip: str, user_email: str) -> None:
         await redis.delete(_login_fail_key(login_ip, user_email))
     except Exception:
         logger.exception("清除登录失败记录出错 ip=%s", login_ip)
+
+def _send_reset_mail(user_email: str, code: str) -> None:
+    """放在后台线程里发送，失败只记日志，不影响接口响应时间"""
+    try:
+        send_email(
+            user_email,
+            f"你正在重置密码，验证码为{code}，5分钟内有效。"
+            f"如果不是你本人操作，请忽略这封邮件，并及时检查账号安全。",
+            subject="二手交易网站 - 重置密码",
+        )
+    except Exception:
+        app_logger.exception("重置密码验证码邮件发送失败")
 
 async def invalidate_user(redis, user_id: int) -> None:
     """用户状态、信用分等变化后删除用户缓存"""
@@ -427,11 +438,9 @@ async def refresh_tokens(redis, refresh_token: str) -> dict[str, str]:
         "refresh_token": await create_refresh_token(redis, user_id),
     }
 
-
 async def revoke_refresh_token(redis, refresh_token: str) -> None:
     """退出登录时让 refresh token 立即失效"""
     await redis.delete(refresh_key(refresh_token))
-
 
 async def get_user_info(redis = Depends(get_redis),authorization: str | None = Header(default=None)) -> dict[str, Any | None]:
     """
@@ -634,7 +643,82 @@ async def get_seller_public_info(redis,seller_id:int) -> dict[str,Any]:
         }
     }
 
+async def send_reset_code(redis, user_email: str, client_ip: str, background: BackgroundTasks) -> None:
+    """
+    发送重置密码验证码
+    :param redis:Redis
+    :param user_email:用户邮箱
+    :param client_ip:
+    :param background:
+    :return:
+    """
+    user_email = (user_email or "").strip().lower()
+    email_id = hash_email(user_email)
+    code_key = f"captcha:reset:{email_id}"
+    cooldown_key = f"captcha:reset:cooldown:{email_id}"
+    fail_key = f"captcha:reset:fail:{email_id}"
+    ip_key = f"captcha:reset:ip:{client_ip or 'unknown'}"
 
+    # IP 限流：半小时最多 20 次（和 send_code 一致）
+    count = await redis.incr(ip_key)
+    if count == 1 or await redis.ttl(ip_key) == -1:
+        await redis.expire(ip_key, 1800)
+    if count > 20:
+        raise HTTPException(status_code=429, detail="请求过于频繁，请稍后重试")
+
+    # 邮箱冷却：无论邮箱是否注册都生效，避免从冷却提示里猜出邮箱状态
+    if not await redis.set(cooldown_key, 1, ex=60, nx=True):
+        ttl = await redis.ttl(cooldown_key)
+        raise HTTPException(status_code=429, detail=f"请{max(ttl, 1)}秒后重试")
+
+    async with async_session_maker() as session:
+        user_id = await session.scalar(select(User.id).where(User.email == user_email))
+    if user_id is None:
+        app_logger.info("重置密码：邮箱未注册 ip=%s", client_ip)
+        return
+
+    code = str(secrets.randbelow(900000) + 100000)
+    await redis.set(code_key, code, ex=300)
+    await redis.delete(fail_key)
+    background.add_task(_send_reset_mail, user_email, code)
+
+async def user_reset_password(redis, user_email: str, email_code: str,new_password: str, ip: str) -> None:
+    """
+    重置密码
+    :param redis:
+    :param user_email:
+    :param email_code:
+    :param new_password:
+    :param ip:
+    :return:
+    """
+    user_email = (user_email or "").strip().lower()
+    email_id = hash_email(user_email)
+    code_key = f"captcha:reset:{email_id}"
+    fail_key = f"captcha:reset:fail:{email_id}"
+
+    saved = await redis.get(code_key)
+    if saved is None:
+        raise HTTPException(status_code=400, detail="验证码不存在或已过期")
+    if not secrets.compare_digest(saved.encode(), (email_code or "").strip().encode()):
+        await _count_register_failure(redis, code_key, fail_key)   # 满 5 次作废
+        raise HTTPException(status_code=400, detail="验证码错误")
+
+    new_hash = await password_hash_async(new_password)
+    async with async_session_maker() as session, session.begin():
+        user = (await session.execute(
+            select(User).where(User.email == user_email).with_for_update()
+        )).scalar_one_or_none()
+        if user is None:
+            await redis.delete(code_key, fail_key)
+            raise HTTPException(status_code=400, detail="验证码不存在或已过期")
+        user.password_hash = new_hash
+        user_id = user.id
+
+    await redis.delete(code_key, fail_key)      # 一次性
+    await _clear_login_failures(redis, ip, user_email)
+    await invalidate_user(redis, user_id)
+    app_logger.info("用户重置密码成功 user_id=%s ip=%s", user_id, ip)
 
 
 

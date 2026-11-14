@@ -1,0 +1,311 @@
+2026-11-14 19:36:06 | ERROR    | backend.redis.database_1.redis_config | Redis连接错误 host=127.0.0.1 port=6379
+Traceback (most recent call last):
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 850, in connect_check_health
+    await self._connect()
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1487, in _connect
+    reader, writer = await asyncio.open_connection(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        **self._connection_arguments()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Python\Lib\asyncio\streams.py", line 48, in open_connection
+    transport, _ = await loop.create_connection(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        lambda: protocol, host, port, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\asyncio\base_events.py", line 1168, in create_connection
+    raise exceptions[0]
+  File "E:\Python\Lib\asyncio\base_events.py", line 1143, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+        exceptions, addrinfo, laddr_infos)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\asyncio\base_events.py", line 1042, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "E:\Python\Lib\asyncio\proactor_events.py", line 728, in sock_connect
+    return await self._proactor.connect(sock, address)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\asyncio\windows_events.py", line 804, in _poll
+    value = callback(transferred, key, ov)
+  File "E:\Python\Lib\asyncio\windows_events.py", line 600, in finish_connect
+    ov.getresult()
+    ~~~~~~~~~~~~^^
+ConnectionRefusedError: [WinError 1225] 远程计算机拒绝网络连接。
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\database_1\redis_config.py", line 41, in redis_content
+    await redis_client.ping()
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\client.py", line 929, in execute_command
+    conn = self.connection or await pool.get_connection()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\utils.py", line 249, in async_wrapper
+    return await func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 3103, in get_connection
+    await self.ensure_connection(connection)
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 2865, in ensure_connection
+    await connection.connect()
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 819, in connect
+    await self.retry.call_with_retry(
+    ...<7 lines>...
+    )
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\retry.py", line 81, in call_with_retry
+    raise error
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\retry.py", line 69, in call_with_retry
+    return await do()
+           ^^^^^^^^^^
+  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 876, in connect_check_health
+    raise e
+redis.exceptions.ConnectionError: Error 22 connecting to 127.0.0.1:6379. 远程计算机拒绝网络连接。.
+2026-11-14 19:36:12 | INFO     | backend.redis.database_1.redis_config | Redis连接成功 host=127.0.0.1 port=6379 max_connections=50
+2026-11-14 19:36:12 | INFO     | backend.redis.tools_1.lifespan | 浏览量刷新后台任务已启动
+2026-11-14 19:36:12 | INFO     | backend.redis.tools_1.warm_up_cache | 商品分类和热门商品缓存预热完成 categories=1008 products=300
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.warm_up_cache | 商品列表缓存预热完成 pages=5 page_size=20 version=160
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.lifespan | Redis缓存预热完成
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=161
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=162
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=163
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=164
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=165
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=166
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=167
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=168
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=169
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=170
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=171
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=172
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=173
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=174
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=175
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=176
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=177
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=178
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=179
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=180
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=181
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=182
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=183
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=184
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=185
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=186
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=187
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=188
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=189
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=190
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=191
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=192
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=193
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=194
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=195
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=196
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=197
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=198
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=199
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=200
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=201
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=202
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=203
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=204
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=205
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=206
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=207
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=208
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=209
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=210
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=211
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=212
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=213
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=214
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=215
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=216
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=217
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=218
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=219
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=220
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=221
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=222
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=223
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=224
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=225
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=226
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=227
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=228
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=229
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=230
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=231
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=232
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=233
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=234
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=235
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=236
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=237
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=238
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=239
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=240
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=241
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=242
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=243
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=244
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=245
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=246
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=247
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=248
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=249
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=250
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=251
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=252
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=253
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=254
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=255
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=256
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=257
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=258
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=259
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=260
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=261
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=262
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=263
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=264
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=265
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=266
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=267
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=268
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=269
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=270
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=271
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=272
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=273
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=274
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=275
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=276
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=277
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=278
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=279
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=280
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=281
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=282
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=283
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=284
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=285
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=286
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=287
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=288
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=289
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=290
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=291
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=292
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=293
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=294
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=295
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=296
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=297
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=298
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=299
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=300
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=301
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=302
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=303
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=304
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=305
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=306
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=307
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=308
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=309
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=310
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=311
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=312
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=313
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=314
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=315
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=316
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=317
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=318
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=319
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=320
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=321
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=322
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=323
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=324
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=325
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=326
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=327
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=328
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=329
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=330
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=331
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=332
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=333
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=334
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=335
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=336
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=337
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=338
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=339
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=340
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=341
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=342
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=343
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=344
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=345
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=346
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=347
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=348
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=349
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=350
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=351
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=352
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=353
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=354
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=355
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=356
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=357
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=358
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=359
+2026-11-14 19:36:13 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=360
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=361
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=362
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=363
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=364
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=365
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=366
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=367
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=368
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=369
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=370
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=371
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=372
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=373
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=374
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=375
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=376
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=377
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=378
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=379
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=380
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=381
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=382
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=383
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=384
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=385
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=386
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=387
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=388
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=389
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=390
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=391
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=392
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=393
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=394
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=395
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=396
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=397
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=398
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=399
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=400
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=401
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=402
+2026-11-14 19:36:43 | INFO     | backend.redis.tools_1.product_cache_version | 商品缓存版本已更新 version=403
+2026-11-14 19:38:13 | INFO     | backend.redis.database_1.redis_config | Redis连接池已关闭
