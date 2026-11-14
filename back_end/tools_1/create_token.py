@@ -3,10 +3,9 @@ import os
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
-
 from dotenv import load_dotenv
 from fastapi import HTTPException, status
-from jose import jwt
+from jose import jwt,JWTError, ExpiredSignatureError
 
 from tools_1.logger import get_logger
 
@@ -47,9 +46,12 @@ def decode_token(token:str) -> dict[str, Any]:
     try:
         payload = jwt.decode(token,SECRET_KEY,algorithms = [ALGORITHM])
         return payload
-    except Exception:  # noqa: BLE001
-        logger.warning("Token解码失败或已过期")
+    except ExpiredSignatureError:
+        logger.info("Token已过期")
         raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED,  # noqa: B904
                             detail='token无效或已过期')
-
+    except JWTError:
+        logger.warning("Token无效")
+        raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED,  # noqa: B904
+                            detail='token无效或已过期')
 

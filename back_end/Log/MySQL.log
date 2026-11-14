@@ -1,6 +1,0 @@
-、2026-11-11 18:27:59 | INFO     | backend.mysql.tools_1.lifespan | MySQL连接成功
-2026-11-11 18:27:59 | INFO     | backend.mysql.tools_1.db_init | 数据库为空，开始执行 schema.sql（共 32 条语句）
-2026-11-11 18:27:59 | INFO     | backend.mysql.tools_1.db_init | 数据库初始化完成
-2026-11-11 18:27:59 | INFO     | backend.mysql.tools_1.warm_up_cache | 用户名布隆过滤器加载完成 users=0
-2026-11-11 18:27:59 | INFO     | backend.mysql.tools_1.warm_up_cache | 商品ID布隆过滤器加载完成 products=0
-2026-11-11 18:28:26 | INFO     | backend.mysql.tools_1.lifespan | MySQL连接池已关闭

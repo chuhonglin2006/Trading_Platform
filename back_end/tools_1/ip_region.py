@@ -1,18 +1,15 @@
 """客户端 IP 省份解析、缓存和商品发布地回填。"""
 
 import ipaddress
+
 from database_1.mysql_config import async_engine, async_session_maker
 from sqlalchemy import or_, select, text
 from sqlalchemy.orm import joinedload
+
 from tools_1.add_ip_data_to_memory import search_ip_region
 from tools_1.logger import get_logger
 
-
-
 logger = get_logger(__name__, "python")
-
-
-
 
 UNKNOWN_REGION = "未知"
 REGION_CACHE_PREFIX = "ip:region:v2:"

@@ -25,3 +25,4 @@ cachetools==7.2.4
 pybloom-live==4.0.0
 py-ip2region==3.0.6
 pillow>=10.1
+psutil>=7.0

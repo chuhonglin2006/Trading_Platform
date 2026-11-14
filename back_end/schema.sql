@@ -1,7 +1,7 @@
 -- 校园二手交易平台 建表脚本
 -- 后端启动时发现数据库里一张业务表都没有，才会自动执行本文件。
 
-create table admins
+create table hkz_market.admins
 (
     id            bigint unsigned auto_increment
         primary key,
@@ -17,7 +17,7 @@ create table admins
         unique (username)
 );
 
-create table announcements
+create table hkz_market.announcements
 (
     id         bigint unsigned auto_increment comment '公告ID'
         primary key,
@@ -29,9 +29,9 @@ create table announcements
     comment '平台公告表';
 
 create index idx_created_at
-    on announcements (created_at);
+    on hkz_market.announcements (created_at);
 
-create table categories
+create table hkz_market.categories
 (
     id         bigint unsigned auto_increment
         primary key,
@@ -44,7 +44,7 @@ create table categories
 )
     comment '商品分类表';
 
-create table users
+create table hkz_market.users
 (
     id            bigint unsigned auto_increment
         primary key,
@@ -68,7 +68,7 @@ create table users
 )
     comment '用户表';
 
-create table products
+create table hkz_market.products
 (
     id               bigint unsigned auto_increment
         primary key,
@@ -90,13 +90,13 @@ create table products
     reviewed_at      datetime                                                       null comment '审核时间',
     reviewed_by      bigint unsigned                                                null comment '审核人用户ID',
     constraint fk_products_category
-        foreign key (category_id) references categories (id),
+        foreign key (category_id) references hkz_market.categories (id),
     constraint fk_products_seller
-        foreign key (seller_id) references users (id)
+        foreign key (seller_id) references hkz_market.users (id)
 )
     comment '商品表';
 
-create table favorites
+create table hkz_market.favorites
 (
     id         bigint unsigned auto_increment
         primary key,
@@ -106,16 +106,16 @@ create table favorites
     constraint uk_user_product
         unique (user_id, product_id),
     constraint fk_favorites_product
-        foreign key (product_id) references products (id),
+        foreign key (product_id) references hkz_market.products (id),
     constraint fk_favorites_user
-        foreign key (user_id) references users (id)
+        foreign key (user_id) references hkz_market.users (id)
 )
     comment '商品收藏表';
 
 create index idx_product_id
-    on favorites (product_id);
+    on hkz_market.favorites (product_id);
 
-create table orders
+create table hkz_market.orders
 (
     id                       bigint unsigned auto_increment
         primary key,
@@ -137,15 +137,15 @@ create table orders
     constraint order_no
         unique (order_no),
     constraint fk_orders_buyer
-        foreign key (buyer_id) references users (id),
+        foreign key (buyer_id) references hkz_market.users (id),
     constraint fk_orders_product
-        foreign key (product_id) references products (id),
+        foreign key (product_id) references hkz_market.products (id),
     constraint fk_orders_seller
-        foreign key (seller_id) references users (id)
+        foreign key (seller_id) references hkz_market.users (id)
 )
     comment '订单表';
 
-create table chat_conversations
+create table hkz_market.chat_conversations
 (
     id         bigint unsigned auto_increment
         primary key,
@@ -157,14 +157,14 @@ create table chat_conversations
     constraint uk_chat_order
         unique (order_id),
     constraint fk_chat_conversation_buyer
-        foreign key (buyer_id) references users (id),
+        foreign key (buyer_id) references hkz_market.users (id),
     constraint fk_chat_conversation_order
-        foreign key (order_id) references orders (id),
+        foreign key (order_id) references hkz_market.orders (id),
     constraint fk_chat_conversation_seller
-        foreign key (seller_id) references users (id)
+        foreign key (seller_id) references hkz_market.users (id)
 );
 
-create table chat_messages
+create table hkz_market.chat_messages
 (
     id              bigint unsigned auto_increment
         primary key,
@@ -175,39 +175,39 @@ create table chat_messages
     is_read         tinyint(1)  default 0                 not null,
     created_at      datetime    default CURRENT_TIMESTAMP not null,
     constraint fk_chat_message_conversation
-        foreign key (conversation_id) references chat_conversations (id),
+        foreign key (conversation_id) references hkz_market.chat_conversations (id),
     constraint fk_chat_message_sender
-        foreign key (sender_id) references users (id)
+        foreign key (sender_id) references hkz_market.users (id)
 );
 
 create index idx_chat_messages_conversation_created
-    on chat_messages (conversation_id, created_at);
+    on hkz_market.chat_messages (conversation_id, created_at);
 
 create index idx_chat_messages_sender
-    on chat_messages (sender_id);
+    on hkz_market.chat_messages (sender_id);
 
 create index ix_chat_messages_conv_created
-    on chat_messages (conversation_id, created_at);
+    on hkz_market.chat_messages (conversation_id, created_at);
 
 create index idx_buyer_id
-    on orders (buyer_id);
+    on hkz_market.orders (buyer_id);
 
 create index idx_product_id
-    on orders (product_id);
+    on hkz_market.orders (product_id);
 
 create index idx_seller_id
-    on orders (seller_id);
+    on hkz_market.orders (seller_id);
 
 create index idx_status
-    on orders (status);
+    on hkz_market.orders (status);
 
 create index ix_orders_auto_complete
-    on orders (status, received_at);
+    on hkz_market.orders (status, received_at);
 
 create index ix_orders_auto_receive
-    on orders (status, auto_receive_at);
+    on hkz_market.orders (status, auto_receive_at);
 
-create table product_images
+create table hkz_market.product_images
 (
     id         bigint unsigned auto_increment
         primary key,
@@ -216,39 +216,39 @@ create table product_images
     sort_order int      default 0                 not null comment '图片排序，0为主图',
     created_at datetime default CURRENT_TIMESTAMP not null,
     constraint fk_product_images_product
-        foreign key (product_id) references products (id)
+        foreign key (product_id) references hkz_market.products (id)
             on delete cascade
 )
     comment '商品图片表';
 
 create index idx_product_images_product_id
-    on product_images (product_id);
+    on hkz_market.product_images (product_id);
 
 create index idx_product_images_sort_order
-    on product_images (sort_order);
+    on hkz_market.product_images (sort_order);
 
 create index idx_campus
-    on products (campus);
+    on hkz_market.products (campus);
 
 create index idx_category_id
-    on products (category_id);
+    on hkz_market.products (category_id);
 
 create index idx_seller_id
-    on products (seller_id);
+    on hkz_market.products (seller_id);
 
 create index idx_sold_at
-    on products (sold_at);
+    on hkz_market.products (sold_at);
 
 create index idx_status
-    on products (status);
+    on hkz_market.products (status);
 
 create index ix_products_list
-    on products (status, review_status, created_at, id);
+    on hkz_market.products (status, review_status, created_at, id);
 
 create index ix_products_seller_created
-    on products (seller_id, created_at);
+    on hkz_market.products (seller_id, created_at);
 
-create table reports
+create table hkz_market.reports
 (
     id           bigint unsigned auto_increment
         primary key,
@@ -263,22 +263,23 @@ create table reports
     handle_note  varchar(500)                                                       null,
     created_at   datetime                                 default CURRENT_TIMESTAMP not null,
     constraint fk_reports_reporter
-        foreign key (reporter_id) references users (id)
+        foreign key (reporter_id) references hkz_market.users (id)
 )
     comment '举报表';
 
 create index idx_reporter
-    on reports (reporter_id);
+    on hkz_market.reports (reporter_id);
 
 create index idx_status
-    on reports (status);
+    on hkz_market.reports (status);
 
 create index idx_target
-    on reports (target_type, target_id);
+    on hkz_market.reports (target_type, target_id);
 
 create index idx_campus
-    on users (campus);
+    on hkz_market.users (campus);
 
 create index idx_status
-    on users (status);
+    on hkz_market.users (status);
+
 

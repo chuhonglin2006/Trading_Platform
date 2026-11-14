@@ -31,7 +31,6 @@ pool = aioredis.BlockingConnectionPool(
     health_check_interval=30
 )
 
-r = aioredis.Redis(connection_pool=pool) # 方便测试 最终要删除
 
 
 

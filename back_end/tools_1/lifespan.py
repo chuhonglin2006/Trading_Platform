@@ -16,6 +16,7 @@ from tools_1.ip_region import (
 )
 from tools_1.logger import get_logger
 from tools_1.order_auto_receive_loop import order_auto_receive_loop
+from tools_1.system_monitor import system_monitor_loop
 from tools_1.warm_up_cache import warming_blooms_main, warming_redis_main
 
 
@@ -36,6 +37,7 @@ async def lifespan(app: FastAPI):
     view_task = None
     region_task = None
     disk_task = None
+    system_task = None
 
     try:
         try:
@@ -76,6 +78,9 @@ async def lifespan(app: FastAPI):
         )
         app_logger.info("磁盘空间监控后台任务已启动")
 
+        system_task = asyncio.create_task(system_monitor_loop())
+        app_logger.info("服务器状态采样后台任务已启动")
+
         async def warm_up():
             try:
                 await warming_redis_main(app.state.redis)
@@ -92,7 +97,7 @@ async def lifespan(app: FastAPI):
 
         tasks = [
             task
-            for task in (order_task, warm_task, view_task, region_task, disk_task)
+            for task in (order_task, warm_task, view_task, region_task, disk_task, system_task)
             if task is not None
         ]
         for task in tasks:

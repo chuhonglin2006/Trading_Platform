@@ -4,6 +4,9 @@
     const API = {
         me: '/api/admin/me',
         overview: '/api/admin/overview',
+        system: '/api/admin/system',
+        logs: '/api/admin/logs',
+        logContent: '/api/admin/logs/content',
         admins: '/api/admin/accounts',
         users: '/api/admin/users',
         products: '/api/admin/products',
@@ -19,6 +22,8 @@
         orders: { title: '订单管理', icon: '▤' },
         reports: { title: '举报管理', icon: '⚑' },
         announcements: { title: '公告管理', icon: '◈' },
+        system: { title: '服务器状态', icon: '◉' },
+        logs: { title: '日志查看', icon: '▤' },
         admins: { title: '管理员管理', icon: '♛' }
     };
 
@@ -976,6 +981,838 @@
                 </div>
             `;
         }
+    }
+
+    /* ==================== 服务器状态 ==================== */
+
+    const sysState = {
+        minutes: 15,
+        auto: true,
+        timer: null,
+        loading: false,
+        data: null
+    };
+
+    const SYS_REFRESH_MS = 5000;
+
+    function stopSystemTimer() {
+        if (sysState.timer) {
+            clearInterval(sysState.timer);
+            sysState.timer = null;
+        }
+    }
+
+    function startSystemTimer() {
+        stopSystemTimer();
+
+        if (!sysState.auto) return;
+
+        sysState.timer = setInterval(() => {
+            if (!document.hidden) refreshSystem(false);
+        }, SYS_REFRESH_MS);
+    }
+
+    function sysBytes(value) {
+        const n = Number(value);
+
+        if (!Number.isFinite(n) || n < 0) return '—';
+
+        const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        let v = n;
+        let i = 0;
+
+        while (v >= 1024 && i < units.length - 1) {
+            v /= 1024;
+            i++;
+        }
+
+        return `${v.toFixed(v >= 100 || i === 0 ? 0 : 1)} ${units[i]}`;
+    }
+
+    // 带宽按“比特/秒”显示，和云厂商的带宽口径一致
+    function sysBits(bytesPerSecond) {
+        const n = Number(bytesPerSecond) * 8;
+
+        if (!Number.isFinite(n) || n < 0) return '—';
+
+        const units = ['bps', 'Kbps', 'Mbps', 'Gbps'];
+        let v = n;
+        let i = 0;
+
+        while (v >= 1000 && i < units.length - 1) {
+            v /= 1000;
+            i++;
+        }
+
+        return `${v.toFixed(v >= 100 || i === 0 ? 0 : 1)} ${units[i]}`;
+    }
+
+    function sysRate(bytesPerSecond) {
+        return `${sysBytes(bytesPerSecond)}/s`;
+    }
+
+    function sysDuration(seconds) {
+        let s = Math.max(0, Math.floor(Number(seconds) || 0));
+        const days = Math.floor(s / 86400);
+        s %= 86400;
+        const hours = Math.floor(s / 3600);
+        s %= 3600;
+        const minutes = Math.floor(s / 60);
+
+        if (days) return `${days} 天 ${hours} 小时 ${minutes} 分`;
+        if (hours) return `${hours} 小时 ${minutes} 分`;
+
+        return `${minutes} 分 ${s % 60} 秒`;
+    }
+
+    function sysPercent(value) {
+        const n = Number(value);
+
+        return Number.isFinite(n) ? `${n.toFixed(1)}%` : '—';
+    }
+
+    function sysText(value, formatter) {
+        if (value === null || value === undefined || value === '') {
+            return '—';
+        }
+
+        return formatter ? formatter(value) : String(value);
+    }
+
+    function sysLevel(percent) {
+        if (percent >= 90) return 'danger';
+        if (percent >= 70) return 'warn';
+
+        return 'ok';
+    }
+
+    function sysBar(percent) {
+        const p = Math.min(100, Math.max(0, Number(percent) || 0));
+
+        return `
+            <div class="sys-bar">
+                <span class="sys-bar-fill ${sysLevel(p)}" style="width:${p}%"></span>
+            </div>
+        `;
+    }
+
+    function sysRows(rows) {
+        return `
+            <dl class="sys-kv">
+                ${rows.map(([key, value]) => `
+                    <div>
+                        <dt>${escapeHTML(key)}</dt>
+                        <dd>${escapeHTML(value)}</dd>
+                    </div>
+                `).join('')}
+            </dl>
+        `;
+    }
+
+    function sysPanel(title, body) {
+        return `
+            <section class="sys-panel">
+                <h4>${escapeHTML(title)}</h4>
+                ${body}
+            </section>
+        `;
+    }
+
+    function sysCard({ label, value, sub, percent }) {
+        return `
+            <div class="sys-card">
+                <span>${escapeHTML(label)}</span>
+                <strong>${escapeHTML(value)}</strong>
+                <small>${escapeHTML(sub ?? '')}</small>
+                ${percent === undefined || percent === null ? '' : sysBar(percent)}
+            </div>
+        `;
+    }
+
+    function sysChart({ title, points, series, max, format, interval }) {
+        const head = `
+            <div class="sys-chart-head">
+                <strong>${escapeHTML(title)}</strong>
+            </div>
+        `;
+
+        if (points.length < 2) {
+            return `
+                <section class="sys-panel">
+                    ${head}
+                    <div class="dash-empty">
+                        采样数据积累中（每 ${escapeHTML(interval)} 秒采样一次）...
+                    </div>
+                </section>
+            `;
+        }
+
+        const W = 640;
+        const H = 190;
+        const left = 58;
+        const right = 12;
+        const top = 12;
+        const bottom = 24;
+        const innerW = W - left - right;
+        const innerH = H - top - bottom;
+
+        const values = series.flatMap(item =>
+            points.map(point => Number(point[item.key]) || 0)
+        );
+        const yMax = max ?? Math.max(1, Math.max(...values) * 1.2);
+
+        const t0 = points[0].ts;
+        const t1 = points[points.length - 1].ts;
+        const span = Math.max(1, t1 - t0);
+
+        const x = ts => left + ((ts - t0) / span) * innerW;
+        const y = v => top + innerH -
+            Math.min(1, Math.max(0, v / yMax)) * innerH;
+
+        const grid = [0, 0.25, 0.5, 0.75, 1].map(fraction => {
+            const yy = y(yMax * fraction);
+
+            return `
+                <line class="sys-grid" x1="${left}" x2="${W - right}"
+                      y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}"/>
+                <text class="sys-axis" x="${left - 6}" y="${(yy + 4).toFixed(1)}"
+                      text-anchor="end">${escapeHTML(format(yMax * fraction))}</text>
+            `;
+        }).join('');
+
+        const clock = ts => new Date(ts * 1000).toLocaleTimeString('zh-CN', {
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        const paths = series.map(item => {
+            const d = points.map((point, index) => {
+                const px = x(point.ts).toFixed(1);
+                const py = y(Number(point[item.key]) || 0).toFixed(1);
+
+                return `${index ? 'L' : 'M'}${px},${py}`;
+            }).join('');
+
+            return `
+                <path d="${d}" fill="none" stroke="${item.color}"
+                      stroke-width="2" stroke-linejoin="round"/>
+            `;
+        }).join('');
+
+        const legend = series.map(item => {
+            const list = points.map(point => Number(point[item.key]) || 0);
+            const current = list[list.length - 1];
+            const peak = Math.max(...list);
+            const average = list.reduce((a, b) => a + b, 0) / list.length;
+
+            return `
+                <span class="sys-legend">
+                    <i style="background:${item.color}"></i>
+                    ${escapeHTML(item.name)}
+                    <b>${escapeHTML(format(current))}</b>
+                    <small>均值 ${escapeHTML(format(average))} · 峰值 ${escapeHTML(format(peak))}</small>
+                </span>
+            `;
+        }).join('');
+
+        return `
+            <section class="sys-panel">
+                ${head}
+                <div class="sys-legends">${legend}</div>
+                <svg viewBox="0 0 ${W} ${H}" class="sys-svg" role="img"
+                     aria-label="${escapeHTML(title)}">
+                    ${grid}
+                    ${paths}
+                    <text class="sys-axis" x="${left}" y="${H - 6}">${escapeHTML(clock(t0))}</text>
+                    <text class="sys-axis" x="${W - right}" y="${H - 6}"
+                          text-anchor="end">${escapeHTML(clock(t1))}</text>
+                </svg>
+            </section>
+        `;
+    }
+
+    function renderSystem(data) {
+        const now = data.current ?? {};
+        const host = now.host ?? {};
+        const cpu = now.cpu ?? {};
+        const memory = now.memory ?? {};
+        const network = now.network ?? {};
+        const disk = now.disk ?? {};
+        const proc = now.process ?? {};
+        const redis = now.redis ?? {};
+        const mysql = now.mysql ?? {};
+        const history = data.history ?? [];
+        const interval = host.interval ?? 5;
+
+        const partitions = disk.partitions ?? [];
+        const busiestDisk = partitions.reduce(
+            (best, item) => (!best || item.percent > best.percent ? item : best),
+            null
+        );
+
+        const limitText = network.limit_mbps
+            ? `${network.limit_mbps} Mbps（${network.limit_source === 'configured' ? '已配置' : '网卡速率'}）`
+            : '未知（可在 keys.env 配置 NET_BANDWIDTH_MBPS）';
+
+        const cards = [
+            sysCard({
+                label: 'CPU 使用率',
+                value: sysPercent(cpu.percent),
+                sub: `${host.cpu_logical ?? '—'} 核 · 负载 ${host.load ? host.load[0] : '—'}`,
+                percent: cpu.percent
+            }),
+            sysCard({
+                label: '内存使用率',
+                value: sysPercent(memory.percent),
+                sub: `${sysBytes(memory.used)} / ${sysBytes(memory.total)}`,
+                percent: memory.percent
+            }),
+            sysCard({
+                label: '出站带宽（上行）',
+                value: sysBits(network.tx_rate),
+                sub: network.tx_percent === null || network.tx_percent === undefined
+                    ? sysRate(network.tx_rate)
+                    : `${sysRate(network.tx_rate)} · 占用 ${sysPercent(network.tx_percent)}`,
+                percent: network.tx_percent
+            }),
+            sysCard({
+                label: '入站带宽（下行）',
+                value: sysBits(network.rx_rate),
+                sub: network.rx_percent === null || network.rx_percent === undefined
+                    ? sysRate(network.rx_rate)
+                    : `${sysRate(network.rx_rate)} · 占用 ${sysPercent(network.rx_percent)}`,
+                percent: network.rx_percent
+            }),
+            sysCard({
+                label: '磁盘占用',
+                value: busiestDisk ? sysPercent(busiestDisk.percent) : '—',
+                sub: busiestDisk
+                    ? `剩余 ${sysBytes(busiestDisk.free)}`
+                    : '无法读取磁盘信息',
+                percent: busiestDisk ? busiestDisk.percent : null
+            }),
+            sysCard({
+                label: '后端服务进程内存',
+                value: sysBytes(proc.rss),
+                sub: `CPU ${sysPercent(proc.cpu_percent)} · ${proc.threads ?? '—'} 线程`
+            })
+        ].join('');
+
+        const charts = [
+            sysChart({
+                title: 'CPU 使用率',
+                points: history,
+                interval,
+                max: 100,
+                format: sysPercent,
+                series: [
+                    { key: 'cpu', name: '整机', color: '#3577f8' },
+                    { key: 'pc', name: '后端进程', color: '#f59e0b' }
+                ]
+            }),
+            sysChart({
+                title: '内存使用率',
+                points: history,
+                interval,
+                max: 100,
+                format: sysPercent,
+                series: [
+                    { key: 'mem', name: '整机', color: '#22c55e' }
+                ]
+            }),
+            sysChart({
+                title: '网络带宽',
+                points: history,
+                interval,
+                format: sysBits,
+                series: [
+                    { key: 'tx', name: '出站', color: '#7658ea' },
+                    { key: 'rx', name: '入站', color: '#06b6d4' }
+                ]
+            }),
+            sysChart({
+                title: '磁盘读写',
+                points: history,
+                interval,
+                format: sysRate,
+                series: [
+                    { key: 'dr', name: '读', color: '#ef4444' },
+                    { key: 'dw', name: '写', color: '#14b8a6' }
+                ]
+            })
+        ].join('');
+
+        const cores = (cpu.cores ?? []).map((value, index) => `
+            <div class="sys-core">
+                <b>核心 ${index} · ${escapeHTML(sysPercent(value))}</b>
+                ${sysBar(value)}
+            </div>
+        `).join('');
+
+        const container = memory.container;
+
+        const memoryRows = [
+            ['总内存', sysBytes(memory.total)],
+            ['已用', `${sysBytes(memory.used)}（${sysPercent(memory.percent)}）`],
+            ['可用', sysBytes(memory.available)],
+            [
+                'Swap',
+                memory.swap_total
+                    ? `${sysBytes(memory.swap_used)} / ${sysBytes(memory.swap_total)}（${sysPercent(memory.swap_percent)}）`
+                    : '未启用'
+            ]
+        ];
+
+        if (container) {
+            memoryRows.push([
+                '容器内存限额',
+                `${sysBytes(container.used)} / ${sysBytes(container.limit)}（${sysPercent(container.percent)}）`
+            ]);
+        }
+
+        const networkRows = [
+            ['当前出站', `${sysBits(network.tx_rate)}（${sysRate(network.tx_rate)}）`],
+            ['当前入站', `${sysBits(network.rx_rate)}（${sysRate(network.rx_rate)}）`],
+            ['带宽上限', limitText],
+            ['累计发送', `${sysBytes(network.tx_total)} · ${sysText(network.tx_packets)} 包`],
+            ['累计接收', `${sysBytes(network.rx_total)} · ${sysText(network.rx_packets)} 包`]
+        ];
+
+        const diskBody = partitions.length
+            ? partitions.map(item => `
+                <div class="sys-disk">
+                    <div class="sys-disk-head">
+                        <span>${escapeHTML(item.path)}</span>
+                        <b>${escapeHTML(sysPercent(item.percent))}</b>
+                    </div>
+                    ${sysBar(item.percent)}
+                    <small>
+                        已用 ${escapeHTML(sysBytes(item.used))} /
+                        共 ${escapeHTML(sysBytes(item.total))}，
+                        剩余 ${escapeHTML(sysBytes(item.free))}
+                    </small>
+                </div>
+            `).join('') + sysRows([
+                ['当前读取', sysRate(disk.read_rate)],
+                ['当前写入', sysRate(disk.write_rate)]
+            ])
+            : '<div class="dash-empty">无法读取磁盘信息</div>';
+
+        const topRows = (proc.top ?? []).map(item => `
+            <tr>
+                <td>${escapeHTML(item.pid)}</td>
+                <td>${escapeHTML(item.name)}</td>
+                <td>${escapeHTML(sysBytes(item.rss))}</td>
+            </tr>
+        `).join('');
+
+        const processBody = sysRows([
+            ['进程 PID', proc.pid],
+            ['内存占用 (RSS)', sysBytes(proc.rss)],
+            ['CPU（占整机）', sysPercent(proc.cpu_percent)],
+            ['线程数', sysText(proc.threads)],
+            ['打开的文件/句柄', sysText(proc.handles)],
+            ['已运行', sysDuration(proc.uptime)]
+        ]) + `
+            <table class="sys-table">
+                <thead>
+                    <tr><th>PID</th><th>内存占用最高的进程</th><th>内存</th></tr>
+                </thead>
+                <tbody>${topRows || '<tr><td colspan="3">—</td></tr>'}</tbody>
+            </table>
+        `;
+
+        const redisBody = redis.available
+            ? sysRows([
+                ['版本', sysText(redis.version)],
+                ['已运行', sysText(redis.uptime, sysDuration)],
+                [
+                    '内存',
+                    `${sysBytes(redis.used_memory)}${redis.max_memory ? ` / ${sysBytes(redis.max_memory)}` : '（未设上限）'}`
+                ],
+                ['内存峰值', sysText(redis.peak_memory, sysBytes)],
+                ['内存碎片率', sysText(redis.fragmentation)],
+                ['客户端连接', sysText(redis.clients)],
+                ['每秒命令数', sysText(redis.ops)],
+                ['Key 数量（db0）', sysText(redis.keys)],
+                ['缓存命中率', sysText(redis.hit_rate, sysPercent)],
+                ['累计过期 / 淘汰', `${sysText(redis.expired_keys)} / ${sysText(redis.evicted_keys)}`]
+            ])
+            : '<div class="dash-empty">Redis 状态获取失败，请查看 Redis.log</div>';
+
+        const pool = mysql.pool;
+
+        const mysqlBody = mysql.available
+            ? sysRows([
+                ['版本', sysText(mysql.version)],
+                ['已运行', sysText(mysql.uptime, sysDuration)],
+                [
+                    '当前连接 / 上限',
+                    `${sysText(mysql.connections)} / ${sysText(mysql.max_connections)}`
+                ],
+                ['正在执行的线程', sysText(mysql.running)],
+                ['历史最高连接数', sysText(mysql.max_used)],
+                [
+                    '后端连接池',
+                    pool
+                        ? `使用中 ${pool.checked_out} / 容量 ${pool.size}（溢出 ${pool.overflow}）`
+                        : '—'
+                ],
+                ['慢查询累计', sysText(mysql.slow_queries)],
+                ['失败的连接尝试', sysText(mysql.aborted_connects)]
+            ])
+            : '<div class="dash-empty">MySQL 状态获取失败，请查看 MySQL.log</div>';
+
+        const hostBody = sysRows([
+            ['主机名', sysText(host.hostname)],
+            ['系统', sysText(host.platform)],
+            ['Python', sysText(host.python)],
+            [
+                'CPU 核数',
+                `${sysText(host.cpu_physical)} 物理 / ${sysText(host.cpu_logical)} 逻辑` +
+                (cpu.limit_cores ? `（容器限额 ${cpu.limit_cores} 核）` : '')
+            ],
+            ['CPU 频率', cpu.freq_mhz ? `${cpu.freq_mhz} MHz` : '—'],
+            [
+                '负载 1 / 5 / 15 分钟',
+                host.load ? host.load.join(' / ') : '—（当前系统不支持）'
+            ],
+            ['开机时间', formatDate(host.boot_time ? host.boot_time * 1000 : null)],
+            ['已运行', sysDuration(host.uptime)]
+        ]);
+
+        return `
+            <div class="sys-cards">${cards}</div>
+
+            <div class="sys-charts">${charts}</div>
+
+            <div class="sys-columns">
+                ${sysPanel('主机信息', hostBody)}
+                ${sysPanel('内存', sysRows(memoryRows))}
+                ${sysPanel('网络', sysRows(networkRows))}
+                ${sysPanel('磁盘', diskBody)}
+                ${sysPanel('后端服务进程', processBody)}
+                ${sysPanel('Redis', redisBody)}
+                ${sysPanel('MySQL', mysqlBody)}
+            </div>
+
+            ${cores ? sysPanel('CPU 各核心', `<div class="sys-cores">${cores}</div>`) : ''}
+        `;
+    }
+
+    async function refreshSystem(manual) {
+        if (sysState.loading || state.view !== 'system') return;
+
+        sysState.loading = true;
+
+        try {
+            const result = await get(
+                `${API.system}?minutes=${sysState.minutes}`
+            );
+
+            const body = $('#sys-body');
+
+            // 等待期间如果已经切换到别的页面，丢弃这次结果
+            if (state.view !== 'system' || !body) return;
+
+            sysState.data = result.data;
+            body.innerHTML = renderSystem(result.data);
+
+            const stamp = $('#sys-updated');
+
+            if (stamp) {
+                stamp.textContent = `更新于 ${new Date().toLocaleTimeString('zh-CN', { hour12: false })}`;
+            }
+        } catch (error) {
+            const body = $('#sys-body');
+
+            if (body && !sysState.data) {
+                body.innerHTML = `
+                    <div class="dash-empty">
+                        服务器状态暂不可用：${escapeHTML(error.message)}
+                    </div>
+                `;
+            } else if (manual) {
+                showMessage(error.message, 'error');
+            }
+        } finally {
+            sysState.loading = false;
+        }
+    }
+
+    function installSystemStyles() {
+        if ($('#admin-system-styles')) return;
+
+        const style = document.createElement('style');
+
+        style.id = 'admin-system-styles';
+
+        style.textContent = `
+            .sys-toolbar {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 14px;
+                margin-bottom: 18px;
+            }
+
+            .sys-toolbar label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 14px;
+                color: #374151;
+            }
+
+            .sys-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+                gap: 14px;
+                margin-bottom: 18px;
+            }
+
+            .sys-card,
+            .sys-panel {
+                min-width: 0;
+                background: #fff;
+                border: 1px solid #e5e7eb;
+                border-radius: 14px;
+                padding: 16px 18px;
+            }
+
+            .sys-card span {
+                display: block;
+                color: #6b7280;
+                font-size: 13px;
+            }
+
+            .sys-card strong {
+                display: block;
+                margin: 6px 0 2px;
+                font-size: 26px;
+                color: #111827;
+            }
+
+            .sys-card small {
+                display: block;
+                min-height: 16px;
+                margin-bottom: 8px;
+                color: #8190a6;
+                font-size: 12px;
+            }
+
+            .sys-bar {
+                height: 6px;
+                overflow: hidden;
+                border-radius: 99px;
+                background: #eef2f7;
+            }
+
+            .sys-bar-fill {
+                display: block;
+                height: 100%;
+                border-radius: 99px;
+                transition: width .4s;
+            }
+
+            .sys-bar-fill.ok { background: #22c55e; }
+            .sys-bar-fill.warn { background: #f59e0b; }
+            .sys-bar-fill.danger { background: #ef4444; }
+
+            .sys-charts,
+            .sys-columns {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+                gap: 14px;
+                margin-bottom: 18px;
+            }
+
+            .sys-panel h4,
+            .sys-chart-head strong {
+                display: block;
+                margin: 0 0 12px;
+                font-size: 16px;
+            }
+
+            .sys-legends {
+                margin-bottom: 6px;
+            }
+
+            .sys-legend {
+                display: inline-flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 6px;
+                margin-right: 16px;
+                font-size: 13px;
+            }
+
+            .sys-legend i {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+            }
+
+            .sys-legend small {
+                color: #8190a6;
+            }
+
+            .sys-svg {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+
+            .sys-grid {
+                stroke: #eef2f7;
+                stroke-width: 1;
+            }
+
+            .sys-axis {
+                fill: #8190a6;
+                font-size: 11px;
+            }
+
+            .sys-kv {
+                margin: 0 0 8px;
+            }
+
+            .sys-kv > div {
+                display: flex;
+                justify-content: space-between;
+                gap: 14px;
+                padding: 7px 0;
+                border-bottom: 1px dashed #eef2f7;
+                font-size: 14px;
+            }
+
+            .sys-kv dt {
+                flex: none;
+                color: #6b7280;
+            }
+
+            .sys-kv dd {
+                margin: 0;
+                color: #111827;
+                font-weight: 500;
+                text-align: right;
+                word-break: break-all;
+            }
+
+            .sys-disk {
+                margin-bottom: 14px;
+                font-size: 13px;
+            }
+
+            .sys-disk-head {
+                display: flex;
+                justify-content: space-between;
+                gap: 10px;
+                margin-bottom: 6px;
+                word-break: break-all;
+            }
+
+            .sys-disk small {
+                display: block;
+                margin-top: 4px;
+                color: #8190a6;
+            }
+
+            .sys-cores {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 12px;
+            }
+
+            .sys-core b {
+                display: block;
+                margin-bottom: 4px;
+                font-size: 13px;
+                font-weight: 500;
+                color: #374151;
+            }
+
+            .sys-table {
+                width: 100%;
+                margin-top: 10px;
+                border-collapse: collapse;
+                font-size: 13px;
+            }
+
+            .sys-table th,
+            .sys-table td {
+                padding: 6px 4px;
+                border-bottom: 1px solid #f1f5f9;
+                text-align: left;
+            }
+
+            .sys-table th {
+                color: #6b7280;
+                font-weight: 500;
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    async function loadSystem() {
+        const content = $('#dashboard-content');
+
+        if (!content) return;
+
+        installSystemStyles();
+
+        sysState.data = null;
+
+        content.innerHTML = `
+            <div class="sys-toolbar">
+                <label>
+                    时间范围
+                    <select id="sys-range" class="dash-select">
+                        <option value="5">最近 5 分钟</option>
+                        <option value="15">最近 15 分钟</option>
+                        <option value="60">最近 1 小时</option>
+                    </select>
+                </label>
+
+                <label>
+                    <input type="checkbox" id="sys-auto">
+                    每 5 秒自动刷新
+                </label>
+
+                <button type="button" class="dash-btn" id="sys-refresh">
+                    立即刷新
+                </button>
+
+                <span class="muted" id="sys-updated"></span>
+            </div>
+
+            <div id="sys-body">
+                <div class="dash-empty">正在加载服务器状态...</div>
+            </div>
+        `;
+
+        $('#sys-range').value = String(sysState.minutes);
+        $('#sys-auto').checked = sysState.auto;
+
+        $('#sys-range').addEventListener('change', event => {
+            sysState.minutes = Number(event.target.value) || 15;
+            refreshSystem(true);
+        });
+
+        $('#sys-auto').addEventListener('change', event => {
+            sysState.auto = event.target.checked;
+            startSystemTimer();
+        });
+
+        $('#sys-refresh').addEventListener('click', () => {
+            refreshSystem(true);
+        });
+
+        await refreshSystem(true);
+
+        startSystemTimer();
     }
 
     /* ==================== 用户管理 ==================== */
@@ -2174,16 +3011,231 @@
         }
     }
 
+    /* ==================== 日志查看 ==================== */
+
+    function formatFileSize(bytes) {
+        const size = Number(bytes);
+
+        if (!Number.isFinite(size) || size < 0) return '—';
+        if (size < 1024) return `${size} B`;
+        if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
+        if (size < 1024 * 1024 * 1024) {
+            return `${(size / (1024 * 1024)).toFixed(2)} MB`;
+        }
+
+        return `${(size / (1024 * 1024 * 1024)).toFixed(2)} GB`;
+    }
+
+    function installLogStyles() {
+        if ($('#admin-log-styles')) return;
+
+        const style = document.createElement('style');
+        style.id = 'admin-log-styles';
+        style.textContent = `
+            .log-file-description {
+                margin: 6px 0 18px;
+                color: #6b7280;
+                font-size: 14px;
+            }
+
+            .log-file-row {
+                cursor: pointer;
+                transition: background-color .15s ease;
+            }
+
+            .log-file-row:hover {
+                background: rgba(59, 130, 246, .08);
+            }
+
+            .log-file-name {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-family: Consolas, Monaco, "Courier New", monospace;
+                font-weight: 600;
+            }
+
+            .log-viewer-meta {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 14px;
+                padding: 12px;
+                border: 1px solid var(--border-color, #e5e7eb);
+                border-radius: 8px;
+                background: #f8fafc;
+                color: #4b5563;
+                font-size: 13px;
+            }
+
+            .log-viewer-meta span {
+                padding-right: 12px;
+                border-right: 1px solid #e5e7eb;
+            }
+
+            .log-viewer-meta span:last-child {
+                border-right: 0;
+            }
+
+            .log-content-viewer {
+                width: 100%;
+                max-height: 70vh;
+                min-height: 360px;
+                box-sizing: border-box;
+                margin: 0;
+                padding: 16px;
+                overflow: auto;
+                border-radius: 8px;
+                background: #111827;
+                color: #e5e7eb;
+                font-family: Consolas, Monaco, "Courier New", monospace;
+                font-size: 13px;
+                line-height: 1.6;
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+
+            @media (max-width: 768px) {
+                .log-viewer-meta {
+                    flex-direction: column;
+                    gap: 6px;
+                }
+
+                .log-viewer-meta span {
+                    padding-right: 0;
+                    border-right: 0;
+                }
+
+                .log-content-viewer {
+                    min-height: 280px;
+                    max-height: 65vh;
+                    font-size: 12px;
+                }
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    async function openLogFile(filename) {
+        try {
+            const url = `${API.logContent}?filename=${encodeURIComponent(filename)}&lines=5000`;
+            const result = await get(url);
+            const data = result.data ?? {};
+
+            installLogStyles();
+
+            openModal({
+                title: data.name || filename,
+                width: '1100px',
+                content: `
+                    <div class="log-viewer-meta">
+                        <span>文件大小：${escapeHTML(formatFileSize(data.size))}</span>
+                        <span>总行数：${escapeHTML(data.total_lines ?? 0)}</span>
+                        <span>当前显示：${escapeHTML(data.show_lines ?? 0)} 行</span>
+                        <span>最后修改：${escapeHTML(formatDate(data.modified_at))}</span>
+                    </div>
+                    <pre class="log-content-viewer">${escapeHTML(data.content ?? '')}</pre>
+                `
+            });
+        } catch (error) {
+            showMessage(`打开日志失败：${error.message}`, 'error');
+        }
+    }
+
+    async function loadLogs() {
+        const content = $('#dashboard-content');
+        if (!content) return;
+
+        installLogStyles();
+
+        content.innerHTML = `
+            <div class="dash-panel">
+                <div class="dash-panel-header">
+                    <div>
+                        <h3>日志文件</h3>
+                        <p class="log-file-description">双击日志文件即可打开并查看内容</p>
+                    </div>
+                </div>
+
+                <div id="log-file-list">
+                    <div class="dash-empty">正在加载日志文件...</div>
+                </div>
+            </div>
+        `;
+
+        try {
+            const result = await get(API.logs);
+            const files = Array.isArray(result.data) ? result.data : [];
+            const list = $('#log-file-list');
+
+            if (!list) return;
+
+            if (!files.length) {
+                list.innerHTML = '<div class="dash-empty">暂无日志文件</div>';
+                return;
+            }
+
+            list.innerHTML = `
+                <div class="table-wrap">
+                    <table class="dash-table">
+                        <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>文件大小</th>
+                                <th>最后修改时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${files.map(file => `
+                                <tr
+                                    class="log-file-row"
+                                    data-log-file="${escapeHTML(file.name)}"
+                                    title="双击打开日志"
+                                >
+                                    <td>
+                                        <span class="log-file-name">📄 ${escapeHTML(file.name)}</span>
+                                    </td>
+                                    <td>${escapeHTML(formatFileSize(file.size))}</td>
+                                    <td>${escapeHTML(formatDate(file.modified_at))}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            $$('.log-file-row').forEach(row => {
+                row.addEventListener('dblclick', () => {
+                    const filename = row.dataset.logFile;
+                    if (filename) openLogFile(filename);
+                });
+            });
+        } catch (error) {
+            const list = $('#log-file-list');
+            if (list) {
+                list.innerHTML = `
+                    <div class="dash-empty error">
+                        ${escapeHTML(error.message)}
+                    </div>
+                `;
+            }
+        }
+    }
+
     async function showView(view) {
         if (!MODULES[view]) return;
 
         if (
-            view === 'admins' &&
+            (view === 'admins' || view === 'system' || view === 'logs') &&
             state.admin?.role !== 'super_admin'
         ) {
-            showMessage('无权访问管理员管理', 'error');
+            showMessage(`无权访问${MODULES[view].title}`, 'error');
             return;
         }
+
+        // 离开服务器状态页时停止自动刷新
+        stopSystemTimer();
 
         state.view = view;
         state.page = 1;
@@ -2254,6 +3306,26 @@
             content.id = 'dashboard-content';
 
             moduleView.appendChild(content);
+        }
+
+        if (view === 'system') {
+            await loadSystem();
+
+            if (window.innerWidth <= 768) {
+                document.body.classList.remove('sidebar-open');
+            }
+
+            return;
+        }
+
+        if (view === 'logs') {
+            await loadLogs();
+
+            if (window.innerWidth <= 768) {
+                document.body.classList.remove('sidebar-open');
+            }
+
+            return;
         }
 
         const configs = {
