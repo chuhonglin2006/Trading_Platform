@@ -697,26 +697,83 @@ Nginx 可以直接部署 `dist` 中的静态文件。
 下面是一个基本的 Nginx 配置示例。
 
 ```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
+worker_processes  1;
 
-    root /www/wwwroot/Trading_Platform/front_end/dist;
-    index index.html;
+events {
+    worker_connections  1024;
+}
 
-    location / {
-        try_files $uri $uri/ /index.html;
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    sendfile on;
+    keepalive_timeout 65;
+
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        ''      close;
     }
 
-    location /api/ {
-        proxy_pass http://127.0.0.1:8000/;
+    server {
+        listen 80;
+        server_name localhost;
 
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
+        client_max_body_size 100m;
 
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # FastAPI API
+        location /api/ {
+            proxy_pass http://127.0.0.1:8000;
 
-        proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # 商品图片
+        location /images/ {
+            proxy_pass http://127.0.0.1:8000;
+
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        # 下载文件
+        location /downloads/ {
+            proxy_pass http://127.0.0.1:8000;
+
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        # 管理后台
+        location /admin {
+            proxy_pass http://127.0.0.1:8000;
+
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+
+        # Vue 静态资源
+        location ^~ /assets/ {
+            root E:/PyProject/FastAPI/Trading_Platform/front_end_Web/dist;
+            try_files $uri =404;
+        }
+
+        # Vue 前端
+        location / {
+            root E:/PyProject/FastAPI/Trading_Platform/front_end_Web/dist;
+            index index.html;
+
+            try_files $uri $uri/ /index.html;
+        }
     }
 }
 ```
