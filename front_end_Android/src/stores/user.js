@@ -25,9 +25,13 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  function setSession(token, user = null) {
+  function setSession(token, user = null, refreshToken = null) {
     if (token) {
       localStorage.setItem('cm_token', token)
+    }
+
+    if (refreshToken) {
+      localStorage.setItem('cm_refresh', refreshToken)
     }
 
     if (user) {
@@ -37,12 +41,12 @@ export const useUserStore = defineStore('user', () => {
   }
 
   async function login(result) {
-    setSession(result?.access_token, result?.user)
+    setSession(result?.access_token, result?.user, result?.refresh_token)
     return currentUser.value
   }
 
   async function register(result) {
-    setSession(result?.access_token, result?.user)
+    setSession(result?.access_token, result?.user, result?.refresh_token)
     return currentUser.value
   }
 
@@ -81,6 +85,11 @@ export const useUserStore = defineStore('user', () => {
   }
 
   function logout() {
+    // 通知服务端让 refresh token 失效(失败也不影响本地退出)
+    const refreshToken = localStorage.getItem('cm_refresh')
+    if (refreshToken) {
+      authApi.logout(refreshToken).catch(() => {})
+    }
     currentUser.value = null
     // 令牌、用户信息，以及订单 / 销售记录 / 举报 / 收藏等缓存一起清掉
     clearUserStorage()

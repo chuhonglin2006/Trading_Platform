@@ -17,6 +17,10 @@ export const authApi = {
     })
   },
 
+  logout(refreshToken) {
+    return request.post('/auth/logout', { refresh_token: refreshToken })
+  },
+
   me() {
     return request.get('/auth/me')
   },

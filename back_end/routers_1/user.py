@@ -4,13 +4,15 @@ from typing import Any
 from crud_1.users import (
     get_seller_public_info,
     get_user_info,
+    refresh_tokens,
+    revoke_refresh_token,
     send_code,
     user_login,
     user_register,
 )
 from database_1.redis_config import get_redis
 from fastapi import APIRouter, Depends, Request, Response
-from schemas_1.user import Login, Register, SendCodeRequest
+from schemas_1.user import Login, RefreshRequest, Register, SendCodeRequest
 from tools_1.client_ip import get_client_ip
 from tools_1.image_captcha import create_image_captcha, verify_image_captcha
 from tools_1.limit import ip_rate_limit
@@ -24,6 +26,17 @@ async def login(data:Login,request:Request,redis = Depends(get_redis)) -> dict[s
     login_ip = get_client_ip(request)
     result = await user_login(redis,data.user_email,data.password,login_ip)
     return result
+
+"""刷新token接口"""
+@user.post("/api/auth/refresh",dependencies=[Depends(ip_rate_limit("refresh", 60, 60))])
+async def refresh(data:RefreshRequest,redis = Depends(get_redis)) -> dict[str,str]:
+    return await refresh_tokens(redis,data.refresh_token)
+
+"""退出登录接口 让 refresh token 失效"""
+@user.post("/api/auth/logout")
+async def logout(data:RefreshRequest,redis = Depends(get_redis)) -> dict[str,Any]:
+    await revoke_refresh_token(redis,data.refresh_token)
+    return {"code": 200, "message": "已退出"}
 
 """获取当前用户信息接口"""
 @user.get("/api/auth/me")

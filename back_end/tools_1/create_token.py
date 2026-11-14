@@ -1,5 +1,6 @@
 """生成用户登录token"""
 import os
+import secrets
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -16,6 +17,7 @@ load_dotenv(key_env_path)
 SECRET_KEY = os.getenv('SECRET_KEY', '')
 ALGORITHM = os.getenv('ALGORITHM', '')
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
+REFRESH_TOKEN_EXPIRE_DAYS = 30  # refresh token 有效期 每次刷新都会重新计时
 
 
 # 启动时检查配置 缺失或太弱就直接报错退出
@@ -55,3 +57,19 @@ def decode_token(token:str) -> dict[str, Any]:
         raise HTTPException(status_code = status.HTTP_401_UNAUTHORIZED,  # noqa: B904
                             detail='token无效或已过期')
 
+
+def refresh_key(token: str) -> str:
+    """refresh token 在 Redis 里的 key"""
+    return f"refresh:{token}"
+
+
+async def create_refresh_token(redis, user_id: int) -> str:
+    """
+    生成长期有效的 refresh token 并存入 Redis
+    :param redis: Redis
+    :param user_id: 用户id
+    :return: refresh token
+    """
+    token = secrets.token_urlsafe(48)
+    await redis.set(refresh_key(token), user_id, ex=REFRESH_TOKEN_EXPIRE_DAYS * 86400)
+    return token

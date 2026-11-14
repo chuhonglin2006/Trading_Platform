@@ -17,7 +17,12 @@ from modles_1.user import User
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from tools_1.check_student_id import check_student_id
-from tools_1.create_token import create_token, decode_token
+from tools_1.create_token import (
+    create_refresh_token,
+    create_token,
+    decode_token,
+    refresh_key,
+)
 from tools_1.email import send_email
 from tools_1.email_hash import hash_email
 from tools_1.ip_region import get_ip_province
@@ -289,9 +294,11 @@ password:str,email_code:str,register_ip:str = '') -> dict[Any, Any]:
         )
 
         token = create_token({"user_id": user.id})
+        refresh_token = await create_refresh_token(redis, user.id)
 
         return {
             "access_token": token,
+            "refresh_token": refresh_token,
             "user": {
                 "id": user.id,
                 "username": user.username,
@@ -374,8 +381,10 @@ async def user_login(redis,user_email:str,password:str,login_ip:str) -> dict[str
         token = create_token({
             "user_id": user.id
         })
+        refresh_token = await create_refresh_token(redis, user.id)
         return {
             "access_token": token,
+            "refresh_token": refresh_token,
             "user": {
                 "id": user.id,
                 "username": user.username,
@@ -385,6 +394,44 @@ async def user_login(redis,user_email:str,password:str,login_ip:str) -> dict[str
                 "ipProvince": ip_province
             }
         }
+
+async def refresh_tokens(redis, refresh_token: str) -> dict[str, str]:
+    """
+    用 refresh token 换新的 access token
+    1.在 Redis 查 refresh token 对应的用户
+    2.检查用户存在且未被封禁
+    3.旧 refresh token 作废(轮换) 签发新的 access + refresh
+    :param redis: Redis
+    :param refresh_token: 客户端保存的 refresh token
+    :return: 新的 access_token 和 refresh_token
+    """
+    key = refresh_key(refresh_token)
+    user_id = await redis.get(key)
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="登录已过期，请重新登录"
+        )
+    user_id = int(user_id)
+    user = await get_user_cached(redis, user_id)
+    if user is None or user["status"] == "banned":
+        await redis.delete(key)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="登录已过期，请重新登录"
+        )
+    # 轮换: 旧的 refresh token 只能用一次
+    await redis.delete(key)
+    return {
+        "access_token": create_token({"user_id": user_id}),
+        "refresh_token": await create_refresh_token(redis, user_id),
+    }
+
+
+async def revoke_refresh_token(redis, refresh_token: str) -> None:
+    """退出登录时让 refresh token 立即失效"""
+    await redis.delete(refresh_key(refresh_token))
+
 
 async def get_user_info(redis = Depends(get_redis),authorization: str | None = Header(default=None)) -> dict[str, Any | None]:
     """

@@ -23,3 +23,7 @@ class Register(BaseModel):
         pattern=r"^[0-9]{6}$",
     )
     password: str = Field(min_length=6, max_length=64)
+
+"""刷新token / 退出登录模型类"""
+class RefreshRequest(BaseModel):
+    refresh_token: str = Field(min_length=1, max_length=128)

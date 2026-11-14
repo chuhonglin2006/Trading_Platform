@@ -5,7 +5,7 @@
 export const USER_DATA_KEYS = ['cm_favs', 'cm_orders', 'cm_mysales', 'cm_reports']
 
 // 登录凭证：令牌和用户信息
-export const SESSION_KEYS = ['cm_token', 'cm_user']
+export const SESSION_KEYS = ['cm_token', 'cm_refresh', 'cm_user']
 
 function removeKeys(keys) {
   for (const key of keys) {
