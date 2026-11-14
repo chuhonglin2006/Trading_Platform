@@ -72,8 +72,6 @@ FastAPI Backend
         ├──────── MySQL
         │
         ├──────── Redis
-        │
-        └──────── Image Server
 ```
 
 ---
@@ -446,7 +444,7 @@ Trading_Platform/
 │   │
 │   └── keys.env.example      环境变量示例
 │
-├── front_end/                前端项目
+├── front_end/                前端项目(Android为构建Apk使用,Web和Win为网页端和exe使用)
 │   │
 │   ├── src/
 │   │   ├── views/            页面
