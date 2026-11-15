@@ -8,7 +8,11 @@
 
 [成品展示](https://chuhlblog.top) 
 
-![Python](https://img.shields.io/badge/Python-3.14%2B-blue)![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)![Vue](https://img.shields.io/badge/Vue-3-42b883)![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1)![Redis](https://img.shields.io/badge/Redis-cache%20%26%20rate%20limit-DC382D)
+![Python](https://img.shields.io/badge/Python-3.14%2B-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)
+![Vue](https://img.shields.io/badge/Vue-3-42b883)
+![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1)
+![Redis](https://img.shields.io/badge/Redis-cache%20%26%20rate%20limit-DC382D)
 
 ---
 
@@ -16,7 +20,7 @@
 
 随着校园二手物品交易需求不断增加，学生之间经常存在教材、数码产品、生活用品、服装配饰等闲置物品的交易需求。
 
-Trading_Platform 提供一个校园二手物品展示与交易平台，用户可以：
+Trading_Platform 提供一个校园二手物品展示与交易平台，功能有:
 
 - 注册并登录平台
 - 浏览其他用户发布的商品
@@ -30,6 +34,8 @@ Trading_Platform 提供一个校园二手物品展示与交易平台，用户可
 - 修改交易时间和地点
 - 确认收货和完成交易
 - 举报违规用户或商品
+- 完成交易后对卖家进行评价
+- 信用分系统
 - 下载Windows和Android App
 
 管理员可以通过后台管理系统：
@@ -42,7 +48,7 @@ Trading_Platform 提供一个校园二手物品展示与交易平台，用户可
 - 发布公告
 - 超级管理员查看日志
 - 超级管理员查看服务器详情
-- 管理管理员账号
+- 超级管理员创建管理员账号
 
 项目在部分接口中加入了 Redis 缓存、分布式锁、数据库行锁、接口限流等机制，以提高系统性能并减少部分高并发场景下的数据问题。
 
@@ -72,11 +78,7 @@ FastAPI Backend
 
 系统使用 JWT 进行用户身份认证。
 
-用户登录成功后，后端返回访问 Token，前端保存 Token，并在后续请求中自动携带：
-
-```http
-Authorization: Bearer <token>
-```
+用户登录成功后，后端返回访问 Token，前端保存 Token，并在后续请求中自动携带：Authorization: Bearer <token>
 
 后端通过 JWT 验证用户身份。
 
@@ -104,11 +106,7 @@ Authorization: Bearer <token>
 
 商品可以具有不同审核状态：
 
-```text
-pending
-approved
-rejected
-```
+pending、approved、rejected
 
 管理员审核通过后，商品才能正常展示。
 
@@ -117,12 +115,6 @@ rejected
 ## 并发控制
 
 项目针对部分高并发场景进行了处理。
-
-例如用户购买商品时，通过数据库行锁减少多个用户同时购买同一商品导致的数据问题：
-
-```python
-with_for_update()
-```
 
 部分操作使用 Redis 分布式锁，减少重复提交的可能性。
 
@@ -134,12 +126,7 @@ with_for_update()
 
 支持的图片格式包括：
 
-```text
-jpg
-jpeg
-png
-webp
-```
+jpg、jpeg、png、webp
 
 系统会对上传文件进行：
 
@@ -156,73 +143,35 @@ webp
 
 ### 用户系统
 
-- 用户注册
-- 邮箱验证码
-- 用户登录
-- JWT 身份认证
-- 获取当前用户信息
-- 退出登录
-- 登录状态管理
+用户注册、邮箱验证码、用户登录、JWT 身份认证、获取当前用户信息、退出登录、登录状态管理
 
 ---
 
 ### 商品系统
 
-- 浏览商品
-- 商品分页
-- 商品详情
-- 商品搜索
-- 商品分类
-- 发布商品
-- 编辑商品
-- 删除商品
-- 上架商品
-- 下架商品
-- 商品图片上传
-- 商品浏览次数统计
+浏览商品、商品分页、商品详情、商品搜索、商品分类、发布商品、编辑商品、删除商品、上架商品、下架商品、商品图片上传、商品浏览次数统计
 
 ---
 
 ### 商品分类
 
 系统支持多个商品分类，例如：
-
-```text
-教材书籍
-数码电子
-服装配饰
-生活日用
-运动户外
-家具家电
-其他
-```
+教材书籍、数码电子、服装配饰、生活日用、运动户外、家具家电、其他
 
 ---
 
 ### 收藏功能
 
 用户可以：
-
-- 收藏商品
-- 取消收藏
-- 查看收藏列表
+收藏商品、取消收藏、查看收藏列表
 
 ---
 
 ### 订单系统
 
 用户可以：
-
-- 创建订单
-- 查看购买订单
-- 查看出售订单
-- 修改交易信息
-- 取消订单
-- 确认交易
-- 确认收货
-- 完成订单
-
-订单状态根据实际业务流程进行管理。
+创建订单、查看购买订单、查看出售订单、修改交易信息、取消订单、确认交易、确认收货、完成订单
+订单状态根据实际业务流程进行管理
 
 ---
 
@@ -231,96 +180,46 @@ webp
 交易双方可以在订单对应的聊天会话中进行交流。
 
 聊天功能主要用于：
-
-- 沟通交易细节
-- 确认交易地点
-- 确认交易时间
-- 交流商品相关问题
-
-聊天记录与交易订单关联。
+沟通交易细节、确认交易地点、确认交易时间、交流商品相关问题
+聊天记录与交易订单关联
 
 ---
 
 ### 举报功能
 
 用户可以举报：
-
-```text
-用户
-商品
-```
-
-举报提交后由管理员进行审核处理。
+用户、商品
+举报提交后由管理员进行审核处理
 
 ---
 
 # 管理员功能
 
-系统提供独立的管理员后台。
+系统提供独立的管理员后台
 
-管理员可以进行以下操作。
+管理员可以进行以下操作
 
 ## 用户管理
 
-- 查看用户列表
-- 查看用户信息
-- 修改用户状态
-- 禁用用户
-- 恢复用户
-- 管理用户信用分
+查看用户列表、查看用户信息、修改用户状态、禁用用户、恢复用户、管理用户信用分
 
 ---
 
 ## 商品管理
 
-管理员可以：
-
-- 查看商品
-- 审核商品
-- 通过商品审核
-- 拒绝商品审核
-- 查看商品详情
-- 管理违规商品
-
-商品审核状态包括：
-
-```text
-pending
-approved
-rejected
-```
+查看商品、审核商品、通过商品审核、拒绝商品审核、查看商品详情、管理违规商品
 
 ---
 
 ## 订单管理
 
-管理员可以：
-
-- 查看订单
-- 查看订单状态
-- 查看交易信息
-- 管理异常订单
+查看订单、查看订单状态、查看交易信息、管理异常订单
 
 ---
 
 ## 举报管理
 
-管理员可以：
-
-- 查看举报列表
-- 查看举报详情
-- 处理举报
-- 拒绝举报
-- 对违规用户进行处理
-- 对违规商品进行处理
-
-举报状态包括：
-
-```text
-pending
-resolved
-rejected
-```
+查看举报列表、查看举报详情、处理举报、拒绝举报、对违规用户进行处理、对违规商品进行处理
 
 ---
 
@@ -330,11 +229,9 @@ rejected
 
 ---
 
-## 管理员管理
+## 超级管理员
 
-系统支持管理员账号管理。
-
-管理员可以根据权限进行不同的后台操作。
+超级管理员可以查看服务器信息、查看日志、管理其他管理员账号
 
 ---
 
@@ -372,16 +269,6 @@ rejected
 
 ## 部署
 
-项目可以通过以下方式部署：
-
-```text
-Nginx
-FastAPI
-Uvicorn
-MySQL
-Redis
-Linux
-```
 
 推荐部署结构：
 
@@ -467,218 +354,6 @@ Node.js 18+
 MySQL 8.0+
 Redis 6.0+
 ```
-
-推荐使用：
-
-```text
-Python 虚拟环境
-```
-
-隔离项目依赖。
-
----
-
-# 后端部署
-
-## 1. 克隆项目
-
-```bash
-git clone https://github.com/chuhonglin2006/Trading_Platform.git
-```
-
-进入项目目录：
-
-```bash
-cd Trading_Platform
-```
-
----
-
-## 2. 创建 Python 虚拟环境
-
-Windows：
-
-```bash
-python -m venv .venv
-```
-
-激活虚拟环境：
-
-```bash
-.venv\Scripts\activate
-```
-
-Linux：
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
----
-
-## 3. 安装 Python 依赖
-
-进入后端目录：
-
-```bash
-cd back_end
-```
-
-安装依赖：
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-
-# MySQL 配置
-
-创建数据库：
-
-```sql
-CREATE DATABASE hkz_market
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
-```
-
-然后根据项目中的数据库模型或 SQL 文件创建对应的数据表。
-
-主要数据可能包括：
-
-```text
-users
-products
-categories
-product_images
-favorites
-orders
-conversations
-messages
-reports
-admins
-announcements
-```
-
-具体表结构以项目中的 SQLAlchemy Model 或数据库 SQL 文件为准。
-
----
-
-# Redis 配置
-
-启动 Redis：
-
-```bash
-redis-server
-```
-
-测试 Redis：
-
-```bash
-redis-cli
-```
-
-测试连接：
-
-```bash
-PING
-```
-
-正常情况下返回：
-
-```text
-PONG
-```
-
-如果 Redis 设置了密码：
-
-```bash
-redis-cli -a your_password
-```
-
-然后执行：
-
-```text
-PING
-```
-
----
-
-# 启动后端
-
-进入后端目录后，可以使用：
-
-```bash
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-生产环境不建议使用 `--reload`。
-
-生产环境示例：
-
-```bash
-uvicorn main:app --host 127.0.0.1 --port 8000
-```
-
-启动成功后，可以访问：
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-查看 FastAPI 自动生成的 API 文档。
-
----
-
-# 前端启动
-
-进入前端目录：
-
-```bash
-cd front_end
-```
-
-安装依赖：
-
-```bash
-npm install
-```
-
-启动开发服务器：
-
-```bash
-npm run dev
-```
-
-通常可以通过浏览器访问：
-
-```text
-http://localhost:5173
-```
-
-具体端口以 Vite 实际启动结果为准。
-
----
-
-# 构建前端
-
-生产环境构建：
-
-```bash
-npm run build
-```
-
-构建完成后会生成：
-
-```text
-dist/
-```
-
-目录。
-
-Nginx 可以直接部署 `dist` 中的静态文件。
 
 ---
 
@@ -851,33 +526,6 @@ product:detail:{product_id}
 删除缓存
 缓存预热
 ```
-
----
-
-# 数据库并发控制
-
-订单创建涉及商品交易状态，因此需要考虑并发问题。
-
-例如两个用户同时购买同一个商品。
-
-推荐使用数据库行锁：
-
-```python
-stmt = (
-    select(Product)
-    .where(Product.id == product_id)
-    .with_for_update()
-)
-```
-
-这样可以减少：
-
-```text
-用户 A 同时购买
-用户 B 同时购买
-```
-
-导致重复创建有效订单的问题。
 
 ---
 
@@ -1137,6 +785,7 @@ Trading_Platform 是一个基于 FastAPI、Vue 3、MySQL 和 Redis 开发的前�
 分类系统
 收藏系统
 订单系统
+评价系统
 在线聊天
 举报系统
 商品审核
