@@ -14,6 +14,8 @@ const FIELD_NAMES = {
   reason: '举报原因',
   content: '内容',
   meeting_location: '交易地点',
+  rating: '星级',
+  comment: '评价留言',
 }
 
 export function getApiErrorMessage(error, fallback = '请求失败，请稍后重试') {

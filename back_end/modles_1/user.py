@@ -1,12 +1,13 @@
 """用户模型类"""
 
 from datetime import datetime
+from decimal import Decimal
 
 from sqlalchemy import (
     BigInteger,
     DateTime,
     Enum,
-    Integer,
+    Numeric,
     String,
     func,
 )
@@ -60,10 +61,11 @@ class User(Base):
         default="normal"
     )
 
-    credit_score: Mapped[int] = mapped_column(
-        Integer,
+    # 信用分保留一位小数（评价 4~5 星会 +0.5）
+    credit_score: Mapped[Decimal] = mapped_column(
+        Numeric(7, 1),
         nullable=False,
-        default=100
+        default=Decimal("100.0")
     )
 
     register_ip: Mapped[str | None] = mapped_column(

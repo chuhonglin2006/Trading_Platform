@@ -27,8 +27,5 @@ back_end/image_data/
 android/.gradle/
 android/app/build/
 
-# Node
-node_modules/
-
-back_end/app_downloads/
-front_end_Android/release/
+*.apk
+*.exe

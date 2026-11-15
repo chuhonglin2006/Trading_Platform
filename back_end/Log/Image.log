@@ -1,0 +1,2 @@
+2026-11-15 14:16:56 | INFO     | backend.image.tools_1.image_storage | 图片上传成功 product_id=101001 filename=4efd114341754658a749e707e1d637a2.png size=10127
+2026-11-15 14:22:14 | INFO     | backend.image.tools_1.image_storage | 图片上传成功 product_id=101002 filename=de0fb8a95d854562b089f9b0d626cbd1.png size=10127

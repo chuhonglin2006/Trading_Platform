@@ -8,6 +8,7 @@ from database_1.mysql_config import async_session_maker
 from fastapi import HTTPException, status
 from modles_1.order import Order
 from modles_1.products import Product
+from modles_1.review import Review
 from modles_1.user import User
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import selectinload
@@ -198,6 +199,9 @@ async def get_order_info(user_id:int,order_id:int) -> dict[str,Any]:
                 order.buyer_meeting_confirmed
                 and order.seller_meeting_confirmed
         )
+        review = await session.scalar(
+            select(Review).where(Review.order_id == order.id)
+        )
         return {
             "code": 200,
             "message": "获取成功",
@@ -223,6 +227,16 @@ async def get_order_info(user_id:int,order_id:int) -> dict[str,Any]:
                 "cancelled_at": order.cancelled_at,
                 "received_at": order.received_at,
                 "auto_receive_at": order.auto_receive_at,
+                "review": (
+                    {
+                        "id": review.id,
+                        "rating": review.rating,
+                        "comment": review.comment,
+                        "credit_change": float(review.credit_change),
+                        "created_at": review.created_at,
+                    }
+                    if review else None
+                ),
             }
         }
 

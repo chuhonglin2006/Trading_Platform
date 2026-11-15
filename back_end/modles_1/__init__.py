@@ -4,3 +4,4 @@ from .order import Order
 from .product_image import ProductImage
 from .products import Product
 from .user import User
+from .review import Review

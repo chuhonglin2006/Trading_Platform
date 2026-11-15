@@ -1,218 +1,562 @@
-2026-11-14 19:36:04 | INFO     | uvicorn.error | Started server process [3656]
-2026-11-14 19:36:04 | INFO     | uvicorn.error | Waiting for application startup.
-2026-11-14 19:36:04 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端正在启动
-2026-11-14 19:36:06 | ERROR    | uvicorn.error | Traceback (most recent call last):
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 850, in connect_check_health
-    await self._connect()
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 1487, in _connect
-    reader, writer = await asyncio.open_connection(
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        **self._connection_arguments()
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "E:\Python\Lib\asyncio\streams.py", line 48, in open_connection
-    transport, _ = await loop.create_connection(
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        lambda: protocol, host, port, **kwds)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\Python\Lib\asyncio\base_events.py", line 1168, in create_connection
-    raise exceptions[0]
-  File "E:\Python\Lib\asyncio\base_events.py", line 1143, in create_connection
-    sock = await self._connect_sock(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^
-        exceptions, addrinfo, laddr_infos)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\Python\Lib\asyncio\base_events.py", line 1042, in _connect_sock
-    await self.sock_connect(sock, address)
-  File "E:\Python\Lib\asyncio\proactor_events.py", line 728, in sock_connect
-    return await self._proactor.connect(sock, address)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\Python\Lib\asyncio\windows_events.py", line 804, in _poll
-    value = callback(transferred, key, ov)
-  File "E:\Python\Lib\asyncio\windows_events.py", line 600, in finish_connect
-    ov.getresult()
-    ~~~~~~~~~~~~^^
-ConnectionRefusedError: [WinError 1225] 远程计算机拒绝网络连接。
+2026-11-15 14:03:49 | INFO     | backend.python.__main__ | HTTP请求 request_id=4ea06dfb804a method=GET path=/api/products status=200 duration_ms=9.7 client=127.0.0.1
+2026-11-15 14:03:49 | INFO     | backend.python.__main__ | HTTP请求 request_id=80b8368e7b70 method=GET path=/api/products/categories status=200 duration_ms=14.6 client=127.0.0.1
+2026-11-15 14:03:49 | INFO     | backend.python.__main__ | HTTP请求 request_id=b66269d8538f method=GET path=/images/1689/9888356a11d7425ca9341c83c627c782.webp status=200 duration_ms=35.3 client=127.0.0.1
+2026-11-15 14:03:49 | INFO     | backend.python.__main__ | HTTP请求 request_id=511b5e2fff4f method=GET path=/api/announcements status=200 duration_ms=107.9 client=127.0.0.1
+2026-11-15 14:04:02 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=242 ip=127.0.0.1
+2026-11-15 14:04:02 | INFO     | backend.python.__main__ | HTTP请求 request_id=5f61e7e92295 method=POST path=/api/auth/login status=200 duration_ms=171.6 client=127.0.0.1
+2026-11-15 14:04:02 | INFO     | backend.python.__main__ | HTTP请求 request_id=dad8c8bf54a8 method=GET path=/api/favorite status=200 duration_ms=6.2 client=127.0.0.1
+2026-11-15 14:04:02 | INFO     | backend.python.__main__ | HTTP请求 request_id=7a287b2cab90 method=GET path=/api/products status=200 duration_ms=2.3 client=127.0.0.1
+2026-11-15 14:04:02 | INFO     | backend.python.__main__ | HTTP请求 request_id=bc3a02317a99 method=GET path=/api/products/categories status=200 duration_ms=3.1 client=127.0.0.1
+2026-11-15 14:04:02 | INFO     | backend.python.__main__ | HTTP请求 request_id=eca5cb4b0b03 method=GET path=/api/favorite status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:04:03 | INFO     | backend.python.__main__ | HTTP请求 request_id=77dfe86d84ab method=GET path=/api/favorite status=200 duration_ms=3.2 client=127.0.0.1
+2026-11-15 14:04:03 | INFO     | backend.python.__main__ | HTTP请求 request_id=962c528d1b5a method=GET path=/api/sales/my status=200 duration_ms=16.3 client=127.0.0.1
+2026-11-15 14:04:03 | INFO     | backend.python.__main__ | HTTP请求 request_id=2398535dde3c method=GET path=/api/orders/my status=200 duration_ms=7.2 client=127.0.0.1
+2026-11-15 14:04:03 | INFO     | backend.python.__main__ | HTTP请求 request_id=1bbf6dae3f07 method=GET path=/api/my status=200 duration_ms=13.3 client=127.0.0.1
+2026-11-15 14:04:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=be25fe320624 method=GET path=/api/products status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:04:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=997ad644737a method=GET path=/api/products/categories status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:04:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=d4802283e42d method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:04:11 | INFO     | backend.python.__main__ | HTTP请求 request_id=9d8c0618807f method=GET path=/api/products/100312 status=200 duration_ms=2.6 client=127.0.0.1
+2026-11-15 14:04:11 | INFO     | backend.python.__main__ | HTTP请求 request_id=da2ccdbe0ad1 method=GET path=/api/users/100700 status=200 duration_ms=2.8 client=127.0.0.1
+2026-11-15 14:04:12 | WARNING  | backend.python.__main__ | HTTP请求 request_id=414632042b3d method=POST path=/api/orders status=400 duration_ms=5.6 client=127.0.0.1
+2026-11-15 14:04:16 | WARNING  | backend.python.__main__ | HTTP请求 request_id=9540129f3ee6 method=POST path=/api/orders status=400 duration_ms=3.1 client=127.0.0.1
+2026-11-15 14:04:19 | WARNING  | backend.python.__main__ | HTTP请求 request_id=57620432d44a method=POST path=/api/orders status=400 duration_ms=3.4 client=127.0.0.1
+2026-11-15 14:04:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=099e3bed0b3f method=GET path=/api/products status=200 duration_ms=3.1 client=127.0.0.1
+2026-11-15 14:04:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=d2350f5e681c method=GET path=/api/products/categories status=200 duration_ms=2.9 client=127.0.0.1
+2026-11-15 14:04:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=f9596011339a method=GET path=/api/favorite status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-15 14:07:08 | INFO     | backend.python.__main__ | HTTP请求 request_id=fb883fcbfb58 method=GET path=/api/announcements status=200 duration_ms=8.6 client=127.0.0.1
+2026-11-15 14:07:08 | INFO     | backend.python.__main__ | HTTP请求 request_id=c7628da1113f method=GET path=/api/products/categories status=200 duration_ms=6.1 client=127.0.0.1
+2026-11-15 14:07:08 | WARNING  | backend.python.__main__ | HTTP请求 request_id=79b7444d9c21 method=GET path=/api/auth/me status=401 duration_ms=18.7 client=127.0.0.1
+2026-11-15 14:07:08 | INFO     | backend.python.__main__ | HTTP请求 request_id=41c24667bdb0 method=GET path=/api/products status=200 duration_ms=13.2 client=127.0.0.1
+2026-11-15 14:07:08 | WARNING  | backend.python.__main__ | HTTP请求 request_id=cd550698a15d method=POST path=/api/auth/refresh status=401 duration_ms=2.1 client=127.0.0.1
+2026-11-15 14:07:08 | WARNING  | backend.python.__main__ | HTTP请求 request_id=444cb1d5113c method=GET path=/api/favorite status=401 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:13 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=1 ip=127.0.0.1
+2026-11-15 14:12:13 | INFO     | backend.python.__main__ | HTTP请求 request_id=dcc752ce65b5 method=POST path=/api/auth/login status=200 duration_ms=162.5 client=127.0.0.1
+2026-11-15 14:12:13 | INFO     | backend.python.__main__ | HTTP请求 request_id=dabcba8f720a method=GET path=/api/favorite status=200 duration_ms=4.4 client=127.0.0.1
+2026-11-15 14:12:13 | INFO     | backend.python.__main__ | HTTP请求 request_id=4467a37ba167 method=GET path=/api/products/categories status=200 duration_ms=5.1 client=127.0.0.1
+2026-11-15 14:12:13 | INFO     | backend.python.__main__ | HTTP请求 request_id=7780fe4a3918 method=GET path=/api/products status=200 duration_ms=11.5 client=127.0.0.1
+2026-11-15 14:12:13 | INFO     | backend.python.__main__ | HTTP请求 request_id=f80347f5a689 method=GET path=/api/favorite status=200 duration_ms=1.4 client=127.0.0.1
+2026-11-15 14:12:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=f6ad7d17fba9 method=GET path=/api/auth/me status=200 duration_ms=0.5 client=127.0.0.1
+2026-11-15 14:12:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=f9ea3ea79e6c method=GET path=/api/announcements status=200 duration_ms=4.0 client=127.0.0.1
+2026-11-15 14:12:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=b05d2e9337ca method=GET path=/api/products/categories status=200 duration_ms=1.8 client=127.0.0.1
+2026-11-15 14:12:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=5462ea706809 method=GET path=/api/products status=200 duration_ms=3.3 client=127.0.0.1
+2026-11-15 14:12:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=db17335b3c79 method=GET path=/api/favorite status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:12:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=756223091041 method=GET path=/api/favorite status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:12:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=a5e71a1a5c45 method=GET path=/api/sales/my status=200 duration_ms=5.3 client=127.0.0.1
+2026-11-15 14:12:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=9b4719da44e5 method=GET path=/api/orders/my status=200 duration_ms=4.2 client=127.0.0.1
+2026-11-15 14:12:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=0e3c7f8fb7d3 method=GET path=/api/my status=200 duration_ms=4.6 client=127.0.0.1
+2026-11-15 14:12:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=f5c6df3f96a3 method=GET path=/api/products status=200 duration_ms=1.4 client=127.0.0.1
+2026-11-15 14:12:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=6665953a4283 method=GET path=/api/products/categories status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:12:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=ba8ea028877b method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:12:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=fbbb98afa00d method=GET path=/api/announcements status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-15 14:12:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=e098efebc650 method=GET path=/api/auth/me status=200 duration_ms=3.0 client=127.0.0.1
+2026-11-15 14:12:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=72fa95461864 method=GET path=/api/products/categories status=200 duration_ms=3.9 client=127.0.0.1
+2026-11-15 14:12:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=db216c78cd9b method=GET path=/api/products status=200 duration_ms=8.2 client=127.0.0.1
+2026-11-15 14:12:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=8d30041b83ab method=GET path=/api/favorite status=200 duration_ms=2.6 client=127.0.0.1
+2026-11-15 14:12:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=2af4a7932948 method=GET path=/api/favorite status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:12:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=34d2928d41da method=GET path=/api/sales/my status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:12:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=327c98ac3137 method=GET path=/api/orders/my status=200 duration_ms=4.4 client=127.0.0.1
+2026-11-15 14:12:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=dc9401c511bc method=GET path=/api/my status=200 duration_ms=4.9 client=127.0.0.1
+2026-11-15 14:12:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=e57cda55ccc6 method=GET path=/api/products/categories status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:12:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=f5c0ac50179e method=GET path=/api/products status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:12:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=fca30041e614 method=GET path=/api/favorite status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=744718f8a826 method=GET path=/api/announcements status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=76a904061be5 method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=7ac48edfa956 method=GET path=/api/products/categories status=200 duration_ms=1.5 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=a3e87c5e4f96 method=GET path=/api/products status=200 duration_ms=2.2 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=98eacd06d6c5 method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=3de7d245f744 method=GET path=/api/announcements status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=24cebb9405b0 method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=d5867b072070 method=GET path=/api/products status=200 duration_ms=2.6 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=28c363db7f5b method=GET path=/api/products/categories status=200 duration_ms=1.7 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=f70c5c917b8b method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=62a915da6bfb method=GET path=/api/announcements status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=56e127eb207c method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=f5f349356bae method=GET path=/api/products/categories status=200 duration_ms=1.3 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=db799a1cae79 method=GET path=/api/products status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=7a773af3c1f8 method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=6a89bfc18504 method=GET path=/api/announcements status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=3b270580fe73 method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=9c0ce5c28135 method=GET path=/api/products/categories status=200 duration_ms=1.8 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=671760a8032c method=GET path=/api/products status=200 duration_ms=3.5 client=127.0.0.1
+2026-11-15 14:12:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=3f17d2e8e7a9 method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=d638d5318fd0 method=GET path=/api/announcements status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=72a7c747a387 method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=f96966299226 method=GET path=/api/products/categories status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=f9eb745c1d96 method=GET path=/api/products status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=d3e2d0f2da06 method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=a9481f9e054c method=GET path=/api/announcements status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=91a699cbdfa5 method=GET path=/api/auth/me status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=885ab0adedf8 method=GET path=/api/products/categories status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=99d01c710463 method=GET path=/api/products status=200 duration_ms=2.2 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=9f370f78459b method=GET path=/api/favorite status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=8f120f919d25 method=GET path=/api/announcements status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=d68986439920 method=GET path=/api/auth/me status=200 duration_ms=0.3 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=efd99aa4b53f method=GET path=/api/products/categories status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=701a45f1ba2a method=GET path=/api/products status=200 duration_ms=1.9 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=2aaf062ac13c method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=f53e4c3c0ffc method=GET path=/api/announcements status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=5c6802a4412b method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=7b29bc451196 method=GET path=/api/products/categories status=200 duration_ms=1.5 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=2c01ca8697e0 method=GET path=/api/products status=200 duration_ms=2.2 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=7c2e313130ae method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=15b62b2173cf method=GET path=/api/announcements status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=be71b487a02c method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=fd73298b49c1 method=GET path=/api/products/categories status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=a49c21ecb2f9 method=GET path=/api/products status=200 duration_ms=2.1 client=127.0.0.1
+2026-11-15 14:12:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=1ec9ad43a8f7 method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=743b75bac04b method=GET path=/api/announcements status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=b9bf2f1fa48d method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=89df22bbbd7c method=GET path=/api/products/categories status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=c9cb3b4b1869 method=GET path=/api/products status=200 duration_ms=1.7 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=73a5601cd112 method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=406c15671732 method=GET path=/api/announcements status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=d412da861afc method=GET path=/api/auth/me status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=4c685719880a method=GET path=/api/products/categories status=200 duration_ms=4.0 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=c49cbea08f13 method=GET path=/api/products status=200 duration_ms=5.1 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=91db29b9d064 method=GET path=/api/favorite status=200 duration_ms=1.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=51437328508a method=GET path=/api/announcements status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=f44c3734aee5 method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=36f6bd283ecd method=GET path=/api/products/categories status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=a772fef51291 method=GET path=/api/products status=200 duration_ms=1.6 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=51c5e753fa6b method=GET path=/api/favorite status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=e42b52a007fb method=GET path=/api/announcements status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=f7f730e2e410 method=GET path=/api/auth/me status=200 duration_ms=0.6 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=0c6514f8509e method=GET path=/api/products/categories status=200 duration_ms=2.3 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=92262c7a9ba4 method=GET path=/api/products status=200 duration_ms=2.9 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=f21434ca1ce8 method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=0429e8ad1f3d method=GET path=/api/announcements status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=8f0471898950 method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=31b82ca763e7 method=GET path=/api/products/categories status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=45ffb5b9083c method=GET path=/api/products status=200 duration_ms=1.7 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=9580146061a2 method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=705c5dcf0ed2 method=GET path=/api/announcements status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=d2a2f9e68fb5 method=GET path=/api/auth/me status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=86bee01aef66 method=GET path=/api/products/categories status=200 duration_ms=1.4 client=127.0.0.1
+2026-11-15 14:12:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=377efa341632 method=GET path=/api/products status=200 duration_ms=3.1 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=799007751802 method=GET path=/api/favorite status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=fc36647e6e43 method=GET path=/api/announcements status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=c7d839c8fa33 method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=51fa71e1c231 method=GET path=/api/products/categories status=200 duration_ms=1.5 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=8ccc589be572 method=GET path=/api/products status=200 duration_ms=2.7 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=7b1dddf0c847 method=GET path=/api/favorite status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=177d56bd8d67 method=GET path=/api/announcements status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=379ea9c63657 method=GET path=/api/auth/me status=200 duration_ms=0.4 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=3ad7f2d6d2f8 method=GET path=/api/products/categories status=200 duration_ms=1.3 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=5c4a741f8c79 method=GET path=/api/products status=200 duration_ms=2.5 client=127.0.0.1
+2026-11-15 14:13:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=0200c423419d method=GET path=/api/favorite status=200 duration_ms=1.8 client=127.0.0.1
+2026-11-15 14:13:11 | INFO     | backend.python.__main__ | HTTP请求 request_id=9c34c0c28edf method=GET path=/admin status=307 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:13:11 | INFO     | backend.python.__main__ | HTTP请求 request_id=5a67f0c2dc50 method=GET path=/admin/login.html status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:13:11 | INFO     | backend.python.__main__ | HTTP请求 request_id=5e6721400f81 method=GET path=/admin/css/style.css status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:13:11 | INFO     | backend.python.__main__ | HTTP请求 request_id=08c992453a2b method=GET path=/admin/js/login.js status=200 duration_ms=1.8 client=127.0.0.1
+2026-11-15 14:13:11 | WARNING  | backend.python.__main__ | HTTP请求 request_id=847e3963565b method=GET path=/favicon.ico status=404 duration_ms=25.8 client=127.0.0.1
+2026-11-15 14:13:11 | INFO     | backend.python.__main__ | HTTP请求 request_id=24c07e87295d method=GET path=/api/captcha status=200 duration_ms=65.6 client=127.0.0.1
+2026-11-15 14:13:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=1536d644e119 method=GET path=/api/auth/me status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:13:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=28e5e9229bc4 method=GET path=/api/announcements status=200 duration_ms=4.1 client=127.0.0.1
+2026-11-15 14:13:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=f3e1cdbf1389 method=GET path=/api/products/categories status=200 duration_ms=2.5 client=127.0.0.1
+2026-11-15 14:13:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=47d578896342 method=GET path=/api/products status=200 duration_ms=2.9 client=127.0.0.1
+2026-11-15 14:13:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=5bf7cfde6943 method=GET path=/api/favorite status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:13:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=e7612e04af56 method=GET path=/api/announcements status=200 duration_ms=5.7 client=127.0.0.1
+2026-11-15 14:13:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=c1f941e2d702 method=GET path=/api/auth/me status=200 duration_ms=6.6 client=127.0.0.1
+2026-11-15 14:13:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=78e085d4cc2b method=GET path=/api/products/categories status=200 duration_ms=6.5 client=127.0.0.1
+2026-11-15 14:13:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=2c14432e51dd method=GET path=/api/products status=200 duration_ms=7.5 client=127.0.0.1
+2026-11-15 14:13:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=0cd1130523fe method=GET path=/api/favorite status=200 duration_ms=2.9 client=127.0.0.1
+2026-11-15 14:15:46 | INFO     | backend.python.__main__ | HTTP请求 request_id=98406db2cb70 method=GET path=/admin status=307 duration_ms=0.2 client=127.0.0.1
+2026-11-15 14:15:46 | INFO     | backend.python.__main__ | HTTP请求 request_id=46585a44e8c3 method=GET path=/admin/login.html status=200 duration_ms=1.3 client=127.0.0.1
+2026-11-15 14:15:46 | INFO     | backend.python.__main__ | HTTP请求 request_id=c0013900910d method=GET path=/admin/css/style.css status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:15:46 | INFO     | backend.python.__main__ | HTTP请求 request_id=d0c252708122 method=GET path=/admin/js/login.js status=200 duration_ms=1.6 client=127.0.0.1
+2026-11-15 14:15:46 | INFO     | backend.python.__main__ | HTTP请求 request_id=042c0d6bf4c5 method=GET path=/api/captcha status=200 duration_ms=3.9 client=127.0.0.1
+2026-11-15 14:15:47 | INFO     | backend.python.__main__ | HTTP请求 request_id=3a30d43e899a method=GET path=/admin status=307 duration_ms=0.3 client=127.0.0.1
+2026-11-15 14:15:47 | INFO     | backend.python.__main__ | HTTP请求 request_id=4a6f66f61f24 method=GET path=/api/captcha status=200 duration_ms=5.8 client=127.0.0.1
+2026-11-15 14:15:47 | WARNING  | backend.python.__main__ | HTTP请求 request_id=94fda0e203ae method=GET path=/favicon.ico status=404 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:15:53 | INFO     | backend.python.admin.curd_a.admins | 管理员登录成功 admin_id=1 username=chuhl ip=127.0.0.1
+2026-11-15 14:15:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=02c0170d11be method=POST path=/api/admin/login status=200 duration_ms=161.6 client=127.0.0.1
+2026-11-15 14:15:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=8c030d0c241c method=GET path=/admin/ status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:15:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=828c4b81596c method=GET path=/admin/css/style.css status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:15:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=c3f82f68a5a6 method=GET path=/admin/js/dashboard.js status=200 duration_ms=0.5 client=127.0.0.1
+2026-11-15 14:15:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=99de5f02aa83 method=GET path=/api/admin/me status=200 duration_ms=4.3 client=127.0.0.1
+2026-11-15 14:15:53 | INFO     | backend.python.__main__ | HTTP请求 request_id=bec2e953ae80 method=GET path=/api/admin/overview status=200 duration_ms=7.9 client=127.0.0.1
+2026-11-15 14:15:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=ff30b247c63b method=GET path=/api/admin/users status=200 duration_ms=4.4 client=127.0.0.1
+2026-11-15 14:15:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=b240f6a7a9be method=GET path=/api/admin/products status=200 duration_ms=4.9 client=127.0.0.1
+2026-11-15 14:15:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=31c67820c262 method=GET path=/api/admin/orders status=200 duration_ms=4.6 client=127.0.0.1
+2026-11-15 14:15:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=c77a2a5cc7c0 method=GET path=/api/admin/reports status=200 duration_ms=4.3 client=127.0.0.1
+2026-11-15 14:15:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=81f751721bdb method=GET path=/api/admin/announcements status=200 duration_ms=4.0 client=127.0.0.1
+2026-11-15 14:16:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=a5bfeb8ef2b4 method=GET path=/api/admin/system status=200 duration_ms=411.6 client=127.0.0.1
+2026-11-15 14:16:01 | INFO     | backend.python.__main__ | HTTP请求 request_id=c7610b7a54da method=GET path=/api/admin/system status=200 duration_ms=7.9 client=127.0.0.1
+2026-11-15 14:16:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=43ab3dbfe480 method=GET path=/api/admin/system status=200 duration_ms=8.9 client=127.0.0.1
+2026-11-15 14:16:10 | INFO     | backend.python.__main__ | HTTP请求 request_id=ad7933d34207 method=GET path=/api/admin/system status=200 duration_ms=179.0 client=127.0.0.1
+2026-11-15 14:16:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=d8f699758922 method=GET path=/api/admin/system status=200 duration_ms=7.2 client=127.0.0.1
+2026-11-15 14:16:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=68c1f6c77eef method=GET path=/api/admin/system status=200 duration_ms=7.4 client=127.0.0.1
+2026-11-15 14:16:25 | INFO     | backend.python.__main__ | HTTP请求 request_id=6b8408709661 method=GET path=/api/admin/system status=200 duration_ms=188.8 client=127.0.0.1
+2026-11-15 14:16:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=e78018c645c0 method=GET path=/api/admin/system status=200 duration_ms=7.0 client=127.0.0.1
+2026-11-15 14:16:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=77903483e34f method=GET path=/api/admin/logs status=200 duration_ms=3.4 client=127.0.0.1
+2026-11-15 14:16:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=76a362da237b method=GET path=/api/admin/logs/content status=200 duration_ms=9.8 client=127.0.0.1
+2026-11-15 14:16:36 | INFO     | backend.python.__main__ | HTTP请求 request_id=837110c0045a method=GET path=/api/admin/overview status=200 duration_ms=4.1 client=127.0.0.1
+2026-11-15 14:16:36 | INFO     | backend.python.__main__ | HTTP请求 request_id=b9b297e2b13a method=GET path=/api/admin/users status=200 duration_ms=3.1 client=127.0.0.1
+2026-11-15 14:16:38 | INFO     | backend.python.__main__ | HTTP请求 request_id=da2caa5be562 method=GET path=/api/products/categories status=200 duration_ms=1.7 client=127.0.0.1
+2026-11-15 14:16:56 | INFO     | backend.python.crud_1.produces | 商品发布成功 user_id=1 product_id=101001 name=1
+2026-11-15 14:16:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=7bb05c4c54d2 method=POST path=/api/products status=200 duration_ms=13.8 client=127.0.0.1
+2026-11-15 14:16:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=dd539d5c5b58 method=GET path=/api/products/categories status=200 duration_ms=1.5 client=127.0.0.1
+2026-11-15 14:16:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=7ac0c3237040 method=GET path=/api/products status=200 duration_ms=5.1 client=127.0.0.1
+2026-11-15 14:16:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=051558272be0 method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:16:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=e4b8a4eacd72 method=GET path=/api/admin/products status=200 duration_ms=8.9 client=127.0.0.1
+2026-11-15 14:16:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=2df5edb55d16 method=GET path=/images/101001/4efd114341754658a749e707e1d637a2.png status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:17:01 | INFO     | backend.python.admin.curd_a.products | 商品审核完成 product_id=101001 status=approved admin_id=1
+2026-11-15 14:17:01 | INFO     | backend.python.__main__ | HTTP请求 request_id=deb0a03d32f7 method=PATCH path=/api/admin/products/101001/review status=200 duration_ms=21.5 client=127.0.0.1
+2026-11-15 14:17:01 | INFO     | backend.python.__main__ | HTTP请求 request_id=2cffdd6bd556 method=GET path=/api/admin/products status=200 duration_ms=5.3 client=127.0.0.1
+2026-11-15 14:17:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=6be814a8c9cb method=GET path=/api/favorite status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:17:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=593e6944adb7 method=GET path=/api/sales/my status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:17:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=0e4a638a390c method=GET path=/api/orders/my status=200 duration_ms=4.5 client=127.0.0.1
+2026-11-15 14:17:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=af56fef3ab99 method=GET path=/api/my status=200 duration_ms=6.9 client=127.0.0.1
+2026-11-15 14:17:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=29c349cf1199 method=GET path=/images/101001/4efd114341754658a749e707e1d637a2.png status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:17:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=aef54f9c9ea7 method=GET path=/api/products/categories status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:17:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=643246afea30 method=GET path=/api/products status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:17:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=cda20a680606 method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:17:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=1709674206eb method=GET path=/api/my status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:17:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=c044de4b48a4 method=GET path=/api/sales/my status=200 duration_ms=4.9 client=127.0.0.1
+2026-11-15 14:17:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=cc7dd672a333 method=GET path=/api/favorite status=200 duration_ms=1.4 client=127.0.0.1
+2026-11-15 14:17:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=a97eede19315 method=GET path=/api/orders/my status=200 duration_ms=3.7 client=127.0.0.1
+2026-11-15 14:17:06 | INFO     | backend.python.__main__ | HTTP请求 request_id=532fd7dbb386 method=POST path=/api/auth/logout status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:17:12 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=2 ip=127.0.0.1
+2026-11-15 14:17:12 | INFO     | backend.python.__main__ | HTTP请求 request_id=8a15727558ff method=POST path=/api/auth/login status=200 duration_ms=159.6 client=127.0.0.1
+2026-11-15 14:17:12 | INFO     | backend.python.__main__ | HTTP请求 request_id=c86b173e142e method=GET path=/api/favorite status=200 duration_ms=3.4 client=127.0.0.1
+2026-11-15 14:17:12 | INFO     | backend.python.__main__ | HTTP请求 request_id=906924b1fd02 method=GET path=/api/products status=200 duration_ms=1.8 client=127.0.0.1
+2026-11-15 14:17:12 | INFO     | backend.python.__main__ | HTTP请求 request_id=a9d4b51389c0 method=GET path=/api/products/categories status=200 duration_ms=1.7 client=127.0.0.1
+2026-11-15 14:17:12 | INFO     | backend.python.__main__ | HTTP请求 request_id=ac9e7a450387 method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:17:13 | INFO     | backend.python.__main__ | HTTP请求 request_id=663fb1e902c0 method=GET path=/api/products/101001 status=200 duration_ms=6.4 client=127.0.0.1
+2026-11-15 14:17:13 | INFO     | backend.python.__main__ | HTTP请求 request_id=9fa2c4d05b11 method=GET path=/api/users/1 status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:17:14 | INFO     | backend.python.crud_1.orders | 订单创建成功 order_id=101001 order_no=3578b657f75944dbb9f0c547a48d1eb1 buyer_id=2 seller_id=1 product_id=101001
+2026-11-15 14:17:14 | INFO     | backend.python.__main__ | HTTP请求 request_id=37ab4d4a3225 method=POST path=/api/orders status=200 duration_ms=10.3 client=127.0.0.1
+2026-11-15 14:17:14 | INFO     | backend.python.__main__ | HTTP请求 request_id=5569a9627aee method=GET path=/api/sales/my status=200 duration_ms=2.1 client=127.0.0.1
+2026-11-15 14:17:14 | INFO     | backend.python.__main__ | HTTP请求 request_id=b9b90ab83c52 method=GET path=/api/favorite status=200 duration_ms=1.5 client=127.0.0.1
+2026-11-15 14:17:14 | INFO     | backend.python.__main__ | HTTP请求 request_id=e7a3c9b122e0 method=GET path=/api/orders/my status=200 duration_ms=6.3 client=127.0.0.1
+2026-11-15 14:17:14 | INFO     | backend.python.__main__ | HTTP请求 request_id=d89861242036 method=GET path=/api/my status=200 duration_ms=6.0 client=127.0.0.1
+2026-11-15 14:17:15 | ERROR    | backend.python.tools_1.email | 邮件发送失败 host=smtp.qq.com port=465
+Traceback (most recent call last):
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\email.py", line 39, in send_email
+    smtp.sendmail(EMAIL_ADDRESS,[user_email],msg.as_string())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\smtplib.py", line 909, in sendmail
+    raise SMTPDataError(code, resp)
+smtplib.SMTPDataError: (550, b'The recipient may contain a non-existent account, please check the recipient address.')
+2026-11-15 14:17:15 | ERROR    | backend.python.tools_1.email | 新订单邮件发送失败，订单号：3578b657f75944dbb9f0c547a48d1eb1
+Traceback (most recent call last):
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\email.py", line 39, in send_email
+    smtp.sendmail(EMAIL_ADDRESS,[user_email],msg.as_string())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\smtplib.py", line 909, in sendmail
+    raise SMTPDataError(code, resp)
+smtplib.SMTPDataError: (550, b'The recipient may contain a non-existent account, please check the recipient address.')
 
 During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
-  File "E:\PyProject\FastAPI\Trading_Platform\back_end\database_1\redis_config.py", line 41, in redis_content
-    await redis_client.ping()
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\client.py", line 929, in execute_command
-    conn = self.connection or await pool.get_connection()
-                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\utils.py", line 249, in async_wrapper
-    return await func(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 3103, in get_connection
-    await self.ensure_connection(connection)
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 2865, in ensure_connection
-    await connection.connect()
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 819, in connect
-    await self.retry.call_with_retry(
-    ...<7 lines>...
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\email.py", line 109, in send_new_order_notification
+    send_email(
+    ~~~~~~~~~~^
+        user_email=user_email,
+        ^^^^^^^^^^^^^^^^^^^^^^
+        content=content,
+        ^^^^^^^^^^^^^^^^
+        subject=subject)
+        ^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\email.py", line 46, in send_email
+    raise HTTPException(
+    ...<2 lines>...
     )
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\retry.py", line 81, in call_with_retry
-    raise error
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\retry.py", line 69, in call_with_retry
-    return await do()
-           ^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\redis\asyncio\connection.py", line 876, in connect_check_health
-    raise e
-redis.exceptions.ConnectionError: Error 22 connecting to 127.0.0.1:6379. 远程计算机拒绝网络连接。.
+fastapi.exceptions.HTTPException: 500: 发送失败,请稍后重试
+2026-11-15 14:17:16 | INFO     | backend.python.__main__ | HTTP请求 request_id=3995b2864895 method=GET path=/api/orders/101001 status=200 duration_ms=3.8 client=127.0.0.1
+2026-11-15 14:17:26 | INFO     | backend.python.crud_1.orders | 交易安排设置成功 order_id=101001 user_id=2 old_time=None new_time=2026-11-20 17:17:00 old_location=None new_location=1
+2026-11-15 14:17:26 | INFO     | backend.python.__main__ | HTTP请求 request_id=30c4905c66ca method=PUT path=/api/orders/101001/meeting status=200 duration_ms=7.8 client=127.0.0.1
+2026-11-15 14:17:29 | INFO     | backend.python.crud_1.orders | 交易安排确认成功 order_id=101001 user_id=2 confirmed=False
+2026-11-15 14:17:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=94ab5dbf1b90 method=POST path=/api/orders/101001/meeting/confirm status=200 duration_ms=7.3 client=127.0.0.1
+2026-11-15 14:17:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=c4ad50fc23f0 method=GET path=/api/sales/my status=200 duration_ms=4.6 client=127.0.0.1
+2026-11-15 14:17:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=5083dbea21f2 method=GET path=/api/my status=200 duration_ms=2.7 client=127.0.0.1
+2026-11-15 14:17:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=559d46d26c37 method=GET path=/api/favorite status=200 duration_ms=1.9 client=127.0.0.1
+2026-11-15 14:17:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=64d4fdbd5d10 method=GET path=/api/orders/my status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:17:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=12421a86974d method=POST path=/api/auth/logout status=200 duration_ms=1.4 client=127.0.0.1
+2026-11-15 14:17:38 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=1 ip=127.0.0.1
+2026-11-15 14:17:38 | INFO     | backend.python.__main__ | HTTP请求 request_id=9ce0dc774f08 method=POST path=/api/auth/login status=200 duration_ms=161.2 client=127.0.0.1
+2026-11-15 14:17:38 | INFO     | backend.python.__main__ | HTTP请求 request_id=e44a108b0dd8 method=GET path=/api/favorite status=200 duration_ms=2.4 client=127.0.0.1
+2026-11-15 14:17:38 | INFO     | backend.python.__main__ | HTTP请求 request_id=0b55ef75e964 method=GET path=/api/products/categories status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:17:38 | INFO     | backend.python.__main__ | HTTP请求 request_id=977df1f11cbf method=GET path=/api/products status=200 duration_ms=5.5 client=127.0.0.1
+2026-11-15 14:17:38 | INFO     | backend.python.__main__ | HTTP请求 request_id=cc91c53110f0 method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:17:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=44d5f4bbe289 method=GET path=/api/favorite status=200 duration_ms=1.3 client=127.0.0.1
+2026-11-15 14:17:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=614bad70bb61 method=GET path=/api/sales/my status=200 duration_ms=6.8 client=127.0.0.1
+2026-11-15 14:17:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=b841d4ae2db8 method=GET path=/api/orders/my status=200 duration_ms=4.7 client=127.0.0.1
+2026-11-15 14:17:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=4f8deb4cb2b2 method=GET path=/api/my status=200 duration_ms=6.6 client=127.0.0.1
+2026-11-15 14:17:40 | INFO     | backend.python.__main__ | HTTP请求 request_id=450a70f5eb9a method=GET path=/api/orders/101001 status=200 duration_ms=2.7 client=127.0.0.1
+2026-11-15 14:17:43 | INFO     | backend.python.crud_1.orders | 交易安排确认成功 order_id=101001 user_id=1 confirmed=True
+2026-11-15 14:17:43 | INFO     | backend.python.__main__ | HTTP请求 request_id=cbc56fd31d81 method=POST path=/api/orders/101001/meeting/confirm status=200 duration_ms=6.6 client=127.0.0.1
+2026-11-15 14:17:48 | INFO     | backend.python.__main__ | HTTP请求 request_id=10ac8615ae2d method=GET path=/api/my status=200 duration_ms=1.7 client=127.0.0.1
+2026-11-15 14:17:48 | INFO     | backend.python.__main__ | HTTP请求 request_id=25631d23ebf0 method=GET path=/api/favorite status=200 duration_ms=1.8 client=127.0.0.1
+2026-11-15 14:17:48 | INFO     | backend.python.__main__ | HTTP请求 request_id=60458cacec47 method=GET path=/api/orders/my status=200 duration_ms=4.6 client=127.0.0.1
+2026-11-15 14:17:48 | INFO     | backend.python.__main__ | HTTP请求 request_id=7142eb8b2146 method=GET path=/api/sales/my status=200 duration_ms=6.4 client=127.0.0.1
+2026-11-15 14:17:50 | INFO     | backend.python.__main__ | HTTP请求 request_id=d34690799fa7 method=POST path=/api/auth/logout status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:17:56 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=2 ip=127.0.0.1
+2026-11-15 14:17:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=bc950a7810a9 method=POST path=/api/auth/login status=200 duration_ms=161.0 client=127.0.0.1
+2026-11-15 14:17:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=88f9a195ebdc method=GET path=/api/favorite status=200 duration_ms=2.3 client=127.0.0.1
+2026-11-15 14:17:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=268d87cf442e method=GET path=/api/products status=200 duration_ms=1.7 client=127.0.0.1
+2026-11-15 14:17:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=23dded29d067 method=GET path=/api/products/categories status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:17:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=a5bf7b8a148c method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:17:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=a12a21258041 method=GET path=/api/sales/my status=200 duration_ms=5.5 client=127.0.0.1
+2026-11-15 14:17:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=d9925e80f711 method=GET path=/api/favorite status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-15 14:17:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=6b664ceae8c8 method=GET path=/api/orders/my status=200 duration_ms=5.8 client=127.0.0.1
+2026-11-15 14:17:57 | INFO     | backend.python.__main__ | HTTP请求 request_id=726941de8f68 method=GET path=/api/my status=200 duration_ms=5.7 client=127.0.0.1
+2026-11-15 14:17:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=4474a170ca33 method=GET path=/api/orders/101001 status=200 duration_ms=3.3 client=127.0.0.1
+2026-11-15 14:18:00 | INFO     | backend.python.crud_1.orders | 买家确认收货 order_id=101001 buyer_id=2
+2026-11-15 14:18:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=ecafc5be8a11 method=PATCH path=/api/orders/101001/receive status=200 duration_ms=5.3 client=127.0.0.1
+2026-11-15 14:18:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=3c1bf1067c28 method=GET path=/api/orders/101001 status=200 duration_ms=2.6 client=127.0.0.1
+2026-11-15 14:18:15 | INFO     | backend.python.crud_1.reviews | 买家评价卖家 order_id=101001 buyer_id=2 seller_id=1 rating=5 credit_change=0.5
+2026-11-15 14:18:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=05999269ee01 method=POST path=/api/orders/101001/review status=200 duration_ms=8.3 client=127.0.0.1
+2026-11-15 14:18:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=7bbf883acff4 method=GET path=/api/orders/101001 status=200 duration_ms=2.3 client=127.0.0.1
+2026-11-15 14:18:19 | INFO     | backend.python.__main__ | HTTP请求 request_id=9b2425f22a83 method=GET path=/api/products status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:18:19 | INFO     | backend.python.__main__ | HTTP请求 request_id=c2fb1daa4e54 method=GET path=/api/products/categories status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-15 14:18:19 | INFO     | backend.python.__main__ | HTTP请求 request_id=41ba4aa397dc method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:18:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=83ac834439a9 method=GET path=/api/sales/my status=200 duration_ms=5.6 client=127.0.0.1
+2026-11-15 14:18:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=86282bc6324e method=GET path=/api/favorite status=200 duration_ms=1.5 client=127.0.0.1
+2026-11-15 14:18:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=59d4ed4b6e80 method=GET path=/api/my status=200 duration_ms=3.2 client=127.0.0.1
+2026-11-15 14:18:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=f9b991650b6e method=GET path=/api/orders/my status=200 duration_ms=5.4 client=127.0.0.1
+2026-11-15 14:18:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=6e43094f43a9 method=POST path=/api/auth/logout status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:18:28 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=1 ip=127.0.0.1
+2026-11-15 14:18:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=406aee0a10cb method=POST path=/api/auth/login status=200 duration_ms=159.2 client=127.0.0.1
+2026-11-15 14:18:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=5d95fea11b75 method=GET path=/api/favorite status=200 duration_ms=2.4 client=127.0.0.1
+2026-11-15 14:18:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=64a0bd2fe04f method=GET path=/api/products/categories status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:18:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=d2f5a9970027 method=GET path=/api/products status=200 duration_ms=1.9 client=127.0.0.1
+2026-11-15 14:18:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=e801d80a9940 method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:18:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=787e1644af2d method=GET path=/api/favorite status=200 duration_ms=1.3 client=127.0.0.1
+2026-11-15 14:18:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=b05afbc8baeb method=GET path=/api/my status=200 duration_ms=2.4 client=127.0.0.1
+2026-11-15 14:18:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=dc71b525547f method=GET path=/api/sales/my status=200 duration_ms=7.3 client=127.0.0.1
+2026-11-15 14:18:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=1cdc3c408d66 method=GET path=/api/orders/my status=200 duration_ms=4.0 client=127.0.0.1
+2026-11-15 14:18:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=db3251e149a8 method=GET path=/api/orders/101001 status=200 duration_ms=2.9 client=127.0.0.1
+2026-11-15 14:18:34 | INFO     | backend.python.crud_1.orders | 卖家确认订单完成 order_id=101001 seller_id=1 product_id=101001
+2026-11-15 14:18:34 | INFO     | backend.python.__main__ | HTTP请求 request_id=c85a5dd2937c method=PATCH path=/api/orders/101001/complete status=200 duration_ms=7.4 client=127.0.0.1
+2026-11-15 14:18:34 | INFO     | backend.python.__main__ | HTTP请求 request_id=77c131e35424 method=GET path=/api/orders/101001 status=200 duration_ms=2.3 client=127.0.0.1
+2026-11-15 14:18:35 | INFO     | backend.python.__main__ | HTTP请求 request_id=025625f372c5 method=GET path=/api/favorite status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:18:35 | INFO     | backend.python.__main__ | HTTP请求 request_id=c84255d8d0f6 method=GET path=/api/orders/my status=200 duration_ms=5.7 client=127.0.0.1
+2026-11-15 14:18:35 | INFO     | backend.python.__main__ | HTTP请求 request_id=fb4f5818f311 method=GET path=/api/sales/my status=200 duration_ms=7.6 client=127.0.0.1
+2026-11-15 14:18:35 | INFO     | backend.python.__main__ | HTTP请求 request_id=e95fd861555a method=GET path=/api/my status=200 duration_ms=7.1 client=127.0.0.1
+2026-11-15 14:18:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=6ce938fb854a method=GET path=/api/products/categories status=200 duration_ms=1.4 client=127.0.0.1
+2026-11-15 14:18:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=d89c49d8cce7 method=GET path=/api/products status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:18:39 | INFO     | backend.python.__main__ | HTTP请求 request_id=b449681c6f79 method=GET path=/api/favorite status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:18:40 | INFO     | backend.python.__main__ | HTTP请求 request_id=3fcb33fdcd4f method=GET path=/api/my status=200 duration_ms=1.6 client=127.0.0.1
+2026-11-15 14:18:40 | INFO     | backend.python.__main__ | HTTP请求 request_id=97243dc61058 method=GET path=/api/favorite status=200 duration_ms=2.4 client=127.0.0.1
+2026-11-15 14:18:40 | INFO     | backend.python.__main__ | HTTP请求 request_id=bd7eed2ebc7b method=GET path=/api/orders/my status=200 duration_ms=4.5 client=127.0.0.1
+2026-11-15 14:18:40 | INFO     | backend.python.__main__ | HTTP请求 request_id=1d07f71f6ee8 method=GET path=/api/sales/my status=200 duration_ms=6.6 client=127.0.0.1
+2026-11-15 14:18:40 | INFO     | backend.python.__main__ | HTTP请求 request_id=c10be64e44d6 method=GET path=/api/products status=200 duration_ms=1.3 client=127.0.0.1
+2026-11-15 14:18:40 | INFO     | backend.python.__main__ | HTTP请求 request_id=460b76ff9528 method=GET path=/api/products/categories status=200 duration_ms=0.6 client=127.0.0.1
+2026-11-15 14:18:40 | INFO     | backend.python.__main__ | HTTP请求 request_id=63735d8bd566 method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:19:06 | INFO     | backend.python.__main__ | HTTP请求 request_id=db2a3f2a2128 method=GET path=/api/admin/users status=200 duration_ms=4.1 client=127.0.0.1
+2026-11-15 14:19:06 | INFO     | backend.python.__main__ | HTTP请求 request_id=fdafbf9c0766 method=GET path=/api/admin/overview status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:19:06 | INFO     | backend.python.__main__ | HTTP请求 request_id=fe7c36144914 method=GET path=/api/admin/users status=200 duration_ms=3.3 client=127.0.0.1
+2026-11-15 14:19:07 | INFO     | backend.python.__main__ | HTTP请求 request_id=41627ec05d98 method=GET path=/api/admin/products status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:19:09 | INFO     | backend.python.__main__ | HTTP请求 request_id=e803a4d64197 method=GET path=/api/my status=200 duration_ms=2.9 client=127.0.0.1
+2026-11-15 14:19:09 | INFO     | backend.python.__main__ | HTTP请求 request_id=c1274a25fff4 method=GET path=/api/favorite status=200 duration_ms=3.0 client=127.0.0.1
+2026-11-15 14:19:09 | INFO     | backend.python.__main__ | HTTP请求 request_id=532978c4d7dd method=GET path=/api/orders/my status=200 duration_ms=5.0 client=127.0.0.1
+2026-11-15 14:19:09 | INFO     | backend.python.__main__ | HTTP请求 request_id=a7870c329a23 method=GET path=/api/sales/my status=200 duration_ms=6.8 client=127.0.0.1
+2026-11-15 14:19:10 | INFO     | backend.python.__main__ | HTTP请求 request_id=8a3088625cd4 method=GET path=/api/orders/101001 status=200 duration_ms=3.0 client=127.0.0.1
+2026-11-15 14:21:43 | INFO     | uvicorn.error | Shutting down
+2026-11-15 14:21:43 | INFO     | uvicorn.error | Waiting for application shutdown.
+2026-11-15 14:21:43 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端正在关闭
+2026-11-15 14:21:43 | INFO     | backend.python.tools_1.lifespan | 后台任务已停止
+2026-11-15 14:21:43 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端已关闭
+2026-11-15 14:21:43 | INFO     | uvicorn.error | Application shutdown complete.
+2026-11-15 14:21:43 | INFO     | uvicorn.error | Finished server process [20328]
+2026-11-15 14:21:44 | INFO     | uvicorn.error | Started server process [12328]
+2026-11-15 14:21:44 | INFO     | uvicorn.error | Waiting for application startup.
+2026-11-15 14:21:44 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端正在启动
+2026-11-15 14:21:44 | INFO     | backend.python.tools_1.add_ip_data_to_memory | IP2Region数据库已加载到内存 path=E:\PyProject\FastAPI\Trading_Platform\back_end\ip_data\ip2region_v4.xdb size=11122714bytes
+2026-11-15 14:21:44 | INFO     | backend.python.tools_1.lifespan | 布隆过滤器初始化完成
+2026-11-15 14:21:44 | INFO     | backend.python.tools_1.lifespan | 订单自动处理后台任务已启动
+2026-11-15 14:21:44 | INFO     | backend.python.tools_1.lifespan | 磁盘空间监控后台任务已启动
+2026-11-15 14:21:44 | INFO     | backend.python.tools_1.lifespan | 服务器状态采样后台任务已启动
+2026-11-15 14:21:44 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端启动完成
+2026-11-15 14:21:44 | INFO     | backend.python.tools_1.disk_monitor | 磁盘空间监控已启动 threshold=5.00 GB interval=1800s
+2026-11-15 14:21:44 | INFO     | uvicorn.error | Application startup complete.
+2026-11-15 14:21:44 | INFO     | uvicorn.error | Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+2026-11-15 14:22:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=0bc4e451e756 method=GET path=/api/products status=200 duration_ms=17.1 client=127.0.0.1
+2026-11-15 14:22:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=187ae621cc2f method=GET path=/api/products/categories status=200 duration_ms=4.0 client=127.0.0.1
+2026-11-15 14:22:04 | INFO     | backend.python.__main__ | HTTP请求 request_id=04cf18ca3362 method=GET path=/api/favorite status=200 duration_ms=8.1 client=127.0.0.1
+2026-11-15 14:22:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=f1ab250321fd method=GET path=/api/favorite status=200 duration_ms=4.3 client=127.0.0.1
+2026-11-15 14:22:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=5d75510b62aa method=GET path=/api/orders/my status=200 duration_ms=7.5 client=127.0.0.1
+2026-11-15 14:22:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=9a41575681f2 method=GET path=/api/sales/my status=200 duration_ms=17.1 client=127.0.0.1
+2026-11-15 14:22:05 | INFO     | backend.python.__main__ | HTTP请求 request_id=e3612a0eb8d3 method=GET path=/api/my status=200 duration_ms=13.7 client=127.0.0.1
+2026-11-15 14:22:07 | INFO     | backend.python.__main__ | HTTP请求 request_id=df26665e4597 method=GET path=/api/products/categories status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:22:14 | INFO     | backend.python.crud_1.produces | 商品发布成功 user_id=1 product_id=101002 name=1
+2026-11-15 14:22:14 | INFO     | backend.python.__main__ | HTTP请求 request_id=2d041d693437 method=POST path=/api/products status=200 duration_ms=9.1 client=127.0.0.1
+2026-11-15 14:22:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=07e6109328a4 method=GET path=/api/products status=200 duration_ms=1.4 client=127.0.0.1
+2026-11-15 14:22:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=69ebbbfe9454 method=GET path=/api/products/categories status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-15 14:22:15 | INFO     | backend.python.__main__ | HTTP请求 request_id=543db4bfa88b method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:22:17 | INFO     | backend.python.__main__ | HTTP请求 request_id=3cdba2d2fdfc method=GET path=/api/admin/products status=200 duration_ms=20.5 client=127.0.0.1
+2026-11-15 14:22:17 | INFO     | backend.python.__main__ | HTTP请求 request_id=e17a9c156a34 method=GET path=/images/101002/de0fb8a95d854562b089f9b0d626cbd1.png status=200 duration_ms=23.7 client=127.0.0.1
+2026-11-15 14:22:19 | INFO     | backend.python.admin.curd_a.products | 商品审核完成 product_id=101002 status=approved admin_id=1
+2026-11-15 14:22:19 | INFO     | backend.python.__main__ | HTTP请求 request_id=b35ab9ea6a9e method=PATCH path=/api/admin/products/101002/review status=200 duration_ms=16.1 client=127.0.0.1
+2026-11-15 14:22:19 | INFO     | backend.python.__main__ | HTTP请求 request_id=bf1f1add5166 method=GET path=/api/admin/products status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:22:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=d08558532764 method=GET path=/api/favorite status=200 duration_ms=2.2 client=127.0.0.1
+2026-11-15 14:22:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=e9faf67a0020 method=GET path=/api/orders/my status=200 duration_ms=5.5 client=127.0.0.1
+2026-11-15 14:22:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=8184511a908b method=GET path=/api/sales/my status=200 duration_ms=7.3 client=127.0.0.1
+2026-11-15 14:22:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=9a3bd4a02b36 method=GET path=/api/my status=200 duration_ms=8.0 client=127.0.0.1
+2026-11-15 14:22:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=feff16bcc3f1 method=GET path=/images/101002/de0fb8a95d854562b089f9b0d626cbd1.png status=200 duration_ms=0.6 client=127.0.0.1
+2026-11-15 14:22:22 | INFO     | backend.python.__main__ | HTTP请求 request_id=860076d93374 method=POST path=/api/auth/logout status=200 duration_ms=1.3 client=127.0.0.1
+2026-11-15 14:22:27 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=2 ip=127.0.0.1
+2026-11-15 14:22:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=f268cbd19bfd method=POST path=/api/auth/login status=200 duration_ms=162.1 client=127.0.0.1
+2026-11-15 14:22:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=b473b285ad6f method=GET path=/api/favorite status=200 duration_ms=2.4 client=127.0.0.1
+2026-11-15 14:22:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=6dceda46bc8b method=GET path=/api/products/categories status=200 duration_ms=1.5 client=127.0.0.1
+2026-11-15 14:22:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=73da0889e27c method=GET path=/api/products status=200 duration_ms=5.6 client=127.0.0.1
+2026-11-15 14:22:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=ba905094b5b0 method=GET path=/api/favorite status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:22:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=d245415a432e method=GET path=/images/101002/de0fb8a95d854562b089f9b0d626cbd1.png status=304 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:22:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=52755bdb87c3 method=GET path=/api/favorite status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:22:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=77341f9b4b80 method=GET path=/api/sales/my status=200 duration_ms=5.9 client=127.0.0.1
+2026-11-15 14:22:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=ec672242150f method=GET path=/api/orders/my status=200 duration_ms=6.2 client=127.0.0.1
+2026-11-15 14:22:28 | INFO     | backend.python.__main__ | HTTP请求 request_id=fda6b84585bd method=GET path=/api/my status=200 duration_ms=6.5 client=127.0.0.1
+2026-11-15 14:22:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=d714d128aa9e method=GET path=/api/products status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:22:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=87886aa8ebc7 method=GET path=/api/products/categories status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:22:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=bb2d2a53aedf method=GET path=/api/favorite status=200 duration_ms=0.6 client=127.0.0.1
+2026-11-15 14:22:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=e7a2193895ed method=GET path=/api/products/101002 status=200 duration_ms=7.0 client=127.0.0.1
+2026-11-15 14:22:30 | INFO     | backend.python.crud_1.orders | 订单创建成功 order_id=101002 order_no=da9f050347164778b9ba192fa6b5687b buyer_id=2 seller_id=1 product_id=101002
+2026-11-15 14:22:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=b0cc29cf7214 method=POST path=/api/orders status=200 duration_ms=9.2 client=127.0.0.1
+2026-11-15 14:22:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=422c26be321f method=GET path=/api/my status=200 duration_ms=1.4 client=127.0.0.1
+2026-11-15 14:22:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=914234e30de3 method=GET path=/api/sales/my status=200 duration_ms=5.8 client=127.0.0.1
+2026-11-15 14:22:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=21f410362ff9 method=GET path=/api/favorite status=200 duration_ms=2.3 client=127.0.0.1
+2026-11-15 14:22:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=38e289bd8193 method=GET path=/api/orders/my status=200 duration_ms=5.7 client=127.0.0.1
+2026-11-15 14:22:31 | ERROR    | backend.python.tools_1.email | 邮件发送失败 host=smtp.qq.com port=465
+Traceback (most recent call last):
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\email.py", line 39, in send_email
+    smtp.sendmail(EMAIL_ADDRESS,[user_email],msg.as_string())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\smtplib.py", line 909, in sendmail
+    raise SMTPDataError(code, resp)
+smtplib.SMTPDataError: (550, b'The recipient may contain a non-existent account, please check the recipient address.')
+2026-11-15 14:22:31 | ERROR    | backend.python.tools_1.email | 新订单邮件发送失败，订单号：da9f050347164778b9ba192fa6b5687b
+Traceback (most recent call last):
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\email.py", line 39, in send_email
+    smtp.sendmail(EMAIL_ADDRESS,[user_email],msg.as_string())
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Python\Lib\smtplib.py", line 909, in sendmail
+    raise SMTPDataError(code, resp)
+smtplib.SMTPDataError: (550, b'The recipient may contain a non-existent account, please check the recipient address.')
 
-The above exception was the direct cause of the following exception:
+During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\starlette\routing.py", line 638, in lifespan
-    async with self.lifespan_context(app) as maybe_state:
-               ~~~~~~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\.venv\Lib\site-packages\fastapi\routing.py", line 248, in merged_lifespan
-    async with original_context(app) as maybe_original_state:
-               ~~~~~~~~~~~~~~~~^^^^^
-  File "E:\Python\Lib\contextlib.py", line 214, in __aenter__
-    return await anext(self.gen)
-           ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\lifespan.py", line 33, in lifespan
-    app.state.redis = await redis_content()
-                      ^^^^^^^^^^^^^^^^^^^^^
-  File "E:\PyProject\FastAPI\Trading_Platform\back_end\database_1\redis_config.py", line 55, in redis_content
-    raise RuntimeError("Redis连接错误") from e
-RuntimeError: Redis连接错误
-
-2026-11-14 19:36:06 | ERROR    | uvicorn.error | Application startup failed. Exiting.
-2026-11-14 19:36:12 | INFO     | uvicorn.error | Started server process [21080]
-2026-11-14 19:36:12 | INFO     | uvicorn.error | Waiting for application startup.
-2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端正在启动
-2026-11-14 19:36:12 | INFO     | backend.python.tools_1.add_ip_data_to_memory | IP2Region数据库已加载到内存 path=E:\PyProject\FastAPI\Trading_Platform\back_end\ip_data\ip2region_v4.xdb size=11122714bytes
-2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 布隆过滤器初始化完成
-2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 订单自动处理后台任务已启动
-2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 磁盘空间监控后台任务已启动
-2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 服务器状态采样后台任务已启动
-2026-11-14 19:36:12 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端启动完成
-2026-11-14 19:36:12 | INFO     | backend.python.tools_1.disk_monitor | 磁盘空间监控已启动 threshold=5.00 GB interval=1800s
-2026-11-14 19:36:12 | INFO     | uvicorn.error | Application startup complete.
-2026-11-14 19:36:12 | INFO     | uvicorn.error | Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-2026-11-14 19:36:12 | INFO     | backend.python.tools_1.order_auto_receive_loop | 订单自动收货完成 count=2
-2026-11-14 19:36:13 | INFO     | backend.python.tools_1.order_auto_receive_loop | 订单自动完成 count=200
-2026-11-14 19:36:43 | INFO     | backend.python.tools_1.order_auto_receive_loop | 订单自动完成 count=43
-2026-11-14 19:37:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=2e656f1b2e37 method=GET path=/api/products/categories status=200 duration_ms=7.7 client=127.0.0.1
-2026-11-14 19:37:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=e7671dce326a method=GET path=/api/products status=200 duration_ms=33.8 client=127.0.0.1
-2026-11-14 19:37:20 | INFO     | backend.python.__main__ | HTTP请求 request_id=779e0ee5ecbb method=GET path=/api/announcements status=200 duration_ms=56.4 client=127.0.0.1
-2026-11-14 19:37:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=3873605c165f method=GET path=/api/products/categories status=200 duration_ms=24.9 client=127.0.0.1
-2026-11-14 19:37:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=1ed5ab769ba3 method=GET path=/images/1689/9888356a11d7425ca9341c83c627c782.webp status=200 duration_ms=31.2 client=127.0.0.1
-2026-11-14 19:37:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=c6c7579c91a8 method=GET path=/api/products status=200 duration_ms=29.4 client=127.0.0.1
-2026-11-14 19:37:27 | INFO     | backend.python.__main__ | HTTP请求 request_id=a13699f723e4 method=GET path=/api/captcha status=200 duration_ms=34.2 client=127.0.0.1
-2026-11-14 19:37:29 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=242 ip=127.0.0.1
-2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=fea1e452ebd6 method=POST path=/api/auth/login status=200 duration_ms=173.2 client=127.0.0.1
-2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=0fdef366c9b0 method=GET path=/api/favorite status=200 duration_ms=11.1 client=127.0.0.1
-2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=92e37daaa6f4 method=GET path=/api/products/categories status=200 duration_ms=2.3 client=127.0.0.1
-2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=34ebc7af9e7a method=GET path=/api/products status=200 duration_ms=4.2 client=127.0.0.1
-2026-11-14 19:37:29 | INFO     | backend.python.__main__ | HTTP请求 request_id=dbcc9696c262 method=GET path=/api/favorite status=200 duration_ms=0.9 client=127.0.0.1
-2026-11-14 19:37:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=799420047576 method=GET path=/api/favorite status=200 duration_ms=3.2 client=127.0.0.1
-2026-11-14 19:37:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=d8efc0dfbb57 method=GET path=/api/orders/my status=200 duration_ms=6.5 client=127.0.0.1
-2026-11-14 19:37:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=358d49389ea6 method=GET path=/api/sales/my status=200 duration_ms=24.4 client=127.0.0.1
-2026-11-14 19:37:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=b52c7f489bde method=GET path=/api/my status=200 duration_ms=13.0 client=127.0.0.1
-2026-11-14 19:37:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=e5c150ec0d99 method=POST path=/api/auth/logout status=200 duration_ms=1.1 client=127.0.0.1
-2026-11-14 19:37:45 | INFO     | backend.python.__main__ | HTTP请求 request_id=d1d8e1c455f3 method=GET path=/api/announcements status=200 duration_ms=6.3 client=127.0.0.1
-2026-11-14 19:37:45 | INFO     | backend.python.__main__ | HTTP请求 request_id=2b5b5de95a61 method=GET path=/api/products/categories status=200 duration_ms=6.2 client=127.0.0.1
-2026-11-14 19:37:45 | INFO     | backend.python.__main__ | HTTP请求 request_id=5a8490289673 method=GET path=/api/products status=200 duration_ms=7.2 client=127.0.0.1
-2026-11-14 19:37:51 | INFO     | backend.python.__main__ | HTTP请求 request_id=b92d16267236 method=GET path=/api/captcha status=200 duration_ms=4.0 client=127.0.0.1
-2026-11-14 19:37:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=e27eaf005e0b method=GET path=/api/captcha status=200 duration_ms=4.2 client=127.0.0.1
-2026-11-14 19:37:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=a726c59ccfac method=GET path=/api/captcha status=200 duration_ms=2.8 client=127.0.0.1
-2026-11-14 19:38:13 | INFO     | uvicorn.error | Shutting down
-2026-11-14 19:38:13 | INFO     | uvicorn.error | Waiting for application shutdown.
-2026-11-14 19:38:13 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端正在关闭
-2026-11-14 19:38:13 | INFO     | backend.python.tools_1.lifespan | 后台任务已停止
-2026-11-14 19:38:13 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端已关闭
-2026-11-14 19:38:13 | INFO     | uvicorn.error | Application shutdown complete.
-2026-11-14 19:38:13 | INFO     | uvicorn.error | Finished server process [21080]
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\email.py", line 109, in send_new_order_notification
+    send_email(
+    ~~~~~~~~~~^
+        user_email=user_email,
+        ^^^^^^^^^^^^^^^^^^^^^^
+        content=content,
+        ^^^^^^^^^^^^^^^^
+        subject=subject)
+        ^^^^^^^^^^^^^^^^
+  File "E:\PyProject\FastAPI\Trading_Platform\back_end\tools_1\email.py", line 46, in send_email
+    raise HTTPException(
+    ...<2 lines>...
+    )
+fastapi.exceptions.HTTPException: 500: 发送失败,请稍后重试
+2026-11-15 14:22:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=07435ad09a68 method=GET path=/api/orders/101002 status=200 duration_ms=3.9 client=127.0.0.1
+2026-11-15 14:22:33 | INFO     | backend.python.crud_1.orders | 买家确认收货 order_id=101002 buyer_id=2
+2026-11-15 14:22:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=8cfddb7608c7 method=PATCH path=/api/orders/101002/receive status=200 duration_ms=5.7 client=127.0.0.1
+2026-11-15 14:22:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=45b4b8d7357d method=GET path=/api/orders/101002 status=200 duration_ms=2.6 client=127.0.0.1
+2026-11-15 14:22:35 | INFO     | backend.python.__main__ | HTTP请求 request_id=29fa28c6ab01 method=GET path=/api/my status=200 duration_ms=1.5 client=127.0.0.1
+2026-11-15 14:22:35 | INFO     | backend.python.__main__ | HTTP请求 request_id=b2b260583078 method=GET path=/api/favorite status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:22:35 | INFO     | backend.python.__main__ | HTTP请求 request_id=c6f6981eeec4 method=GET path=/api/sales/my status=200 duration_ms=5.7 client=127.0.0.1
+2026-11-15 14:22:35 | INFO     | backend.python.__main__ | HTTP请求 request_id=6cc77ec215d2 method=GET path=/api/orders/my status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:22:37 | INFO     | backend.python.__main__ | HTTP请求 request_id=dca2bebd5dcd method=POST path=/api/auth/logout status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=1 ip=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.__main__ | HTTP请求 request_id=0b1389d2ad10 method=POST path=/api/auth/login status=200 duration_ms=162.3 client=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.__main__ | HTTP请求 request_id=b18d86a4cc78 method=GET path=/api/favorite status=200 duration_ms=2.5 client=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.__main__ | HTTP请求 request_id=7e1921f9eb7b method=GET path=/api/products/categories status=200 duration_ms=0.9 client=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.__main__ | HTTP请求 request_id=dd87ad05c38b method=GET path=/api/products status=200 duration_ms=5.5 client=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.__main__ | HTTP请求 request_id=1fa2383f12a1 method=GET path=/api/favorite status=200 duration_ms=0.7 client=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.__main__ | HTTP请求 request_id=9873dac99c5c method=GET path=/api/favorite status=200 duration_ms=1.3 client=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.__main__ | HTTP请求 request_id=4f64b5b8fb26 method=GET path=/api/sales/my status=200 duration_ms=7.1 client=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.__main__ | HTTP请求 request_id=494523ff648d method=GET path=/api/orders/my status=200 duration_ms=4.9 client=127.0.0.1
+2026-11-15 14:22:42 | INFO     | backend.python.__main__ | HTTP请求 request_id=51f1cc728228 method=GET path=/api/my status=200 duration_ms=7.5 client=127.0.0.1
+2026-11-15 14:22:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=6efa554ae818 method=GET path=/api/orders/101002 status=200 duration_ms=3.3 client=127.0.0.1
+2026-11-15 14:22:47 | INFO     | backend.python.crud_1.orders | 卖家确认订单完成 order_id=101002 seller_id=1 product_id=101002
+2026-11-15 14:22:47 | INFO     | backend.python.__main__ | HTTP请求 request_id=3f4a60de5325 method=PATCH path=/api/orders/101002/complete status=200 duration_ms=6.9 client=127.0.0.1
+2026-11-15 14:22:47 | INFO     | backend.python.__main__ | HTTP请求 request_id=1281e6f44fdc method=GET path=/api/orders/101002 status=200 duration_ms=2.7 client=127.0.0.1
+2026-11-15 14:22:51 | INFO     | backend.python.__main__ | HTTP请求 request_id=9de224921f8e method=GET path=/api/favorite status=200 duration_ms=2.5 client=127.0.0.1
+2026-11-15 14:22:51 | INFO     | backend.python.__main__ | HTTP请求 request_id=30204f02131b method=GET path=/api/orders/my status=200 duration_ms=5.2 client=127.0.0.1
+2026-11-15 14:22:51 | INFO     | backend.python.__main__ | HTTP请求 request_id=067ae74f9421 method=GET path=/api/sales/my status=200 duration_ms=7.6 client=127.0.0.1
+2026-11-15 14:22:51 | INFO     | backend.python.__main__ | HTTP请求 request_id=f30809cca0fe method=GET path=/api/my status=200 duration_ms=7.4 client=127.0.0.1
+2026-11-15 14:22:52 | INFO     | backend.python.__main__ | HTTP请求 request_id=1f91b56266fb method=POST path=/api/auth/logout status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:22:58 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=2 ip=127.0.0.1
+2026-11-15 14:22:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=a6c8b3c5a8d4 method=POST path=/api/auth/login status=200 duration_ms=160.3 client=127.0.0.1
+2026-11-15 14:22:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=b4ad07d8bd54 method=GET path=/api/favorite status=200 duration_ms=2.4 client=127.0.0.1
+2026-11-15 14:22:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=b4efcb469623 method=GET path=/api/products/categories status=200 duration_ms=1.5 client=127.0.0.1
+2026-11-15 14:22:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=bba4de631d86 method=GET path=/api/products status=200 duration_ms=5.1 client=127.0.0.1
+2026-11-15 14:22:58 | INFO     | backend.python.__main__ | HTTP请求 request_id=db244408fc24 method=GET path=/api/favorite status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:22:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=3647f2b141ce method=GET path=/api/favorite status=200 duration_ms=2.1 client=127.0.0.1
+2026-11-15 14:22:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=176c8efbf529 method=GET path=/api/sales/my status=200 duration_ms=6.2 client=127.0.0.1
+2026-11-15 14:22:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=a3575317dc15 method=GET path=/api/orders/my status=200 duration_ms=6.0 client=127.0.0.1
+2026-11-15 14:22:59 | INFO     | backend.python.__main__ | HTTP请求 request_id=5be6a8c822e8 method=GET path=/api/my status=200 duration_ms=6.8 client=127.0.0.1
+2026-11-15 14:23:01 | INFO     | backend.python.__main__ | HTTP请求 request_id=dc853000fc95 method=GET path=/api/orders/101002 status=200 duration_ms=2.4 client=127.0.0.1
+2026-11-15 14:23:19 | INFO     | backend.python.__main__ | HTTP请求 request_id=33a040bd8893 method=GET path=/api/sales/my status=200 duration_ms=4.6 client=127.0.0.1
+2026-11-15 14:23:19 | INFO     | backend.python.__main__ | HTTP请求 request_id=1e6201d8b290 method=GET path=/api/favorite status=200 duration_ms=1.9 client=127.0.0.1
+2026-11-15 14:23:19 | INFO     | backend.python.__main__ | HTTP请求 request_id=ae4ca33b48ec method=GET path=/api/my status=200 duration_ms=3.2 client=127.0.0.1
+2026-11-15 14:23:19 | INFO     | backend.python.__main__ | HTTP请求 request_id=8cc4ed47f4c0 method=GET path=/api/orders/my status=200 duration_ms=5.1 client=127.0.0.1
+2026-11-15 14:23:21 | INFO     | backend.python.__main__ | HTTP请求 request_id=19fc8bce41aa method=GET path=/api/orders/101002 status=200 duration_ms=2.6 client=127.0.0.1
+2026-11-15 14:23:23 | INFO     | backend.python.__main__ | HTTP请求 request_id=15832b03f591 method=GET path=/api/products status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:23:23 | INFO     | backend.python.__main__ | HTTP请求 request_id=6a82a31ca6cd method=GET path=/api/products/categories status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-15 14:23:23 | INFO     | backend.python.__main__ | HTTP请求 request_id=6f93e51fdb21 method=GET path=/api/favorite status=200 duration_ms=0.6 client=127.0.0.1
+2026-11-15 14:23:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=fbf2f18fb345 method=GET path=/api/my status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-15 14:23:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=a7641ce84d41 method=GET path=/api/sales/my status=200 duration_ms=6.0 client=127.0.0.1
+2026-11-15 14:23:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=c775a8dd0ada method=GET path=/api/favorite status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:23:24 | INFO     | backend.python.__main__ | HTTP请求 request_id=9c5f5bdf9e9d method=GET path=/api/orders/my status=200 duration_ms=5.5 client=127.0.0.1
+2026-11-15 14:23:26 | INFO     | backend.python.__main__ | HTTP请求 request_id=893d0901143f method=GET path=/api/orders/101002 status=200 duration_ms=2.9 client=127.0.0.1
+2026-11-15 14:23:30 | INFO     | backend.python.crud_1.reviews | 买家评价卖家 order_id=101002 buyer_id=2 seller_id=1 rating=5 credit_change=0.1
+2026-11-15 14:23:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=f45b373f2217 method=POST path=/api/orders/101002/review status=200 duration_ms=9.8 client=127.0.0.1
+2026-11-15 14:23:30 | INFO     | backend.python.__main__ | HTTP请求 request_id=8f858fe2558a method=GET path=/api/orders/101002 status=200 duration_ms=2.3 client=127.0.0.1
+2026-11-15 14:23:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=47bfef5e91e2 method=GET path=/api/favorite status=200 duration_ms=1.9 client=127.0.0.1
+2026-11-15 14:23:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=f1e32fb66eab method=GET path=/api/sales/my status=200 duration_ms=5.8 client=127.0.0.1
+2026-11-15 14:23:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=65103aba484c method=GET path=/api/orders/my status=200 duration_ms=6.3 client=127.0.0.1
+2026-11-15 14:23:32 | INFO     | backend.python.__main__ | HTTP请求 request_id=8a30128a3319 method=GET path=/api/my status=200 duration_ms=5.6 client=127.0.0.1
+2026-11-15 14:23:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=126ca3dccb5b method=GET path=/api/products status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:23:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=d02e5780dfd8 method=GET path=/api/products/categories status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:23:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=de820c177cbf method=GET path=/api/favorite status=200 duration_ms=0.6 client=127.0.0.1
+2026-11-15 14:23:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=03b3350a2da9 method=GET path=/api/my status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-15 14:23:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=2ca371114e3c method=GET path=/api/sales/my status=200 duration_ms=6.2 client=127.0.0.1
+2026-11-15 14:23:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=f5964f8e2774 method=GET path=/api/favorite status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:23:33 | INFO     | backend.python.__main__ | HTTP请求 request_id=56665be379e1 method=GET path=/api/orders/my status=200 duration_ms=5.1 client=127.0.0.1
+2026-11-15 14:23:37 | INFO     | backend.python.__main__ | HTTP请求 request_id=2b320e0729b4 method=POST path=/api/auth/logout status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.crud_1.users | 用户登录成功 user_id=1 ip=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=4d7b2ad83688 method=POST path=/api/auth/login status=200 duration_ms=163.0 client=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=855f91392577 method=GET path=/api/favorite status=200 duration_ms=2.6 client=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=7edc86716818 method=GET path=/api/products status=200 duration_ms=3.1 client=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=c464137a07de method=GET path=/api/products/categories status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=567d0466d510 method=GET path=/api/favorite status=200 duration_ms=0.6 client=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=63171a4cb5a2 method=GET path=/api/favorite status=200 duration_ms=2.2 client=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=d54012a3499d method=GET path=/api/my status=200 duration_ms=3.3 client=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=c44af2465345 method=GET path=/api/orders/my status=200 duration_ms=4.9 client=127.0.0.1
+2026-11-15 14:23:44 | INFO     | backend.python.__main__ | HTTP请求 request_id=eefab7378124 method=GET path=/api/sales/my status=200 duration_ms=6.7 client=127.0.0.1
+2026-11-15 14:23:48 | INFO     | backend.python.__main__ | HTTP请求 request_id=0800c592e46a method=GET path=/api/my/products/101001 status=200 duration_ms=6.4 client=127.0.0.1
+2026-11-15 14:23:50 | INFO     | backend.python.__main__ | HTTP请求 request_id=1b1035c52bf9 method=GET path=/api/my status=200 duration_ms=1.7 client=127.0.0.1
+2026-11-15 14:23:50 | INFO     | backend.python.__main__ | HTTP请求 request_id=b5c9d97d9fd2 method=GET path=/api/favorite status=200 duration_ms=2.5 client=127.0.0.1
+2026-11-15 14:23:50 | INFO     | backend.python.__main__ | HTTP请求 request_id=ad02b2facd15 method=GET path=/api/orders/my status=200 duration_ms=4.6 client=127.0.0.1
+2026-11-15 14:23:50 | INFO     | backend.python.__main__ | HTTP请求 request_id=01717cfb77a3 method=GET path=/api/sales/my status=200 duration_ms=6.9 client=127.0.0.1
+2026-11-15 14:23:52 | INFO     | backend.python.__main__ | HTTP请求 request_id=0b28ce6916c3 method=GET path=/api/orders/101002 status=200 duration_ms=2.9 client=127.0.0.1
+2026-11-15 14:23:54 | INFO     | backend.python.__main__ | HTTP请求 request_id=5a06c9c83162 method=GET path=/api/my status=200 duration_ms=1.0 client=127.0.0.1
+2026-11-15 14:23:54 | INFO     | backend.python.__main__ | HTTP请求 request_id=58d163a92928 method=GET path=/api/favorite status=200 duration_ms=1.9 client=127.0.0.1
+2026-11-15 14:23:54 | INFO     | backend.python.__main__ | HTTP请求 request_id=eacdbb745f1d method=GET path=/api/orders/my status=200 duration_ms=4.8 client=127.0.0.1
+2026-11-15 14:23:54 | INFO     | backend.python.__main__ | HTTP请求 request_id=18b2219b342c method=GET path=/api/sales/my status=200 duration_ms=6.5 client=127.0.0.1
+2026-11-15 14:23:54 | INFO     | backend.python.__main__ | HTTP请求 request_id=e1dc7892c03c method=GET path=/api/products status=200 duration_ms=1.9 client=127.0.0.1
+2026-11-15 14:23:54 | INFO     | backend.python.__main__ | HTTP请求 request_id=bd96bc7a2bab method=GET path=/api/products/categories status=200 duration_ms=1.1 client=127.0.0.1
+2026-11-15 14:23:54 | INFO     | backend.python.__main__ | HTTP请求 request_id=cca5838a62bd method=GET path=/api/favorite status=200 duration_ms=2.7 client=127.0.0.1
+2026-11-15 14:23:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=abb62a420e0a method=GET path=/api/favorite status=200 duration_ms=1.3 client=127.0.0.1
+2026-11-15 14:23:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=f84ba2a01fae method=GET path=/api/sales/my status=200 duration_ms=7.2 client=127.0.0.1
+2026-11-15 14:23:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=b4d27746eacc method=GET path=/api/orders/my status=200 duration_ms=5.0 client=127.0.0.1
+2026-11-15 14:23:56 | INFO     | backend.python.__main__ | HTTP请求 request_id=e75362385ba6 method=GET path=/api/my status=200 duration_ms=6.8 client=127.0.0.1
+2026-11-15 14:24:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=ec45c37ab50b method=GET path=/api/products status=200 duration_ms=2.0 client=127.0.0.1
+2026-11-15 14:24:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=1c0c1dbd26d6 method=GET path=/api/products/categories status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:24:00 | INFO     | backend.python.__main__ | HTTP请求 request_id=d0e0415c271c method=GET path=/api/favorite status=200 duration_ms=0.8 client=127.0.0.1
+2026-11-15 14:24:02 | INFO     | backend.python.__main__ | HTTP请求 request_id=2624ef8fb7b8 method=GET path=/api/my status=200 duration_ms=1.2 client=127.0.0.1
+2026-11-15 14:24:02 | INFO     | backend.python.__main__ | HTTP请求 request_id=6ff95f438b95 method=GET path=/api/favorite status=200 duration_ms=2.4 client=127.0.0.1
+2026-11-15 14:24:02 | INFO     | backend.python.__main__ | HTTP请求 request_id=bef68f19ab5a method=GET path=/api/orders/my status=200 duration_ms=4.3 client=127.0.0.1
+2026-11-15 14:24:02 | INFO     | backend.python.__main__ | HTTP请求 request_id=087fb05f923e method=GET path=/api/sales/my status=200 duration_ms=6.5 client=127.0.0.1
+2026-11-15 14:30:33 | INFO     | uvicorn.error | Shutting down
+2026-11-15 14:30:33 | INFO     | uvicorn.error | Waiting for application shutdown.
+2026-11-15 14:30:33 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端正在关闭
+2026-11-15 14:30:33 | INFO     | backend.python.tools_1.lifespan | 后台任务已停止
+2026-11-15 14:30:33 | INFO     | backend.python.tools_1.lifespan | 校园二手交易平台后端已关闭
+2026-11-15 14:30:33 | INFO     | uvicorn.error | Application shutdown complete.
+2026-11-15 14:30:33 | INFO     | uvicorn.error | Finished server process [12328]

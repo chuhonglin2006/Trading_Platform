@@ -55,7 +55,7 @@ create table hkz_market.users
     campus        varchar(50)                                         null comment '所属校区',
     status        enum ('normal', 'banned') default 'normal'          not null comment '账号状态：正常/封禁',
     banned_until  datetime                                            null comment '封禁截止时间，NULL表示永久封禁',
-    credit_score  int                       default 100               not null comment '信用分，默认100',
+    credit_score  decimal(7, 1)             default 100.0             not null comment '信用分，默认100，保留一位小数',
     register_ip   varchar(45)                                         null comment '注册IP',
     last_login_ip varchar(45)                                         null comment '最近登录IP',
     created_at    datetime                  default CURRENT_TIMESTAMP not null,
@@ -282,4 +282,29 @@ create index idx_campus
 create index idx_status
     on hkz_market.users (status);
 
+create table hkz_market.reviews
+(
+    id            bigint unsigned auto_increment
+        primary key,
+    order_id      bigint unsigned                    not null comment '订单ID，一个订单只能评价一次',
+    buyer_id      bigint unsigned                    not null comment '评价人（买家）ID',
+    seller_id     bigint unsigned                    not null comment '被评价人（卖家）ID',
+    rating        tinyint                            not null comment '星级 1~5',
+    comment       varchar(200)                       null comment '评价留言',
+    credit_change decimal(4, 1)                      default 0.0 not null comment '这条评价实际给卖家加减的信用分',
+    created_at    datetime default CURRENT_TIMESTAMP not null,
+    constraint uk_reviews_order
+        unique (order_id),
+    constraint chk_reviews_rating
+        check (rating between 1 and 5),
+    constraint fk_reviews_order
+        foreign key (order_id) references hkz_market.orders (id),
+    constraint fk_reviews_buyer
+        foreign key (buyer_id) references hkz_market.users (id),
+    constraint fk_reviews_seller
+        foreign key (seller_id) references hkz_market.users (id)
+)
+    comment '订单评价表';
 
+create index ix_reviews_seller_created
+    on hkz_market.reviews (seller_id, created_at);

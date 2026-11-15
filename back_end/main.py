@@ -22,6 +22,7 @@ from routers_1.chat import chat
 from routers_1.orders import order
 from routers_1.products import products
 from routers_1.reports import report
+from routers_1.reviews import review
 from routers_1.user import user
 from tools_1.client_ip import get_client_ip
 from tools_1.image_storage import IMAGE_DIR
@@ -126,6 +127,7 @@ app.include_router(products)
 app.include_router(announcements)
 app.include_router(order)
 app.include_router(report)
+app.include_router(review)
 app.include_router(chat)
 app.include_router(admin)
 app.include_router(admin_user)

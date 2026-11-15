@@ -807,6 +807,119 @@
           该订单已经完成
         </div>
 
+        <!-- ================================================= -->
+        <!-- 评价：已评价 -->
+        <!-- ================================================= -->
+
+        <div
+          v-if="order.review"
+          class="review-box"
+        >
+          <div class="review-title">
+            {{ isBuyer ? '我的评价' : '买家的评价' }}
+          </div>
+
+          <div class="review-stars">
+            <span
+              v-for="n in 5"
+              :key="n"
+              class="review-star"
+              :class="{ on: n <= order.review.rating }"
+            >★</span>
+            <span class="review-score-text">
+              {{ order.review.rating }} 星
+            </span>
+          </div>
+
+          <p
+            v-if="order.review.comment"
+            class="review-comment"
+          >
+            {{ order.review.comment }}
+          </p>
+
+          <p
+            v-else
+            class="review-comment review-empty"
+          >
+            没有留下文字评价
+          </p>
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- 评价：买家评价卖家 -->
+        <!-- ================================================= -->
+
+        <div
+          v-else-if="canReview"
+          class="review-box"
+        >
+          <div class="review-title">
+            评价卖家
+          </div>
+
+          <div class="review-stars">
+            <button
+              v-for="n in 5"
+              :key="n"
+              type="button"
+              class="review-star review-star-btn"
+              :class="{ on: n <= reviewRating }"
+              :disabled="reviewSubmitting"
+              :aria-label="n + ' 星'"
+              @click="reviewRating = n"
+            >★</button>
+          </div>
+
+          <p class="review-hint">
+            {{ reviewHint }}
+          </p>
+
+          <textarea
+            v-model="reviewComment"
+            class="review-textarea"
+            rows="3"
+            maxlength="200"
+            placeholder="说说这次交易的感受（选填，最多 200 字）"
+            :disabled="reviewSubmitting"
+          ></textarea>
+
+          <div class="review-count">
+            {{ reviewComment.length }}/200
+          </div>
+
+          <button
+            class="btn btn-primary"
+            type="button"
+            :disabled="reviewSubmitting || reviewRating === 0"
+            @click="handleSubmitReview"
+          >
+            <span v-if="reviewSubmitting">
+              正在提交...
+            </span>
+            <span v-else>
+              提交评价
+            </span>
+          </button>
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- 评价：卖家等待买家评价 -->
+        <!-- ================================================= -->
+
+        <div
+          v-else-if="
+            isSeller &&
+            (order.status === 'received' ||
+              order.status === 'completed')
+          "
+          class="action-message review-waiting"
+        >
+          买家还没有评价
+        </div>
+
       </div>
 
     </div>
@@ -835,6 +948,10 @@ import {
 import {
   chatApi
 } from '../api/chat'
+
+import {
+  reviewsApi
+} from '../api/reviews'
 
 import {
   orderStatusText
@@ -1831,6 +1948,128 @@ async function handleContact() {
   } finally {
 
     openingChat.value = false
+
+  }
+
+}
+
+
+/* =========================================================
+   评价卖家
+   ========================================================= */
+
+const reviewRating = ref(0)
+
+const reviewComment = ref('')
+
+const reviewSubmitting = ref(false)
+
+
+/* 买家确认收货之后（待完成 / 已完成）、并且还没评价过，才能评价 */
+const canReview = computed(() => {
+
+  return Boolean(
+    order.value &&
+    isBuyer.value &&
+    !order.value.review &&
+    (
+      order.value.status === 'received' ||
+      order.value.status === 'completed'
+    )
+  )
+
+})
+
+
+/* 告诉买家这次评价会怎样影响卖家信用分 */
+const reviewHint = computed(() => {
+
+  if (reviewRating.value === 0) {
+    return '请点击星星选择评分'
+  }
+
+  if (reviewRating.value <= 2) {
+    return '1~2 星：卖家信用分 -1'
+  }
+
+  if (reviewRating.value === 3) {
+    return '3 星：不影响卖家信用分'
+  }
+
+  return '4~5 星：卖家信用分 +0.5'
+
+})
+
+
+async function handleSubmitReview() {
+
+  if (!canReview.value || reviewSubmitting.value) {
+    return
+  }
+
+
+  if (reviewRating.value < 1 || reviewRating.value > 5) {
+
+    window.alert('请先选择星级')
+
+    return
+
+  }
+
+
+  const confirmed =
+    window.confirm(
+
+      '确定提交评价吗？\n\n' +
+
+      '评价提交后不能修改，' +
+
+      '并会按星级调整卖家的信用分。'
+
+    )
+
+
+  if (!confirmed) {
+    return
+  }
+
+
+  reviewSubmitting.value = true
+
+
+  try {
+
+    await reviewsApi.create(
+      order.value.id,
+      {
+        rating: reviewRating.value,
+        comment: reviewComment.value.trim() || null
+      }
+    )
+
+
+    reviewRating.value = 0
+
+    reviewComment.value = ''
+
+
+    await loadOrder()
+
+  } catch (err) {
+
+    console.error(
+      '提交评价失败:',
+      err
+    )
+
+
+    window.alert(
+      getApiErrorMessage(err, '提交评价失败，请稍后重试')
+    )
+
+  } finally {
+
+    reviewSubmitting.value = false
 
   }
 
@@ -3037,6 +3276,113 @@ onMounted(() => {
     align-items: flex-start;
   }
 
+}
+
+
+/* =========================================================
+   评价
+   ========================================================= */
+
+.review-box {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--border, #e2e2e2);
+  border-radius: 10px;
+  background: var(--panel, #f7f7f7);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+.review-title {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+
+.review-stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+
+.review-star {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--border, #d4d4d4);
+}
+
+
+.review-star.on {
+  color: #f59e0b;
+}
+
+
+.review-star-btn {
+  cursor: pointer;
+}
+
+
+.review-star-btn:disabled {
+  cursor: default;
+}
+
+
+.review-score-text {
+  margin-left: 8px;
+  font-size: 14px;
+  color: var(--muted, #6b6b6b);
+}
+
+
+.review-hint,
+.review-count {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted, #6b6b6b);
+}
+
+
+.review-count {
+  text-align: right;
+}
+
+
+.review-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border, #e2e2e2);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  color: var(--ink, #111);
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+
+.review-comment {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+
+.review-empty {
+  color: var(--muted, #6b6b6b);
+}
+
+
+.review-waiting {
+  color: var(--muted, #6b6b6b);
+  background: var(--panel, #f5f5f5);
 }
 
 </style>

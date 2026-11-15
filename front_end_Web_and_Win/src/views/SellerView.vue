@@ -7,6 +7,7 @@ import { useToast } from '../composables/useToast'
 import { ICON_FLAG, ICON_BOX } from '../utils/icons'
 import ProductCard from '../components/ProductCard.vue'
 import { getApiErrorMessage } from '../utils/apiError'
+import { reviewsApi } from '../api/reviews'
 
 const props = defineProps({
   id: {
@@ -170,6 +171,9 @@ async function loadSeller() {
         sellerId
       )
 
+    // 评价单独加载，失败不影响页面
+    loadReviews(true)
+
   } catch (error) {
     console.error(
       '加载卖家页面失败:',
@@ -184,6 +188,64 @@ async function loadSeller() {
     loading.value = false
   }
 }
+
+// =========================
+// 收到的评价
+// =========================
+
+const REVIEW_PAGE_SIZE = 10
+
+const reviews = ref([])
+const reviewTotal = ref(0)
+const reviewAverage = ref(null)
+const reviewsLoading = ref(false)
+
+async function loadReviews(reset = true) {
+  if (reviewsLoading.value) {
+    return
+  }
+
+  reviewsLoading.value = true
+
+  try {
+    const sellerId = getSellerId()
+
+    const page = reset
+      ? 1
+      : Math.floor(reviews.value.length / REVIEW_PAGE_SIZE) + 1
+
+    const response = await reviewsApi.listBySeller(
+      sellerId,
+      {
+        page,
+        page_size: REVIEW_PAGE_SIZE,
+      }
+    )
+
+    const data = response?.data || {}
+
+    reviews.value = reset
+      ? (data.items || [])
+      : reviews.value.concat(data.items || [])
+
+    reviewTotal.value = data.total || 0
+    reviewAverage.value = data.average ?? null
+
+  } catch (error) {
+    // 评价加载失败不影响卖家页面的其他内容
+    console.error('加载卖家评价失败:', error)
+
+    if (reset) {
+      reviews.value = []
+      reviewTotal.value = 0
+      reviewAverage.value = null
+    }
+
+  } finally {
+    reviewsLoading.value = false
+  }
+}
+
 
 // =========================
 // 打开商品详情
@@ -490,5 +552,144 @@ watch(
 
     </div>
 
+
+    <!-- 收到的评价 -->
+    <div
+      v-if="!loading && !loadError"
+      class="seller-reviews"
+    >
+
+      <p
+        class="page-sub"
+        style="margin: 32px 0 16px"
+      >
+        收到的评价（{{ reviewTotal }}）
+        <span
+          v-if="reviewAverage !== null"
+          class="seller-reviews-avg"
+        >
+          · 平均 {{ reviewAverage }} 星
+        </span>
+      </p>
+
+      <div
+        v-if="reviews.length"
+        class="seller-review-list"
+      >
+
+        <div
+          v-for="item in reviews"
+          :key="item.id"
+          class="seller-review-item"
+        >
+
+          <div class="seller-review-head">
+
+            <span class="seller-review-name">
+              {{ item.reviewer_name || '用户' }}
+            </span>
+
+            <span class="seller-review-stars">
+              <span
+                v-for="n in 5"
+                :key="n"
+                :class="{ on: n <= item.rating }"
+              >★</span>
+            </span>
+
+            <span class="seller-review-date">
+              {{ (item.created_at || '').slice(0, 10) }}
+            </span>
+
+          </div>
+
+          <p
+            v-if="item.comment"
+            class="seller-review-comment"
+          >
+            {{ item.comment }}
+          </p>
+
+        </div>
+
+        <button
+          v-if="reviews.length < reviewTotal"
+          class="btn btn-ghost"
+          :disabled="reviewsLoading"
+          @click="loadReviews(false)"
+        >
+          {{ reviewsLoading ? '加载中...' : '加载更多' }}
+        </button>
+
+      </div>
+
+      <div
+        v-else
+        class="empty-state"
+      >
+        <p>
+          还没有收到评价
+        </p>
+      </div>
+
+    </div>
+
   </div>
 </template>
+
+
+<style scoped>
+.seller-reviews-avg {
+  color: var(--muted);
+}
+
+.seller-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 32px;
+}
+
+.seller-review-item {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--panel);
+}
+
+.seller-review-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.seller-review-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.seller-review-stars {
+  color: var(--border);
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+.seller-review-stars .on {
+  color: #f59e0b;
+}
+
+.seller-review-date {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--muted-2);
+}
+
+.seller-review-comment {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+</style>

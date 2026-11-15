@@ -15,6 +15,7 @@ from tools_1.ip_region import (
     ensure_product_region_schema,
 )
 from tools_1.logger import get_logger
+from tools_1.review_schema import ensure_review_schema
 from tools_1.order_auto_receive_loop import order_auto_receive_loop
 from tools_1.system_monitor import system_monitor_loop
 from tools_1.warm_up_cache import warming_blooms_main, warming_redis_main
@@ -58,6 +59,7 @@ async def lifespan(app: FastAPI):
         await init_database_if_empty()
 
         await ensure_product_region_schema()
+        await ensure_review_schema()
         region_task = asyncio.create_task(
             backfill_product_publish_provinces(app.state.redis)
         )

@@ -1,5 +1,6 @@
 """管理员界面举报"""
 from datetime import datetime, timedelta
+from decimal import Decimal
 from typing import Any
 
 from crud_1.users import invalidate_user
@@ -253,12 +254,12 @@ async def handle_report(
                         detail="扣除信用分必须是大于0的整数"
                     )
 
-                actual_score = min(
-                    punish_score,
-                    int(user.credit_score or 0)
-                )
+                # 信用分现在带一位小数，不能再用 int() 取整，否则会吞掉评价加的 0.5
+                current_score = Decimal(user.credit_score or 0)
+                deduct_score = min(Decimal(punish_score), current_score)
+                actual_score = int(deduct_score)
 
-                user.credit_score = int(user.credit_score or 0) - actual_score
+                user.credit_score = current_score - deduct_score
 
                 report.handle_type = "deduct_score"
                 report.punish_score = actual_score
