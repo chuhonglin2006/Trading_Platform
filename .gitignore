@@ -1,31 +1,13 @@
-# Python
 __pycache__/
-*.py[cod]
-
-# Environment / Secrets
-.env
+*.pyc
 *.env
-
-# Logs
 *.log
-logs/
-
-# IDE
 .idea/
-
-# Python virtual environment
 .venv/
 venv/
-
-# Build
 dist/
 build/
-
-# image_data
 back_end/image_data/
-
-android/.gradle/
-android/app/build/
-
 *.apk
 *.exe
+node_modules/
