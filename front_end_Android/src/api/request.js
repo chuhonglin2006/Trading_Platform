@@ -3,7 +3,7 @@ import { Capacitor } from '@capacitor/core'
 import { clearUserStorage } from '../utils/session.js'
 
 const API_BASE_URL = Capacitor.isNativePlatform()
-  ? 'https://chuhlblog.top/api'
+  ? '你的后端服务api url'
   : '/api'
 
 const request = axios.create({
