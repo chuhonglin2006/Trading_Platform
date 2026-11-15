@@ -2,21 +2,13 @@
 
 一个基于 FastAPI 和 Vue 3 开发的校园二手物品交易与信息展示平台。
 
-本项目主要面向校园用户，提供用户注册登录、商品发布、商品浏览与搜索、商品收藏、订单交易、在线聊天、举报管理以及后台管理等功能。
+本项目主要面向校园用户，提供用户注册登录、商品发布、商品浏览与搜索、商品收藏、订单交易、在线聊天、评价、举报管理以及后台管理等功能。
 
 项目采用前后端分离架构，后端使用 FastAPI 提供 RESTful API，前端使用 Vue 3 构建用户界面，并使用 MySQL 进行数据持久化、Redis 提供缓存和部分高并发场景优化。
 
 [成品展示](https://chuhlblog.top) 
 
-
-[![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4) [![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4) [![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4) [![6a02444da3020wU0](https://i.im.ge/QQNnes4/6a02444da3020wU0.webp)](https://im.ge/i/QQNnes4)
-
-
-![Python](https://img.shields.io/badge/Python-3.12%2B-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)
-![Vue](https://img.shields.io/badge/Vue-3-42b883)
-![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1)
-![Redis](https://img.shields.io/badge/Redis-cache%20%26%20rate%20limit-DC382D)
+![Python](https://img.shields.io/badge/Python-3.14%2B-blue)![FastAPI](https://img.shields.io/badge/FastAPI-async-009688)![Vue](https://img.shields.io/badge/Vue-3-42b883)![MySQL](https://img.shields.io/badge/MySQL-8.x-4479A1)![Redis](https://img.shields.io/badge/Redis-cache%20%26%20rate%20limit-DC382D)
 
 ---
 
